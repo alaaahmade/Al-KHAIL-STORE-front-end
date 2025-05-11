@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import { ServiceEditView } from 'src/sections/services/view';
 
 export const metadata = {
@@ -5,5 +6,5 @@ export const metadata = {
 };
 
 export default function ServiceEditPage() {
-  return <ServiceEditView />;
+  return <Typography>ServicesListPage</Typography>;
 }

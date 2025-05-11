@@ -107,7 +107,6 @@ export function AuthProvider({ children }: Props) {
 
         const response = await axios.get(endpoints.auth.me);
         const { user } = response.data.data;
-        console.log(user);
 
         dispatch({
           type: Types.INITIAL,
@@ -134,23 +133,17 @@ export function AuthProvider({ children }: Props) {
 
   // LOGIN
   const login = useCallback(async (email: string, password: string) => {
-    const response = await axios.post(endpoints.auth.login, {
+    const {data} = await axios.post(endpoints.auth.login, {
       email,
       password,
     },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      withCredentials: true,
-    });
-    console.log(response, 'response');
+    );
+    console.log(data, 'response');
 
-    console.log(response.data);
-    const { accessToken, user } = response.data;
-
-    sessionStorage.setItem(STORAGE_KEY, accessToken);
-    setSession(accessToken);
+    const { token, user } = data;
+    console.log({ token, user })
+    sessionStorage.setItem(STORAGE_KEY, token);
+    setSession(token);
 
     dispatch({
       type: Types.LOGIN,

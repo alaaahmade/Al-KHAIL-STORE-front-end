@@ -33,9 +33,11 @@ import { useTheme } from '@mui/material/styles';
 // ----------------------------------------------------------------------
 
 export default function JwtLoginView() {
-  const { login } = useAuthContext();
+  const { login, user } = useAuthContext();
   const pathName = usePathname();
   const theme = useTheme()
+
+  console.log({user})
   
   const router = useRouter();
 

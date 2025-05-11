@@ -7,24 +7,16 @@ import Typography from '@mui/material/Typography';
 import { useSettingsContext } from 'src/components/settings';
 import { fDate } from 'src/utils/format-time';
 import DashboardContent from '../dashpoard-content';
+import { Button } from '@mui/material';
+import { useAuthContext } from '@/auth/hooks';
+import axiosInstance, { endpoints } from '@/utils/axios';
 
 // ----------------------------------------------------------------------
 
 export default function OneView() {
   const settings = useSettingsContext();
-
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-      <Typography variant="h4"> Dashboard </Typography>
-      <Typography
-        sx={{
-          opacity: 0.5,
-          fontWeight: 100
-        }}
-      variant="body1">
-        Status for {fDate(new Date(), 'MMM yyy')}
-      </Typography>
-      
+    <Container maxWidth={settings.themeStretch ? false : 'xl'}>      
       <DashboardContent />
     </Container>
   );

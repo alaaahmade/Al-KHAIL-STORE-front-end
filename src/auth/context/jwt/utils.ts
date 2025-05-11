@@ -36,26 +36,6 @@ export const isValidToken = (accessToken: string) => {
 
 // ----------------------------------------------------------------------
 
-export const tokenExpired = (exp: number) => {
-  // eslint-disable-next-line prefer-const
-  let expiredTimer;
-
-  const currentTime = Date.now();
-
-  // Test token expires after 10s
-  // const timeLeft = currentTime + 10000 - currentTime; // ~10s
-  const timeLeft = exp * 1000 - currentTime;
-
-  clearTimeout(expiredTimer);
-
-  expiredTimer = setTimeout(() => {
-    alert('Token expired');
-
-    Cookies.remove('accessToken');
-
-    window.location.href = paths.auth.jwt.login;
-  }, timeLeft);
-};
 
 // ----------------------------------------------------------------------
 
@@ -65,7 +45,7 @@ export function setSession(accessToken: string | null) {
 
     // This function below will handle when token is expired
     const { exp } = jwtDecode(accessToken); // ~3 days by minimals server
-    tokenExpired(exp);
+    // tokenExpired(exp);
   } else {
     delete axios.defaults.headers.common.Authorization;
   }

@@ -12,35 +12,38 @@ interface Props extends CardProps {
   icon: React.ReactElement;
 }
 
-export default function BookingWidgetSummary({ title, total, icon, sx, ...other }: Props) {
+export default function BookingWidgetSummary({ title, total, icon,color, type, sx, ...other }: Props) {
   return (
     <Card
       sx={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
+        gap:2,
         p: 2,
         pl: 3,
         ...sx,
       }}
       {...other}
     >
+              <Box
+          sx={{
+            width: 44,
+            height: 44,
+            display: 'flex',
+            borderRadius: 2,
+            alignItems: 'center',
+            justifyContent: 'center',
+            bgcolor: color,
+          }}
+        >
+        {icon}
+        </Box>
       <Box>
-        <Box sx={{ mb: 1, typography: 'h3' }}>{fShortenNumber(total)}</Box>
-        <Box sx={{ color: 'text.secondary', typography: 'subtitle2' }}>{title}</Box>
+        <Box sx={{ color: 'text.secondary', typography: 'h6', fontWeight: 'normal', m: 0, p:0 }}>{title}</Box>
+        <Box sx={{ mb: 1, typography: 'h4', color: '$000', fontWeight: 'bold',  m: 0, p:0 }}>{type === 'area'? `$ ${fShortenNumber(total)}` : total}</Box>
       </Box>
 
-      <Box
-        sx={{
-          width: 120,
-          height: 120,
-          lineHeight: 0,
-          borderRadius: '50%',
-          bgcolor: 'background.neutral',
-        }}
-      >
-        {icon}
-      </Box>
     </Card>
   );
 }
