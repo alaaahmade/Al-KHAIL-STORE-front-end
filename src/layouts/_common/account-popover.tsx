@@ -42,7 +42,7 @@ export default function AccountPopover() {
 
   // const { user } = useMockedUser();
   const {user} = useContext(AuthContext)
-
+  
 
   const { logout } = useAuthContext();
 
@@ -82,8 +82,8 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={user?.picture}
-          alt={user?.fllName}
+          src={user?.photo}
+          alt={user?.firstName}
           sx={{
             width: 36,
             height: 36,
@@ -91,6 +91,12 @@ export default function AccountPopover() {
           }}
         />
       </IconButton>
+        <Typography
+          sx={{
+            minWidth: 'fit-content',
+            fontSize: '14px'
+          }}
+        >{user?.firstName + ' ' + user?.lastName}</Typography>
 
       <CustomPopover open={popover.open} onClose={popover.onClose} sx={{ width: 200, p: 0 }}>
         <Box sx={{ p: 2, pb: 1.5 }}>

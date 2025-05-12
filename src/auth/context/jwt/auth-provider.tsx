@@ -105,7 +105,7 @@ export function AuthProvider({ children }: Props) {
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
 
-        const response = await axios.get(endpoints.auth.me);
+        const response = await axios.get(endpoints.auth.me);         
         const { user } = response.data.data;
 
         dispatch({
@@ -138,10 +138,7 @@ export function AuthProvider({ children }: Props) {
       password,
     },
     );
-    console.log(data, 'response');
-
     const { token, user } = data;
-    console.log({ token, user })
     sessionStorage.setItem(STORAGE_KEY, token);
     setSession(token);
 

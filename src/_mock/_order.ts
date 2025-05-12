@@ -1,4 +1,5 @@
 import { _mock } from './_mock';
+import { _firstNames } from './assets';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +36,8 @@ export const _orders = [...Array(20)].map((_, index) => {
 
   const customer = {
     id: _mock.id(index),
-    name: _mock.fullName(index),
+    firstName: _firstNames[index],
+    lastName: _mock.lastName(index),
     email: _mock.email(index),
     avatarUrl: _mock.image.avatar(index),
     ipAddress: '192.158.1.38',
@@ -67,10 +69,12 @@ export const _orders = [...Array(20)].map((_, index) => {
   return {
     id: _mock.id(index),
     customer, 
+    product:  (index % 2 && 'Luxury Face Cream') || 'Anti-Aging Serum',
+    amount: totalAmount,
     status:
-      (index % 2 && 'completed') ||
-      (index % 3 && 'pending') ||
-      (index % 4 && 'cancelled') ||
-      'refunded',
+      (index % 2 && 'Delivered') ||
+      (index % 3 && 'Processing') ||
+      (index % 4 && 'cancelled') || 
+      'Delivered',
   };
 });
