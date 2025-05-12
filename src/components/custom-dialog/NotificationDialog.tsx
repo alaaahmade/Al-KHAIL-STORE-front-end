@@ -12,7 +12,7 @@ import { RootState } from 'src/redux/store';
 import { changeStateValue, closeNotificationsDialog, setError, setSOptions } from 'src/redux/slices/notificationSlice';
 import axios from 'src/utils/axios';
 import { useBoolean } from '@/hooks/use-boolean';
-import { fetchServices } from '@/redux/slices/serviceSlice';
+import { fetchServices } from '@/redux/slices/productsReducer';
 import { useAppDispatch } from '@/redux/hooks';
 
 

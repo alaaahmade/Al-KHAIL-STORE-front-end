@@ -8,73 +8,149 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 // components
 import { useSettingsContext } from 'src/components/settings';
 import { LoadingButton } from '@mui/lab';
-import {  InputAdornment, CircularProgress } from '@mui/material';
+import {  InputAdornment, CircularProgress, Button, Card, TableContainer, IconButton, Tooltip, Table, TableBody } from '@mui/material';
 import Iconify from 'src/components/iconify';
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from 'src/redux/hooks';
-import { fetchServices } from 'src/redux/slices/serviceSlice';
+import { fetchProducts } from '@/redux/slices/productsReducer';
 import { useSnackbar } from 'notistack';
-import ListingCard from '../card';
+import {  ProductInterface } from '@/types/product';
+import { useBoolean } from '@/hooks/use-boolean';
+import { emptyRows, TableEmptyRows, TableHeadCustom, TableNoData, TablePaginationCustom, TableSelectedAction, useTable } from 'src/components/table';
+import { getComparator } from 'src/components/table';
+import { isEqual } from 'lodash';
+import Scrollbar from 'src/components/scrollbar';
+import TableSkeleton from 'src/components/table/table-skeleton';
+import ProductTableRow from './product-table-row';
 // ----------------------------------------------------------------------
+const TABLE_HEAD = [
+  { id: 'name', label: 'Product' },
+  { id: 'createdAt', label: 'Create at', width: 160 },
+  { id: 'inventoryType', label: 'Stock', width: 160 },
+  { id: 'price', label: 'Price', width: 140 },
+  { id: 'publish', label: 'Publish', width: 110 },
+  { id: '', width: 88 },
+];
 
-export default function TwoView() {
+const PUBLISH_OPTIONS = [
+  { value: 'published', label: 'Published' },
+  { value: 'draft', label: 'Draft' },
+];
+
+const defaultFilters = {
+  name: '',
+  publish: [],
+  stock: [],
+};
+
+export default function ProductsListView() {
   const settings = useSettingsContext();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const serviceState = useAppSelector((state) => state.service);
-  const services = useMemo(() => serviceState?.services || [], [serviceState?.services]);
-  const loading = serviceState?.loading || false;  
-  
-  const [search, setSearch] = useState({
-    query: '',
-    results: [],
-  });
-  const [currentListing, setCurrentListing] = useState<any[]>([]);
+  const productsState = useAppSelector((state) => state.products);
+  const products = useMemo(() => productsState?.products || [], [productsState?.products]);
+  const loading = productsState?.loading || false; 
+
+
+  const table = useTable();
+
+
+  const [tableData, setTableData] = useState<ProductInterface[]>([]);
+
+  const [filters, setFilters] = useState(defaultFilters);
+
+  const confirm = useBoolean();
 
   useEffect(() => {
-    dispatch(fetchServices())
+    if (products.length) {
+      setTableData(products);
+    }
+  }, [products]);
+
+  const dataFiltered = applyFilter({
+    inputData: tableData,
+    comparator: getComparator(table.order, table.orderBy),
+    filters,
+  });
+
+  const dataInPage = dataFiltered.slice(
+    table.page * table.rowsPerPage,
+    table.page * table.rowsPerPage + table.rowsPerPage
+  );
+
+  const denseHeight = table.dense ? 60 : 80;
+
+  const canReset = !isEqual(defaultFilters, filters);
+
+  const notFound = (!dataFiltered.length && canReset) ;
+
+  const handleFilters = useCallback(
+    (name: string, value: any) => {
+      table.onResetPage();
+      setFilters((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    },
+    [table]
+  );
+
+  const handleDeleteRow = useCallback(
+    (id: string) => {
+      const deleteRow = tableData.filter((row) => String(row.id) !== String(id));
+      setTableData(deleteRow);
+
+      table.onUpdatePageDeleteRow(dataInPage.length);
+    },
+    [dataInPage.length, table, tableData]
+  );
+
+  const handleDeleteRows = useCallback(() => {
+    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
+    setTableData(deleteRows);
+
+    table.onUpdatePageDeleteRows({
+      totalRows: tableData.length,
+      totalRowsInPage: dataInPage.length,
+      totalRowsFiltered: dataFiltered.length,
+    });
+  }, [dataFiltered.length, dataInPage.length, table, tableData]);
+
+  const handleEditRow = useCallback(
+    (id: string) => {
+      router.push(paths.dashboard.products);
+    },
+    [router]
+  );
+
+  const handleViewRow = useCallback(
+    (id: string) => {
+      router.push(paths.dashboard.products);
+    },
+    [router]
+  );
+
+  const handleResetFilters = useCallback(() => {
+    setFilters(defaultFilters);
+  }, []);
+
+  
+  useEffect(() => {
+    dispatch(fetchProducts())
       .unwrap()
       .catch((err) => {
         enqueueSnackbar(err || 'Failed to fetch services', { variant: 'error' });
       });
   }, [dispatch, enqueueSnackbar]);
 
-  useEffect(() => {
-    if (services.length > 0) {
-      setCurrentListing(services);
-    }
-  }, [services]);
-
-  const handleSearch = useCallback(
-    (value: string) => {
-      if (!value) {
-        setCurrentListing(services);
-        return;
-      }
-      
-      const filtered = services.filter((item) => 
-        item.title.toLowerCase().includes(value.toLowerCase()) ||
-        item.vendor.toLowerCase().includes(value.toLowerCase()) ||
-        item.description?.toLowerCase().includes(value.toLowerCase())
-      );
-      
-      setCurrentListing(filtered);
-    },
-    [services]
-  );
-
-  const handleCreateListing = () => {
-    router.push(paths.dashboard.service.create);
-  };
-
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'} >
       <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Typography variant="h4"> My Services </Typography>
-      <LoadingButton
+      <Typography variant="h4"> Products Management </Typography>
+      {/* <LoadingButton
         color="inherit"
         size="medium"
         type="submit"
@@ -86,61 +162,129 @@ export default function TwoView() {
         onClick={handleCreateListing}
       >
         Create a listing
-      </LoadingButton>
+      </LoadingButton> */}
       </Container>
-      
-      <OutlinedInput
-        placeholder="Search..."
-        value={search.query}
-        onChange={(event) => {
-          setSearch({ ...search, query: event.target.value });
-          handleSearch(event.target.value);
-        }}
-        sx={{ width: 0.4 }}
-        startAdornment={
-          <InputAdornment position="start">
-            <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-          </InputAdornment>
-        }
-      />
       
       {loading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', my: 5 }}>
           <CircularProgress />
         </Box>
       ) : (
-        <Box
-          sx={{
-            mt: 5,
-            width: 1,
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: {sx: 'center', sm: 'flex-start'},
-            alignItems:{sx: 'center', sm: 'flex-start'},
-            gap: 5,
-            flexDirection: { xs: 'column', sm: 'row' },
-            borderRadius: 2,
-          }}
-        >
-          {Array.isArray(currentListing) && currentListing.length > 0 ? (
-            currentListing.map(({ id, title, images, hours, vendor, credits }) => (
-              <ListingCard 
-                key={id}
-                id={id}
-                title={title}
-                images={images || []}
-                hours={hours}
-                vendor={vendor}
-                credits={credits?.toString() || '0'}
-              />
-            ))
-          ) : (
-            <Typography variant="body1" sx={{ py: 5, textAlign: 'center', width: '100%' }}>
-              No services found
-            </Typography>
-          )}
-        </Box>
+        ///
+        <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+
+        <Card>
+
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <TableSelectedAction
+              dense={table.dense}
+              numSelected={table.selected.length}
+              rowCount={tableData.length}
+              onSelectAllRows={(checked) =>
+                table.onSelectAllRows(
+                  checked,
+                  tableData.map((row) => row.id)
+                )
+              }
+              action={
+                <Tooltip title="Delete">
+                  <IconButton color="primary" onClick={confirm.onTrue}>
+                    <Iconify icon="solar:trash-bin-trash-bold" />
+                  </IconButton>
+                </Tooltip>
+              }
+            />
+
+            <Scrollbar>
+              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                <TableHeadCustom
+                  order={table.order}
+                  orderBy={table.orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={tableData.length}
+                  numSelected={table.selected.length}
+                  onSort={table.onSort}
+                  onSelectAllRows={(checked) =>
+                    table.onSelectAllRows(
+                      checked,
+                      tableData.map((row) => row.id)
+                    )
+                  }
+                />
+
+                <TableBody>
+                  {loading ? (
+                    [...Array(table.rowsPerPage)].map((i, index) => (
+                      <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    ))
+                  ) : (
+                    <>
+                      {/* {dataFiltered
+                        .slice(
+                          table.page * table.rowsPerPage,
+                          table.page * table.rowsPerPage + table.rowsPerPage
+                        )
+                        .map((row) => (
+                          <ProductTableRow
+                            key={row.id}
+                            row={row}
+                            selected={table.selected.includes(row.id)}
+                            onSelectRow={() => table.onSelectRow(row.id)}
+                            onDeleteRow={() => handleDeleteRow(row.id)}
+                            onEditRow={() => handleEditRow(row.id)}
+                            onViewRow={() => handleViewRow(row.id)}
+                          />
+                        ))} */}
+                    </>
+                  )}
+
+                  <TableEmptyRows
+                    height={denseHeight}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
+                  />
+
+                  <TableNoData notFound={notFound} />
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+
+          <TablePaginationCustom
+            count={dataFiltered.length}
+            page={table.page}
+            rowsPerPage={table.rowsPerPage}
+            onPageChange={table.onChangePage}
+            onRowsPerPageChange={table.onChangeRowsPerPage}
+            //
+            dense={table.dense}
+            onChangeDense={table.onChangeDense}
+          />
+        </Card>
+      </Container>
       )}
     </Container>
   );
+}
+
+
+function applyFilter({
+  inputData,
+  comparator,
+  filters,
+}: {
+  inputData: ProductInterface[];
+  comparator: (a: any, b: any) => number;
+  filters: any;
+}) {
+
+  const stabilizedThis = inputData.map((el, index) => [el, index] as const);
+
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  inputData = stabilizedThis.map((el) => el[0]);
+  return inputData;
 }

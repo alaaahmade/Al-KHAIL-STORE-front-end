@@ -60,7 +60,9 @@ const ICONS = {
   category: <Icon icon="carbon:collapse-categories" width="32" height="32" />,
   interests: <Icon icon="material-symbols:interests-outline" width="24" height="24" />,
 
-  subscriptionList: <Icon icon="material-symbols:list" width="24" height="24" />
+  subscriptionList: <Icon icon="material-symbols:list" width="24" height="24" />,
+
+  products : <Icon icon="ix:product" width="512" height="512" />
 };
 
 // ----------------------------------------------------------------------
@@ -73,7 +75,7 @@ export function useNavData() {
         subheader: 'MANAGEMENT',
         items: [
           { title: 'Dashboard', path: paths.dashboard.root, icon: ICONS.dashboard },
-          { title: 'Services', path: paths.dashboard.service.root, icon: ICONS.analytics },
+          { title: 'Products', path: paths.dashboard.products, icon: ICONS.products },
           { title: 'Customers', path: paths.dashboard.customers, icon: ICONS.customers },
           { title: 'Transactions', path: paths.dashboard.transactions, icon: ICONS.transactions },
           { title: 'Subscription', path: paths.dashboard.subscription.root, icon: ICONS.subscription,

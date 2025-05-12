@@ -56,9 +56,15 @@ export type IOrderProductItem = {
 };
 
 export type IOrderItem = {
+  orderNumber: any;
+  user: any;
   id: string;
   status: string;
+  product: string
+  amount: string;
   customer: {
+    lastName: string;
+    firstName: string;
     id: string;
     name: string;
     email: string;

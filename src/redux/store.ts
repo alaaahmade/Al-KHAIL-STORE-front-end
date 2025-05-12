@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 // import { persistStore, persistReducer } from 'redux-persist';
 // import { rootPersistConfig, rootReducer } from './root-reducer';
-import serviceReducer from './slices/serviceSlice';
+import productsReducer from './slices/productsReducer';
 // import authReducer from './slices/authSlice';
 // import userReducer from './slices/userSlice';
 import businessReducer from './slices/businessSlice';
@@ -16,6 +16,8 @@ import AdvertisementsSlice from './slices/AdsSlice';
 import CategoriesSlice from './slices/CategoriesSlice';
 import InterestsSlice from './slices/InterestsSlice';
 import PlansSlice from './slices/PlanSlice';
+import ordersSlice from './slices/ordersSlice';
+import reviewsSlice from './slices/reviewsSlice';
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +28,7 @@ export type AppDispatch = typeof store.dispatch;
 
 const store = configureStore({
   reducer: {
-    service: serviceReducer,
+    products: productsReducer,
     business: businessReducer,
     role: roleReducer,
     permission: permissionReducer,
@@ -38,7 +40,9 @@ const store = configureStore({
     AdvertisementsSlice,
     CategoriesSlice,
     InterestsSlice,
-    PlansSlice
+    PlansSlice,
+    ordersSlice,
+    reviewsSlice
     // theme: themeReducer,
   },
   middleware: (getDefaultMiddleware) =>
