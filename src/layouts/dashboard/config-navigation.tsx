@@ -21,7 +21,8 @@ const ICONS = {
   category: <Icon icon="carbon:collapse-categories" width="32" height="32" />,
   interests: <Icon icon="material-symbols:interests-outline" width="24" height="24" />,
   products : <Icon icon="ix:product" width="512" height="512" />,
-  orders: <Icon icon="mdi:cart" width="24" height="24" />
+  orders: <Icon icon="mdi:cart" width="24" height="24" />,
+  Reviews: <Icon icon="fa-solid:comments" width="576" height="512" />,
 };
 
 // ----------------------------------------------------------------------
@@ -36,6 +37,7 @@ export function useNavData() {
           { title: 'Dashboard', path: paths.dashboard.root, icon: ICONS.dashboard },
           { title: 'Products', path: paths.dashboard.products, icon: ICONS.products },
           { title: 'Orders', path: paths.dashboard.orders.root, icon: ICONS.orders },
+          {title: 'Reviews', path:  paths.dashboard.reviews.root, icon: ICONS.Reviews},
           { title: 'Customers', path: paths.dashboard.customers, icon: ICONS.customers },
           { title: 'Advertisements', path: paths.dashboard.advertisements, icon: ICONS.advertisements },
           { title: 'Categories', path: paths.dashboard.categories, icon: ICONS.category },

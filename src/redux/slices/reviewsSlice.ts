@@ -23,8 +23,9 @@ export const fetchReviews = createAsyncThunk(
   'reviews/fetchReviews',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get('/v1/reviews');
-      return response.data.data.reviews;
+      const response = await axios.get('/v1/comments');
+      return response.data.data;
+      
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch reviews');
     }
