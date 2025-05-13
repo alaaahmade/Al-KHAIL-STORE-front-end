@@ -4,11 +4,9 @@
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import OutlinedInput from '@mui/material/OutlinedInput';
 // components
 import { useSettingsContext } from 'src/components/settings';
-import { LoadingButton } from '@mui/lab';
-import {  InputAdornment, CircularProgress, Button, Card, TableContainer, IconButton, Tooltip, Table, TableBody } from '@mui/material';
+import {  CircularProgress, Card, TableContainer, IconButton, Tooltip, Table, TableBody, Toolbar } from '@mui/material';
 import Iconify from 'src/components/iconify';
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { paths } from 'src/routes/paths';
@@ -26,17 +24,12 @@ import TableSkeleton from 'src/components/table/table-skeleton';
 import ProductTableRow from './product-table-row';
 // ----------------------------------------------------------------------
 const TABLE_HEAD = [
-  { id: 'name', label: 'Product' },
-  { id: 'createdAt', label: 'Create at', width: 160 },
-  { id: 'inventoryType', label: 'Stock', width: 160 },
-  { id: 'price', label: 'Price', width: 140 },
-  { id: 'publish', label: 'Publish', width: 110 },
-  { id: '', width: 88 },
-];
-
-const PUBLISH_OPTIONS = [
-  { value: 'published', label: 'Published' },
-  { value: 'draft', label: 'Draft' },
+  { id: 'product', label: 'Product', width: 200 },
+  { id: 'categoryName', label: 'Category' ,width: 120  },
+  { id: 'price', label: 'Price', width: 100 },
+  { id: 'Stock', label: 'Stock', width: 100 },
+  { id: 'Status', label: 'Status', width: 80 },
+  { id: 'actions', label: 'Actions', width: 80 },
 ];
 
 const defaultFilters = {
@@ -149,7 +142,7 @@ export default function ProductsListView() {
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'} >
       <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Typography variant="h4"> Products Management </Typography>
+      <Typography sx={{mb: 5}} variant="h4"> Products Management </Typography>
       {/* <LoadingButton
         color="inherit"
         size="medium"
@@ -174,6 +167,24 @@ export default function ProductsListView() {
         <Container maxWidth={settings.themeStretch ? false : 'lg'}>
 
         <Card>
+          <Toolbar
+          sx={{
+            p: '2em',
+            border: '1px solid #f4f6f8',
+          }}
+        >
+          
+            <Typography
+              sx={{ flex: '1 1 100%' }}
+              variant="h6"
+              id="tableTitle"
+              component="div"
+            >
+              All Products
+            </Typography>
+      
+          
+        </Toolbar>
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
@@ -196,7 +207,7 @@ export default function ProductsListView() {
             />
 
             <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 600 }}>
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -219,7 +230,7 @@ export default function ProductsListView() {
                     ))
                   ) : (
                     <>
-                      {/* {dataFiltered
+                      {dataFiltered
                         .slice(
                           table.page * table.rowsPerPage,
                           table.page * table.rowsPerPage + table.rowsPerPage
@@ -228,13 +239,13 @@ export default function ProductsListView() {
                           <ProductTableRow
                             key={row.id}
                             row={row}
-                            selected={table.selected.includes(row.id)}
-                            onSelectRow={() => table.onSelectRow(row.id)}
-                            onDeleteRow={() => handleDeleteRow(row.id)}
-                            onEditRow={() => handleEditRow(row.id)}
-                            onViewRow={() => handleViewRow(row.id)}
+                            selected={table.selected.includes(String(row.id))}
+                            onSelectRow={() => table.onSelectRow(String(row.id))}
+                            onDeleteRow={() => handleDeleteRow(String(row.id))}
+                            onEditRow={() => handleEditRow(String(row.id))}
+                            onViewRow={() => handleViewRow(String(row.id))}
                           />
-                        ))} */}
+                        ))}
                     </>
                   )}
 
