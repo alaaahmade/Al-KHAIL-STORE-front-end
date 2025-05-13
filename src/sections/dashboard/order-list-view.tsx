@@ -9,21 +9,12 @@ import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 // routes
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
 // _mock
-import { _orders, ORDER_STATUS_OPTIONS } from 'src/_mock';
-// utils
-import { fTimestamp } from 'src/utils/format-time';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
-import { useSettingsContext } from 'src/components/settings';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import {
   useTable,
   getComparator,
@@ -31,21 +22,17 @@ import {
   TableNoData,
   TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/table';
 // types
-import { IOrderItem, IOrderTableFilters, IOrderTableFilterValue } from 'src/types/order';
+import { IOrderItem } from 'src/types/order';
 //
 import OrderTableRow from './order-table-row';
-import OrderTableToolbar from './order-table-toolbar';
-import OrderTableFiltersResult from './order-table-filters-result';
 import { Toolbar, Typography } from '@mui/material';
 import { useAppSelector } from '@/redux/hooks';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...ORDER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
   { id: 'orderNumber', label: 'Order ID', width: 100 },
@@ -55,94 +42,28 @@ const TABLE_HEAD = [
   { id: 'status', label: 'Status', width: 150 },
 ];
 
-const defaultFilters: IOrderTableFilters = {
-  name: '',
-  status: 'all',
-  startDate: null,
-  endDate: null,
-};
-
 // ----------------------------------------------------------------------
 
 export default function OrderListView() {
   const table = useTable({ defaultOrderBy: 'orderNumber' });
 
-  const settings = useSettingsContext();
 
   const orders = useAppSelector((state) => state.ordersSlice.orders);
   
-  const router = useRouter();
 
   const confirm = useBoolean();
 
   const [tableData, setTableData] = useState(orders);
 
-  const [filters, setFilters] = useState(defaultFilters);
-
-  const dateError =
-    filters.startDate && filters.endDate
-      ? filters.startDate.getTime() > filters.endDate.getTime()
-      : false;
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
   });
 
-  const dataInPage = dataFiltered.slice(
-    table.page * table.rowsPerPage,
-    table.page * table.rowsPerPage + table.rowsPerPage
-  );
-
   const denseHeight = table.dense ? 52 : 72;
 
-  const canReset =
-    !!filters.name || filters.status !== 'all' || (!!filters.startDate && !!filters.endDate);
-
-  const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
-
-  const handleFilters = useCallback(
-    (name: string, value: IOrderTableFilterValue) => {
-      table.onResetPage();
-      setFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    [table]
-  );
-
-  const handleDeleteRow = useCallback(
-    (id: string) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
-      setTableData(deleteRow);
-
-      table.onUpdatePageDeleteRow(dataInPage.length);
-    },
-    [dataInPage.length, table, tableData]
-  );
-
-  const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
-    setTableData(deleteRows);
-
-    table.onUpdatePageDeleteRows({
-      totalRows: tableData.length,
-      totalRowsInPage: dataInPage.length,
-      totalRowsFiltered: dataFiltered.length,
-    });
-  }, [dataFiltered.length, dataInPage.length, table, tableData]);
-
-  const handleResetFilters = useCallback(() => {
-    setFilters(defaultFilters);
-  }, []);
-
-  const handleViewRow = useCallback(
-    (id: string) => {
-      router.push(paths.dashboard.order.details(id));
-    },
-    [router]
-  );  
+  const notFound = (!dataFiltered.length)
   useEffect(() => {
     setTableData(orders);
   }, [orders]);
@@ -173,56 +94,58 @@ export default function OrderListView() {
     
         
       </Toolbar>
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
 
-            <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'}   sx={{
-                minWidth: 960,
+          <TableContainer
+            component={Scrollbar}
+            sx={{
+              maxWidth: '100%',
+              overflowX: 'auto',
+            }}
+          >
+            <Table
+              size={table.dense ? 'small' : 'medium'}
+              sx={{
+                minWidth: 600,
+                tableLayout: 'auto',
               }}
-              
-              >
+            >
+              <TableHeadCustom
+                order={table.order}
+                orderBy={table.orderBy}
+                headLabel={TABLE_HEAD}
+                rowCount={tableData.length}
+                numSelected={table.selected.length}
+                onSort={table.onSort}
+                onSelectAllRows={(checked) =>
+                  table.onSelectAllRows(
+                    checked,
+                    tableData.map((row) => row.id)
+                  )
+                }
+              />
 
-                <TableHeadCustom
-                  order={table.order}
-                  orderBy={table.orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={table.selected.length}
-                  onSort={table.onSort}
-                  onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
+              <TableBody>
+                {dataFiltered
+                  .slice(
+                    table.page * table.rowsPerPage,
+                    table.page * table.rowsPerPage + table.rowsPerPage
+                  )
+                  .map((row) => (
+                    <OrderTableRow
+                      key={row.id}
+                      row={row}
+                      selected={table.selected.includes(row.id)}
+                    />
+                  ))}
+
+                <TableEmptyRows
+                  height={denseHeight}
+                  emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
                 />
 
-                <TableBody>
-                  {dataFiltered
-                    .slice(
-                      table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage
-                    )
-                    .map((row) => (
-                      <OrderTableRow
-                        key={row.id}
-                        row={row}
-                        selected={table.selected.includes(row.id)}
-                        onSelectRow={() => table.onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onViewRow={() => handleViewRow(row.id)}
-                      />
-                    ))}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
-                  />
-
-                  <TableNoData notFound={notFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
+                <TableNoData notFound={notFound} />
+              </TableBody>
+            </Table>
           </TableContainer>
 
           <TablePaginationCustom
@@ -237,29 +160,6 @@ export default function OrderListView() {
           />
         </Card>
       </Container>
-
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {table.selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows();
-              confirm.onFalse();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
     </>
   );
 }

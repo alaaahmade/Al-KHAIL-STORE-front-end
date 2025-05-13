@@ -29,17 +29,11 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 type Props = {
   row: IOrderItem;
   selected: boolean;
-  onViewRow: VoidFunction;
-  onSelectRow: VoidFunction;
-  onDeleteRow: VoidFunction;
 };
 
 export default function OrderTableRow({
   row,
   selected,
-  onViewRow,
-  onSelectRow,
-  onDeleteRow,
 }: Props) {
   const { orderNumber, user, cart, orderStatus } = row;
 
@@ -47,7 +41,6 @@ export default function OrderTableRow({
 
   const confirm = useBoolean();
 
-  const collapse = useBoolean();
 
   const popover = usePopover();
 
@@ -56,7 +49,6 @@ export default function OrderTableRow({
 
       <TableCell>
         <Box
-          onClick={onViewRow}
           sx={{
             cursor: 'pointer',
             '&:hover': {
@@ -106,45 +98,7 @@ export default function OrderTableRow({
   return (
     <>
       {renderPrimary}
-      <CustomPopover
-        open={popover.open}
-        onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 140 }}
-      >
-        <MenuItem
-          onClick={() => {
-            confirm.onTrue();
-            popover.onClose();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
-        </MenuItem>
 
-        <MenuItem
-          onClick={() => {
-            onViewRow();
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:eye-bold" />
-          View
-        </MenuItem>
-      </CustomPopover>
-
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content="Are you sure want to delete?"
-        action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
-            Delete
-          </Button>
-        }
-      />
     </>
   );
 }
