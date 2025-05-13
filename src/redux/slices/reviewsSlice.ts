@@ -43,6 +43,20 @@ export const fetchLatestReviews = createAsyncThunk(
   }
 );
 
+export const createCommentReply = createAsyncThunk(
+  'reviews/createCommentReply',
+  async (data: any, { rejectWithValue }) => {
+    try {
+      console.log(data);
+      
+      const response = await axios.post('/v1/comment-replies', data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to create comment reply');
+    }
+  }
+);
+
 export const createReviews = createAsyncThunk(
   'reviews/createReviews',
   async (data: any, { rejectWithValue }) => {
@@ -82,7 +96,8 @@ export const deleteReviews = createAsyncThunk(
 const reviewsSlice = createSlice({
   name: 'reviews',
   initialState,
-  reducers: {},
+  reducers: {
+  },
   extraReducers: (builder) => {
     builder
       // Reviews
@@ -120,8 +135,9 @@ const reviewsSlice = createSlice({
       .addCase(fetchLatestReviews.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      });
+      })
   },
 });
+
 
 export default reviewsSlice.reducer;
