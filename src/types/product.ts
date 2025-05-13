@@ -33,7 +33,8 @@ export type IProductReview = {
   postedAt: Date;
   content: string;
   user: any,
-  product: any
+  product: any,
+  commentReplies: any[]
 };
 
 export type IProductItem = {
