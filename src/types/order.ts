@@ -55,20 +55,39 @@ export type IOrderProductItem = {
   quantity: number;
 };
 
-export type IOrderItem = {
-  orderNumber: any;
-  user: any;
-  id: string;
-  status: string;
-  product: string
-  amount: string;
-  customer: {
+
+export interface IOrder {
+  id: number;
+  orderNumber: string;
+  orderStatus: string;
+  orderDate: string; // ISO date string (e.g. "2025-05-13")
+  cartId: number;
+  paymentInfo: string;
+  country: string;
+  city: string;
+  streetAddress: string;
+  userId: number;
+  phoneNumber: string;
+  email: string;
+  createdAt: string; // ISO timestamp string
+  updatedAt: string; // ISO timestamp string
+
+  // Optional embedded relations (only if you fetch with joins)
+  user: {
     lastName: string;
-    firstName: string;
-    id: string;
-    name: string;
-    email: string;
-    avatarUrl: string;
-    ipAddress: string;
-  }
-};
+    photo: string | undefined;
+    firstName: string | undefined;
+    id: number;
+    // extend as needed
+    name?: string;
+    email?: string;
+  };
+
+  cart: {
+    total(total: any): import("react").ReactNode;
+    id: number;
+    // extend as needed
+    totalAmount?: number;
+    items?: any[]; // refine if needed
+  };
+}

@@ -14,25 +14,17 @@ import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 //
-import { Checkbox, Typography } from '@mui/material';
+import { Checkbox, Icon, IconButton, Typography } from '@mui/material';
 import { fDate } from 'src/utils/format-time';
+import { IOrder } from '@/types/order';
+import { fCurrency } from '@/utils/format-number';
 
 // ----------------------------------------------------------------------
-
-type transactionsItem = {
-  id: string;
-  name: string;
-  avatarUrl: string;
-  status: string;
-  amount: number;
-  date: string;
-}
 
 type Props = {
   selected: boolean;
   onEditRow: VoidFunction;
-  row: transactionsItem;
-  onSelectRow: VoidFunction;
+  row: IOrder;
   onDeleteRow: VoidFunction;
 };
 
@@ -40,10 +32,9 @@ export default function UserTableRow({
   row,
   selected,
   onEditRow,
-  onSelectRow,
   onDeleteRow,
 }: Props) {
-  const { name, avatarUrl, date, status, id, amount } = row;
+  const { user, cart, createdAt, orderStatus, id } = row;  
 
   const confirm = useBoolean();
 
@@ -52,44 +43,29 @@ export default function UserTableRow({
 
   return (
     <>
-      <TableRow hover selected={selected}>
-        
-            <Checkbox checked={selected} onClick={onSelectRow} />
-        
-        <TableCell padding="checkbox">
-        <Typography>#{id}</Typography>
-        </TableCell>
-        <TableCell sx={{ display: 'flex', alignItems: 'center', height: '7em' }}>
-          <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} />
-
+      <TableRow hover selected={selected}>        
+        <TableCell>{'ORD-' + id}</TableCell>
+        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar alt={user.firstName} src={user.photo} sx={{ mr: 1 }} />
           <ListItemText
-            primary={name}
-            // secondary={name}
+            primary={user.firstName + ' ' + user.lastName}
             primaryTypographyProps={{ typography: 'body2' }}
-            secondaryTypographyProps={{
-              component: 'span',
-              color: 'text.disabled',
-            }}
+          />
+        </TableCell>
+
+        <TableCell>{fCurrency(String(cart.total))}</TableCell>
+
+        <TableCell>
+        <ListItemText
+            primary={cart?.items.length > 1 ? cart?.items[0].product.productName + ' ...' : cart?.items[0].product.productName}
+            primaryTypographyProps={{ typography: 'body2' }}
+            secondary={'Qty:' + cart?.items.length}
+            secondaryTypographyProps={{ typography: 'caption' }}
           />
         </TableCell>
         
-        <TableCell sx={{ height: '7em', whiteSpace: 'wrap'}}>
-        <TableCell sx={{ whiteSpace: 'wrap', p: 0, m: 0, border: 0}}>
-        <span style={{ display: 'block' }}>{fDate(date, 'dd MMM yyyy')}</span>
-        <span style={{ display: 'block', opacity: 0.7 }}>{fDate(date, 'p')}</span>
-          </TableCell>
-          <TableCell sx={{
-            border: 0
-          }}/>
-          <TableCell sx={{
-            border: 0
-          }} />
-          <TableCell sx={{
-            border: 0
-          }} />
+        <TableCell>{fDate(createdAt, 'MMM dd yyyy')}</TableCell>
 
-            
-        </TableCell>
         <TableCell
           sx={{
             border: 0
@@ -98,18 +74,30 @@ export default function UserTableRow({
           <Label
             variant="soft"
             color={
-              (status === 'received' && 'success') ||
-              (status === 'pending' && 'warning') ||
-              (status === 'withdrawal' && 'error') ||
+              (orderStatus === 'delivered' && 'success') ||
+              (orderStatus === 'processing' && 'warning') ||
+              (orderStatus === 'cancelled' && 'error') ||
               'default'
             }
+            sx={{borderRadius: 50, p : '0 1.2em',}}
           >
-            {status}
+            {orderStatus}
+            <Iconify icon="oui:arrow-down" width={12} sx={{ ml: 2 }} /> 
           </Label>
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{amount}</TableCell>
-      </TableRow>
+
+      <TableCell sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+        <Iconify color='#309dec' icon="mdi:eye" width={20} height={20} />
+        </IconButton>
+
+        <IconButton>
+          <Iconify icon="material-symbols:print" width={20} height={20} />
+        </IconButton>
+
+        </TableCell>
+        </TableRow>
 
       <CustomPopover
         open={popover.open}

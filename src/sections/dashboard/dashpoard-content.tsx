@@ -7,7 +7,7 @@ import BookingWidgetSummary from './dashpoard-widget-summary';
 import { Icon } from '@iconify/react';
 import OrderListView from './order-list-view';
 import { useAppDispatch } from '@/redux/hooks';
-import { fetchOrders } from '@/redux/slices/ordersSlice';
+import { fetchLatestOrders } from '@/redux/slices/ordersSlice';
 
 
 
@@ -16,11 +16,11 @@ function DashboardContent() {
   const theme = useTheme();
   const appDispatch = useAppDispatch()
   useEffect(() => {
-    appDispatch(fetchOrders())
+    appDispatch(fetchLatestOrders())
   }, [])
 
   return (
-    <Container sx={{ display: 'flex', flexDirection: 'column', gap: 5 }} maxWidth={settings.themeStretch ? false : 'xl'}>
+    <Container sx={{ display: 'flex', flexDirection: 'column', gap: 5, p: 0 }} maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
         {[0, 1, 2, 3].map((_, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>

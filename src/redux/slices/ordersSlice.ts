@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'src/utils/axios';
 
 interface OrdersState {
+  latestOrders: any[];
   orders: any[];
   ordersTypes: any[];
   loading: boolean;
@@ -9,6 +10,7 @@ interface OrdersState {
 }
 
 const initialState: OrdersState = {
+  latestOrders: [],
   orders: [],
   ordersTypes: [],
   loading: false,
@@ -17,6 +19,18 @@ const initialState: OrdersState = {
 
 
 // Orders Actions
+export const fetchLatestOrders = createAsyncThunk(
+  'orders/fetchLatestOrders',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get('/v1/orders/recent');
+      return response.data.data.orders;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch orders');
+    }
+  }
+);
+
 export const fetchOrders = createAsyncThunk(
   'orders/fetchOrders',
   async (_, { rejectWithValue }) => {
@@ -72,6 +86,17 @@ const ordersSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Orders
+      .addCase(fetchLatestOrders.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchLatestOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.latestOrders = action.payload;
+      })
+      .addCase(fetchLatestOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
       .addCase(fetchOrders.pending, (state) => {
         state.loading = true;
       })
@@ -84,16 +109,16 @@ const ordersSlice = createSlice({
         state.error = action.payload as string;
       })
       .addCase(createOrders.fulfilled, (state, action) => {
-        state.orders.push(action.payload);
+        state.latestOrders.push(action.payload);
       })
       .addCase(updateOrders.fulfilled, (state, action) => {
-        const index = state.orders.findIndex((orders) => orders.id === action.payload.id);
+        const index = state.latestOrders.findIndex((orders) => orders.id === action.payload.id);
         if (index !== -1) {
-          state.orders[index] = action.payload;
+          state.latestOrders[index] = action.payload;
         }
       })
       .addCase(deleteOrders.fulfilled, (state, action) => {
-        state.orders = state.orders.filter((orders) => orders.id !== action.payload);
+        state.latestOrders = state.latestOrders.filter((orders) => orders.id !== action.payload);
       });
   },
 });

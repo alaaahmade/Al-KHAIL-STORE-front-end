@@ -1,7 +1,7 @@
 'use client';
 
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
@@ -35,12 +35,15 @@ import {
 // types
 import { IUserItem, IUserTableFilters, IUserTableFilterValue } from 'src/types/user';
 //
-import {  Typography } from '@mui/material';
-// import { transactions } from 'src/redux/slices/transactionsSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import UserTableRow from '../transactions-table-row';
-import UserTableToolbar from '../transactions-table-toolbar';
-import UserTableFiltersResult from '../transactions-table-filters-result';
+import {  Box, FormControl, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { useSelector } from 'react-redux';
+import UserTableRow from '../orders-table-row';
+import UserTableToolbar from '../orders-table-toolbar';
+import UserTableFiltersResult from '../orders-table-filters-result';
+import { useAppDispatch } from '@/redux/hooks';
+import { fetchOrders } from '@/redux/slices/ordersSlice';
+import { IOrder } from '@/types/order';
+import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -53,11 +56,13 @@ const STATUS_OPTIONS = [
 
 const TABLE_HEAD = [
   
-  { id: 'name', label: 'ID',  width: 500 },
-  { id: 'customer', label: 'Customer', width: 3000 },
-  { id: 'date', label: 'Date', width :3000 },
-  { id: 'status',label: 'Status', width: 3000 },
-  { id: 'amount', label: 'Amount', width:3000},
+  { id: 'id', label: 'Order ID',  width: 100 },
+  { id: 'customer', label: 'Customer', width: 200 },
+  { id: 'total', label: 'Total', width :120 },
+  { id: 'products', label: 'Products', width :180 },
+  { id: 'date', label: 'Date', width :160 },
+  { id: 'status',label: 'Status', width: 180 },
+  { id: 'actions', label: 'Actions', width:100},
 ];
 
 const defaultFilters: IUserTableFilters = {
@@ -69,7 +74,7 @@ const defaultFilters: IUserTableFilters = {
 
 // ----------------------------------------------------------------------
 
-export default function TransactionsListView() {
+export default function OrdersView() {
   const table = useTable();
 
   const settings = useSettingsContext();
@@ -77,16 +82,15 @@ export default function TransactionsListView() {
   const router = useRouter();
 
   const confirm = useBoolean();
-
-  const transactions = useSelector((state: any) => state.TransactionsSlice.transactions);
-  const dispatch = useDispatch();
-
-  // const [tableData, setTableData] = useState([]);
-
+  const dispatch = useAppDispatch();
+  const orders = useSelector((state: any) => state.ordersSlice.orders);
+  // ;
+  console.log(orders[0]);
+  
   const [filters, setFilters] = useState(defaultFilters);
 
   const dataFiltered = applyFilter({
-    inputData: transactions,
+    inputData: orders,
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
@@ -115,11 +119,11 @@ export default function TransactionsListView() {
 
   const handleDeleteRow = useCallback(
     (id: string) => {
-      const updatedTransactions = transactions.filter((row: { id: string;}) => row.id !== id);
-      dispatch(transactions({ transactions: updatedTransactions }));
+      const updatedTransactions = orders.filter((row: { id: string;}) => row.id !== id);
+      // dispatch(transactions({ transactions: updatedTransactions }));
       table.onUpdatePageDeleteRow(dataInPage.length);
     },
-    [transactions, dispatch, dataInPage.length, table]
+    [orders, dataInPage.length, table]
   );
 
 
@@ -134,6 +138,10 @@ export default function TransactionsListView() {
     (event: React.SyntheticEvent, newValue: string) => {
       
       handleFilters('status', newValue);
+      setFilters((prevState) => ({
+        ...prevState,
+        status: newValue,
+      }));
     },
     [handleFilters]
   );
@@ -142,62 +150,72 @@ export default function TransactionsListView() {
     setFilters(defaultFilters);
   }, []);
 
-  console.log(transactions);
-  
+  useEffect(() => {
+    dispatch(fetchOrders());
+  }, [])
 
-
+  console.log(filters.status)
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-        <Typography variant="h4" sx={{ mb: 5 }}>
-        Transactions
-        </Typography>
 
         <Card>
-          <Tabs
-            value={filters.status}
-            onChange={handleFilterStatus}
+          <Box
             sx={{
-              px: 2.5,
-              boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+              p: 3,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
             }}
+
           >
-            {STATUS_OPTIONS.map((tab) => (
-              <Tab
-                key={tab.value}
-                iconPosition="end"
-                value={tab.value}
-                label={tab.label}
-                icon={
-                  <Label
-                    variant={
-                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
-                    }
-                    color={
-                      (tab.value === 'received' && 'success') ||
-                      (tab.value === 'pending' && 'warning') ||
-                      (tab.value === 'withdrawal' && 'error') ||
-                      (tab.value === 'all' && 'wGray') ||
-                      'default'
-                    }
-                  >
-                    {tab.value === 'all' && transactions.length}
-                    {tab.value === 'received' &&
-                      transactions.filter((user: { status: string;}) => user.status === 'received').length}
+          <Typography variant="h4" sx={{ mb: 5 }}>
+          Orders Management
+          </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
+            <TextField
+              value={filters.name}
+              onChange={(event) => handleFilters('name', event.target.value)}
+              placeholder="Search Orders..."
+              size='small'
+              sx={{minWidth: 300}}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
 
-                    {tab.value === 'withdrawal' &&
-                      transactions.filter((user:{ status: string;}) => user.status === 'withdrawal').length}
+              }}
+            />
+          <FormControl sx={{  minWidth: 120,}}>
+            <InputLabel id="demo-simple-select-label">Status</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="status"
+              size='small'
+              sx={{ width: 100, }}
+              value={filters.status}
+              onChange={(e) => {
+                handleFilterStatus(e, e.target.value);
+              }}
+            >
+              <MenuItem value={'all'}>All</MenuItem>
+              <MenuItem value={'delivered'}>delivered</MenuItem>
+              <MenuItem value={'processing'}>Processing</MenuItem>
+              <MenuItem value={'canceled'}>Canceled</MenuItem>
+            </Select>
+          </FormControl>
+            </Box>
+          </Box>
 
-                  </Label>
-                }
-              />
-            ))}
-          </Tabs>
-
-          <UserTableToolbar
-            filters={filters}
-            onFilters={handleFilters}
-          />
 
           {canReset && (
             <UserTableFiltersResult
@@ -219,13 +237,13 @@ export default function TransactionsListView() {
                   order={table.order}
                   orderBy={table.orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={transactions.length}
+                  rowCount={orders.length}
                   numSelected={table.selected.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      transactions.map((row: { id: string;}) => row.id)
+                      orders.map((row: { id: string;}) => row.id)
                     )
                   }
                 />
@@ -241,7 +259,6 @@ export default function TransactionsListView() {
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(String(row.id))}
-                        onSelectRow={() => table.onSelectRow(String(row.id))}
                         onDeleteRow={() => handleDeleteRow(String(row.id))}
                         onEditRow={() => handleEditRow(String(row.id))}
                       />
@@ -249,7 +266,7 @@ export default function TransactionsListView() {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, transactions.length)}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, orders.length)}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -303,7 +320,7 @@ function applyFilter({
   comparator,
   filters,
 }: {
-  inputData: IUserItem[] | any;
+  inputData: IOrder[] | any;
   comparator: (a: any, b: any) => number;
   filters: IUserTableFilters;
 }) {
@@ -321,28 +338,15 @@ function applyFilter({
 
   if (name) {
     inputData = inputData.filter(
-      (user: IUserItem) => user?.name?.toLowerCase().indexOf(name.toLowerCase()) !== -1
-    );
+      (order: IOrder) => (order?.user?.firstName + ' ' + order?.user?.lastName).toLocaleLowerCase().includes(name.toLocaleLowerCase())||
+      inputData.filter((order: IOrder) => order?.cart?.items?.some((item: any) => item.product.productName.toLocaleLowerCase().includes(name.toLocaleLowerCase())) )
+    )
+
   }
 
   if (status !== 'all') {
-    inputData = inputData.filter((user: IUserItem) => user.status === status);
-    console.log(inputData, status);
-    
-  }
-
-  if (startDate || endDate) {
-    inputData = inputData.filter((user: IUserItem) => {
-      const transactionDate = user.date ? new Date(user.date).getTime() : 0;
-      const start = startDate ? new Date(startDate).getTime() : null;
-      const end = endDate ? new Date(endDate).getTime() : null;
-
-      return (
-        (!start || transactionDate >= start) &&
-        (!end || transactionDate <= end)
-      );
-    });
-  }
+    inputData = inputData.filter((order: IOrder) => order.orderStatus.toLocaleLowerCase() === status.toLocaleLowerCase())
+   }
 
   return inputData;
 }
