@@ -19,9 +19,7 @@ const initialState: UserState = {
 export const fetchUsers = createAsyncThunk('user/fetchUsers', async (_, { rejectWithValue }) => {
   try {
     const response = await axios.get('/users');
-    console.log(response.data, 'response users');
-
-    return response.data.users;
+    return response.data.data.users;
   } catch (error: any) {
     return rejectWithValue(error.response?.data?.message || 'Failed to fetch users');
   }

@@ -13,10 +13,14 @@ import {
   DialogActions,
   Button,
   Typography,
+  Avatar,
+  ListItemText,
 } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Popover from '@mui/material/Popover';
 import { useState } from 'react';
+import Label from 'src/components/label';
+import { timeAgo } from '@/utils/format-time';
 
 type Props = {
   row: IUserItem;
@@ -55,24 +59,64 @@ export default function UserTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={() => onSelectRow(row.id.toString())} />
-        </TableCell>
 
-        <TableCell>{row?.fullName}</TableCell>
-        <TableCell>{row.email}</TableCell>
+      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+        <Avatar alt={row.firstName} src={row.photo} sx={{ mr: 2 }} />
+
+        <ListItemText
+          primary={row.firstName + ' ' + row.lastName}
+          primaryTypographyProps={{ typography: 'body2' }}
+          secondary={row.email}
+          secondaryTypographyProps={{
+            component: 'span',
+            color: 'text.disabled',
+          }}
+        />
+      </TableCell>
+      <TableCell>
+        {/* <Chip label={row.roles[0].name} color={row.roles[0].name === 'ADMIN' ? 'success' : 'error'} /> */}
+        <Label
+          variant="soft"
+          color={
+            (String(row.roles[0].name)?.toLocaleLowerCase() === 'admin' && 'info') ||
+            (String(row.roles[0].name)?.toLocaleLowerCase() === 'manager' && 'success') ||
+            (String(row.roles[0].name)?.toLocaleLowerCase() === 'seller' && 'warning') ||
+            'default'
+          }
+        > 
+          {row.roles[0].name}
+        </Label>
+      </TableCell>
 
         <TableCell>
           <Stack direction="row" spacing={1}>
-            {row.roles.map((role) => (
-              <Chip key={role.id} label={role.name} size="small" />
-            ))}
+              <Label
+              variant="soft"
+              color={
+                (String(row.roles[0].name) && 'success') ||
+                !(String(row.roles[0].name)  && 'error') ||
+                'default'
+              }
+            > 
+            
+              {row.isActive ? 'Active' : 'Inactive'}
+            </Label>
           </Stack>
         </TableCell>
 
-        <TableCell align="right">
+        <TableCell>
+          {timeAgo(row.lastActiveAt)}
+        </TableCell>
+
+        <TableCell  >
           <IconButton onClick={handleOpenMenu}>
-            <Iconify icon="eva:more-vertical-fill" />
+          <Iconify icon="eva:edit-fill" width={18} height={18}  /> 
+          </IconButton>
+          <IconButton onClick={handleOpenMenu}>
+          <Iconify icon="majesticons:key" width={18} height={18}  /> 
+          </IconButton>
+          <IconButton onClick={handleOpenMenu}>
+          <Iconify icon="nimbus:edit" width={18} height={18}  /> 
           </IconButton>
         </TableCell>
       </TableRow>

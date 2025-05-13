@@ -3,11 +3,11 @@ import {  Container, Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import React, { useEffect } from 'react';
 import { useSettingsContext } from 'src/components/settings';
-import BookingWidgetSummary from './dashpoard-widget-summary';
 import { Icon } from '@iconify/react';
 import OrderListView from './order-list-view';
 import { useAppDispatch } from '@/redux/hooks';
 import { fetchLatestOrders } from '@/redux/slices/ordersSlice';
+import BookingWidgetSummary from '../reviews/reviews-widget-summary';
 
 
 

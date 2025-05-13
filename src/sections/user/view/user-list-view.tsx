@@ -24,13 +24,17 @@ import { fetchUsers, deleteUser, updateUser, createUser } from 'src/redux/slices
 import { fetchRoles } from 'src/redux/slices/roleSlice';
 import { UserTableRow, UserTableToolbar } from '../user-table';
 import UserDialog from '../user-dialog';
+import { Grid } from '@mui/material';
+import BookingWidgetSummary from '@/sections/reviews/reviews-widget-summary';
+import { Icon } from '@iconify/react';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name' },
-  { id: 'email', label: 'Email' },
+  { id: 'user', label: 'User' },
   { id: 'role', label: 'Role' },
+  { id: 'status', label: 'Status' },
+  {id: 'Last Active', label: 'Last Active'},
   { id: 'actions', label: 'Actions' },
 ];
 
@@ -47,7 +51,8 @@ export default function UserListView() {
   const [filterName, setFilterName] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   const [currentUser, setCurrentUser] = useState<IUserItem | null>(null);
-
+  console.log({users});
+  
   useEffect(() => {
     dispatch(fetchUsers());
     dispatch(fetchRoles());
@@ -103,17 +108,43 @@ export default function UserListView() {
     : [];
 
   return (
-    <Container maxWidth={false}>
-      <CustomBreadcrumbs
-        heading="Users List"
+    <Container maxWidth={false} sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 2,
+    }}>
+    <Card>
+    <CustomBreadcrumbs
+        heading="Users Management"
         links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'User Management', href: paths.dashboard.user.root },
-          { name: 'List' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
-
+        <Grid container spacing={3}>
+          {[0, 1, 2].map((_, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <BookingWidgetSummary
+                title={["Administrators", "Moderators", "Support Staff", "Replied"][index]}
+                total={[8, 12, 24][index]}
+                color={[
+                  'rgba(219, 234, 254, 1)',
+                  'rgba(209, 250, 229, 1)',
+                  'rgba(237, 233, 254, 1)',
+                ][index]}
+                type={['info', 'info', 'info', 'info'][index]}
+                icon={
+                  <Icon
+                    color={['#2563eb', '#059669', '#7c3aed', ][index]}
+                    icon={['material-symbols:person-shield', 'fluent:person-tag-20-filled', 'material-symbols:person'][index]}
+                    width="20"
+                    height="20"
+                  />
+                }
+              />
+            </Grid>
+          ))}
+        </Grid>
+    </Card>
       <Card>
         <UserTableToolbar
           numSelected={selected.length}

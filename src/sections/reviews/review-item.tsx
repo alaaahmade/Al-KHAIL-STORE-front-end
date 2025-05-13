@@ -1,5 +1,5 @@
 import Iconify from 'src/components/iconify';
-import { fDate, fDateTime } from '@/utils/format-time';
+import { fDate, fDateTime, timeAgo } from '@/utils/format-time';
 import { Avatar, Box, Button, ListItemText, Rating, Stack, TextField, Typography } from '@mui/material'
 import React from 'react'
 import { position } from 'stylis';
@@ -8,31 +8,7 @@ export const ReviewItem = ({ review }: { review: any }) => {
   const { rating, content, createdAt, user } = review;
   console.log(review);
   
-  function timeAgo(dateString: any) {
-    const now = new Date();
-    const past = new Date(dateString);
-    const secondsAgo = Math.floor((now - past) / 1000);
-  
-    const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
-  
-    const intervals = [
-      { unit: "year", seconds: 31536000 },
-      { unit: "month", seconds: 2592000 },
-      { unit: "day", seconds: 86400 },
-      { unit: "hour", seconds: 3600 },
-      { unit: "minute", seconds: 60 },
-      { unit: "second", seconds: 1 },
-    ];
-  
-    for (const { unit, seconds } of intervals) {
-      const diff = Math.floor(secondsAgo / seconds);
-      if (diff >= 1) {
-        return rtf.format(-diff, unit); // Negative for "X ago"
-      }
-    }
-  
-    return "just now";
-  }
+
   return (
     <Stack spacing={2} direction={'column'} sx={{ flex: 1,  }} >
           <Stack sx={{

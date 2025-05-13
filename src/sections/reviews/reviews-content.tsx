@@ -32,11 +32,12 @@ function DashboardContent() {
               icon={
                 <Icon
                   color={['#d97706', '#2563eb', '#ea580c', '#6bc8a7'][index]}
-                  icon={['famicons:bag', 'famicons:bag', 'gravity-ui:persons-lock', 'tabler:star-filled'][index]}
+                  icon={['iconoir:star-solid', 'fa-solid:comment', 'mingcute:time-fill', 'icon-park-solid:correct'][index]}
                   width="20"
                   height="20"
                 />
               }
+              
             />
           </Grid>
         ))}

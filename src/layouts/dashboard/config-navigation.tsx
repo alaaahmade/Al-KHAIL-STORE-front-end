@@ -23,6 +23,7 @@ const ICONS = {
   products : <Icon icon="ix:product" width="512" height="512" />,
   orders: <Icon icon="mdi:cart" width="24" height="24" />,
   Reviews: <Icon icon="fa-solid:comments" width="576" height="512" />,
+  persons: <Icon icon="fontisto:persons" width="26" height="24" />
 };
 
 // ----------------------------------------------------------------------
@@ -42,6 +43,7 @@ export function useNavData() {
           { title: 'Advertisements', path: paths.dashboard.advertisements, icon: ICONS.advertisements },
           { title: 'Categories', path: paths.dashboard.categories, icon: ICONS.category },
           { title: 'Interests', path: paths.dashboard.interests, icon: ICONS.interests,  },
+          { title: 'User MANAGEMENT', path: paths.dashboard.user.list , icon: ICONS.persons },
         ],
       },
 

@@ -19,9 +19,9 @@ const initialState: RoleState = {
 // Async thunks
 export const fetchRoles = createAsyncThunk('role/fetchRoles', async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get('/roles');
+    const response = await axios.get('/users/roles');
     // Remove the string transformation since we're getting full permission objects
-    return response.data;
+    return response.data.data.roles;
   } catch (error: any) {
     return rejectWithValue(error.response?.data?.message || 'Failed to fetch roles');
   }
