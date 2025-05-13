@@ -20,18 +20,18 @@ function DashboardContent() {
         {[0, 1, 2, 3].map((_, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
             <BookingWidgetSummary
-              title={["Total Sales", "Products", "Customers", "Reviews"][index]}
-              total={[24780, 1240, 3427, 4.8][index]}
+              title={["Average Rating", "Total Reviews", "Pending Replies", "Replied"][index]}
+              total={[4.8, 1240, 24, 892][index]}
               color={[
-                'rgba(252, 231, 243, 1)',
+                'rgba(254, 243, 199, 1)',
                 'rgba(219, 234, 254, 1)',
-                'rgba(229, 231, 235, 1)',
-                'rgba(229, 231, 235, 1)',
+                'rgba(255, 237, 213, 1)',
+                'rgba(209, 250, 229, 1)',
               ][index]}
-              type={['area', 'area', 'area', 'info'][index]}
+              type={['info', 'info', 'info', 'info'][index]}
               icon={
                 <Icon
-                  color={[theme.palette.primary.main, '#2563eb', '#059669', '#7c3aed'][index]}
+                  color={['#d97706', '#2563eb', '#ea580c', '#6bc8a7'][index]}
                   icon={['famicons:bag', 'famicons:bag', 'gravity-ui:persons-lock', 'tabler:star-filled'][index]}
                   width="20"
                   height="20"

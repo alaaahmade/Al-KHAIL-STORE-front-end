@@ -41,7 +41,7 @@ export default function BookingWidgetSummary({ title, total, icon,color, type, s
         {icon}
         </Box>
       <Box>
-        <Box sx={{ color: 'text.secondary', typography: 'h6', fontWeight: 'normal', m: 0, p:0 }}>{title}</Box>
+        <Box sx={{ color: 'text.secondary', typography: 'h6', fontWeight: 'normal', m: 0, p:0, fontSize: '14px !important' }}>{title}</Box>
         <Box sx={{ mb: 1, typography: 'h4', color: '$000', fontWeight: 'bold',  m: 0, p:0 }}>{type === 'area'? `$ ${fShortenNumber(total)}` : total}</Box>
       </Box>
 
