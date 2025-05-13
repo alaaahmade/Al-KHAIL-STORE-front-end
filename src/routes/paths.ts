@@ -72,6 +72,10 @@ export const paths = {
     categories: '/dashboard/categories',
     interests: '/dashboard/interests',
     products: '/dashboard/products',
+    orders: {
+      root: '/dashboard/orders',
+      // edit: (id: string) => `/dashboard/orders/${id}/edit`,
+    }
   },
   
 };

@@ -1,9 +1,11 @@
 'use client';
 
 // sections
-import TransactionsView from 'src/sections/transactions/view/view';
+import OrdersView from '@/sections/orders/view/view';
 
 // ----------------------------------------------------------------------
 export default function Page() {
-  return <TransactionsView />;
+
+  
+  return <OrdersView />;
 }

@@ -18,3 +18,5 @@ export interface CreatePermissionDto {
 }
 
 export interface UpdatePermissionDto extends Partial<CreatePermissionDto> {}
+
+

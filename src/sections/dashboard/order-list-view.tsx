@@ -1,20 +1,12 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
-// routes
-// _mock
-// hooks
-import { useBoolean } from 'src/hooks/use-boolean';
-// components
 import Scrollbar from 'src/components/scrollbar';
-import { ConfirmDialog } from 'src/components/custom-dialog';
 import {
   useTable,
   getComparator,
@@ -24,9 +16,7 @@ import {
   TableHeadCustom,
   TablePaginationCustom,
 } from 'src/components/table';
-// types
 import { IOrderItem } from 'src/types/order';
-//
 import OrderTableRow from './order-table-row';
 import { Toolbar, Typography } from '@mui/material';
 import { useAppSelector } from '@/redux/hooks';
@@ -48,11 +38,8 @@ export default function OrderListView() {
   const table = useTable({ defaultOrderBy: 'orderNumber' });
 
 
-  const orders = useAppSelector((state) => state.ordersSlice.orders);
+  const orders = useAppSelector((state) => state.ordersSlice.latestOrders);
   
-
-  const confirm = useBoolean();
-
   const [tableData, setTableData] = useState(orders);
 
 
@@ -70,7 +57,6 @@ export default function OrderListView() {
 
   return (
     <>
-        <Container maxWidth={false} sx={{ p: 0 }}>
         <Card 
           sx={{
             p: 0,
@@ -159,7 +145,6 @@ export default function OrderListView() {
             onChangeDense={table.onChangeDense}
           />
         </Card>
-      </Container>
     </>
   );
 }
