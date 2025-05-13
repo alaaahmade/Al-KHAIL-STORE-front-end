@@ -75,6 +75,9 @@ export const paths = {
     orders: {
       root: '/dashboard/orders',
       // edit: (id: string) => `/dashboard/orders/${id}/edit`,
+    },
+    reviews: {
+      root: '/dashboard/reviews',
     }
   },
   
