@@ -14,16 +14,17 @@ const icon = (name: string) => (
 const ICONS = {
   user: icon('ic_user'),
   ecommerce: icon('ic_ecommerce'),
-  customers: <Icon icon="fa6-solid:user-group" width="400" height="400" />,
-  dashboard: <Icon icon="carbon:analytics" width="32" height="32" />,
-  plans: <Icon icon="stash:plan" width="24" height="24" />,
+  customers: <Icon icon="fa6-solid:user-group" width="14" height="14"/>,
+  dashboard: <Icon icon="carbon:analytics"width="14" height="14" />,
+  plans: <Icon icon="stash:plan" width="14" height="14"/>,
   advertisements: <Icon icon="entypo:blackboard" width="20" height="20" />,
   category: <Icon icon="carbon:collapse-categories" width="32" height="32" />,
-  interests: <Icon icon="material-symbols:interests-outline" width="24" height="24" />,
+  interests: <Icon icon="material-symbols:interests-outline" width="14" height="14"/>,
   products : <Icon icon="ix:product" width="512" height="512" />,
-  orders: <Icon icon="mdi:cart" width="24" height="24" />,
-  Reviews: <Icon icon="fa-solid:comments" width="576" height="512" />,
-  persons: <Icon icon="fontisto:persons" width="26" height="24" />
+  orders: <Icon icon="mdi:cart" width="14" height="14"/>,
+  Reviews: <Icon icon="fa-solid:comments" width="14" height="14" />,
+  persons: <Icon icon="fontisto:persons" width="14" height="14" />,
+  analytics: <Icon icon="streamline:money-graph-analytics-business-product-graph-data-chart-analysis" width="14" height="14" />,
 };
 
 // ----------------------------------------------------------------------
@@ -36,6 +37,7 @@ export function useNavData() {
         subheader: 'MANAGEMENT',
         items: [
           { title: 'Dashboard', path: paths.dashboard.root, icon: ICONS.dashboard },
+          { title: 'Analytics', path: paths.dashboard.analytics.root, icon: ICONS.analytics },
           { title: 'Products', path: paths.dashboard.products, icon: ICONS.products },
           { title: 'Orders', path: paths.dashboard.orders.root, icon: ICONS.orders },
           {title: 'Reviews', path:  paths.dashboard.reviews.root, icon: ICONS.Reviews},

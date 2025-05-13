@@ -78,6 +78,9 @@ export const paths = {
     },
     reviews: {
       root: '/dashboard/reviews',
+    },
+    analytics: {
+      root: '/dashboard/analytics',
     }
   },
   
