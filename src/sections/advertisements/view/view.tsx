@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 import { useAppDispatch } from 'src/redux/hooks';
 import { useSelector } from 'react-redux';
 import { CreateAdDialog } from 'src/components/custom-dialog/createAdDialog';
-import { changeIsHome, changeNewAd, closeCreateDialog, gitAdvertisements, openCreateDialog, setAdvertisements, setEditMode, setLadingB } from '@/redux/slices/AdsSlice';
+import { changeIsHome, changeNewAd, closeCreateDialog, gitAdvertisements, openCreateDialog, setAdvertisements, setEditMode, setLadingB } from '@/redux/slices/SellersSlice';
 import axiosInstance from '@/utils/axios';
 import { setError } from '@/redux/slices/notificationSlice';
 import { deleteFile, uploadFile } from '@/utils/s3.client';
