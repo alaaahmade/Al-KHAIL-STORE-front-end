@@ -42,12 +42,11 @@ export function CreateInterestDialog({ onClose, open, handleSave }: CreateIntere
     console.log({ file: acceptedFiles[0] });
     const file = acceptedFiles[0];
     if (file) {
-      // const mimeType = file.type;
-      // const fileBuffer = Buffer.from(await file.arrayBuffer());
       setPreviewUrl(URL.createObjectURL(file));
       dispatch(changeNewInterest({ value: file, field: 'image' }));
     }
   };
+
 
   const handleChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(changeNewInterest({

@@ -25,9 +25,10 @@ const ICONS = {
   Reviews: <Icon icon="fa-solid:comments" width="14" height="14" />,
   persons: <Icon icon="fontisto:persons" width="14" height="14" />,
   analytics: <Icon icon="streamline:money-graph-analytics-business-product-graph-data-chart-analysis" width="14" height="14" />,
+  store: <Icon icon="fa6-solid:store" width="14" height="14" />
 };
 
-// ----------------------------------------------------------------------
+// ----------------------------------------------------------------------width="14" height="14"
 
 export function useNavData() {
   const data = useMemo(
@@ -41,11 +42,12 @@ export function useNavData() {
           { title: 'Products', path: paths.dashboard.products, icon: ICONS.products },
           { title: 'Orders', path: paths.dashboard.orders.root, icon: ICONS.orders },
           {title: 'Reviews', path:  paths.dashboard.reviews.root, icon: ICONS.Reviews},
-          { title: 'Customers', path: paths.dashboard.customers, icon: ICONS.customers },
-          { title: 'Advertisements', path: paths.dashboard.advertisements, icon: ICONS.advertisements },
-          { title: 'Categories', path: paths.dashboard.categories, icon: ICONS.category },
-          { title: 'Interests', path: paths.dashboard.interests, icon: ICONS.interests,  },
+          // { title: 'Customers', path: paths.dashboard.customers, icon: ICONS.customers },
+          // { title: 'Advertisements', path: paths.dashboard.advertisements, icon: ICONS.advertisements },
+          // { title: 'Categories', path: paths.dashboard.categories, icon: ICONS.category },
+          // { title: 'Interests', path: paths.dashboard.interests, icon: ICONS.interests,  },
           { title: 'User MANAGEMENT', path: paths.dashboard.user.list , icon: ICONS.persons },
+          { title: 'Merchant MANAGEMENT', path: paths.dashboard.Merchant , icon: ICONS.store },
         ],
       },
 

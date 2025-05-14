@@ -5,7 +5,7 @@ import { Box, Button, IconButton, Stack, TextField } from '@mui/material';
 import Image from 'next/image';
 import { useBoolean } from '@/hooks/use-boolean';
 import { useDispatch } from 'react-redux';
-import { changeIsHome, changeNewAd, openCreateDialog, setEditMode } from '@/redux/slices/AdsSlice';
+import { changeIsHome, changeNewAd, openCreateDialog, setEditMode } from '@/redux/slices/SellersSlice';
 
 interface ListingCardProps {
   title?: string;

@@ -81,7 +81,8 @@ export const paths = {
     },
     analytics: {
       root: '/dashboard/analytics',
-    }
+    },
+    Merchant: '/dashboard/merchant'
   },
   
 };

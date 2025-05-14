@@ -12,7 +12,7 @@ import signDialogSlice  from './slices/customerSignSlice';
 import NotificationsSlice from './slices/notificationSlice';
 import TransactionsSlice from './slices/transactionsSlice';
 import SubscriptionsSlice from './slices/subscriptionsSlice';
-import AdvertisementsSlice from './slices/AdsSlice';
+import SellersSlice from './slices/SellersSlice';
 import CategoriesSlice from './slices/CategoriesSlice';
 import InterestsSlice from './slices/InterestsSlice';
 import PlansSlice from './slices/PlanSlice';
@@ -37,7 +37,7 @@ const store = configureStore({
     NotificationsSlice,
     TransactionsSlice,
     SubscriptionsSlice,
-    AdvertisementsSlice,
+    SellersSlice,
     CategoriesSlice,
     InterestsSlice,
     PlansSlice,
