@@ -1,9 +1,10 @@
 'use client';
 
+import { useAuthContext } from '@/auth/hooks';
+import { AdminDashboardLayout } from '@/layouts/dashboard/Adminlayout';
 // auth
 import { AuthGuard } from 'src/auth/guard';
 // components
-import DashboardLayout from 'src/layouts/dashboard';
 
 // ----------------------------------------------------------------------
 
@@ -12,9 +13,15 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
+  const {user} = useAuthContext()
+
+  console.log(user?.role);
+  
+  
+
   return (
     <AuthGuard>
-      <DashboardLayout>{children}</DashboardLayout>
+      <AdminDashboardLayout>{children}</AdminDashboardLayout>
     </AuthGuard>
   );
 }
