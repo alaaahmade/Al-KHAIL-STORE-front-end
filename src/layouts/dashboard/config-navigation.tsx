@@ -25,10 +25,11 @@ const ICONS = {
   Reviews: <Icon icon="fa-solid:comments" width="14" height="14" />,
   persons: <Icon icon="fontisto:persons" width="14" height="14" />,
   analytics: <Icon icon="streamline:money-graph-analytics-business-product-graph-data-chart-analysis" width="14" height="14" />,
-  store: <Icon icon="fa6-solid:store" width="14" height="14" />
+  store: <Icon icon="fa6-solid:store" width="14" height="14" />,
+  settings: <Icon icon="carbon:settings" width="14" height="14" />,
 };
 
-// ----------------------------------------------------------------------width="14" height="14"
+// ----------------------------------------------------------------------
 
 export function useNavData() {
   const data = useMemo(
@@ -48,6 +49,7 @@ export function useNavData() {
           // { title: 'Interests', path: paths.dashboard.interests, icon: ICONS.interests,  },
           { title: 'User MANAGEMENT', path: paths.dashboard.user.list , icon: ICONS.persons },
           { title: 'Merchant MANAGEMENT', path: paths.dashboard.Merchant , icon: ICONS.store },
+          { title: 'Settings', path: paths.dashboard.settings, icon: ICONS.settings },
         ],
       },
 

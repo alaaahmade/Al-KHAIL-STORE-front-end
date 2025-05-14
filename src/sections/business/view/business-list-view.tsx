@@ -19,7 +19,7 @@ import {
   fetchBusinessTypes,
   updateBusiness,
   deleteBusiness,
-} from 'src/redux/slices/businessSlice';
+} from '@/redux/slices/businessSlice';
 import { IBusiness } from 'src/types/business';
 import { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack';

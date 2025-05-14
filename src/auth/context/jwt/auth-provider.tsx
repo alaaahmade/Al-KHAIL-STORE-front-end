@@ -187,11 +187,8 @@ export function AuthProvider({ children }: Props) {
   }, []);
 
   // RESET PASSWORD
-  const resetPassword = useCallback(async (token: string, password: string) => {
-    await axios.post(endpoints.auth.resetPassword, {
-      token,
-      password,
-    });
+  const resetPassword = useCallback(async ( data: any) => {
+    await axios.patch(endpoints.auth.resetPassword, data);
   }, []);
 
 

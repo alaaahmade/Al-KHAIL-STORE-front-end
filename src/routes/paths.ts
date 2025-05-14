@@ -82,7 +82,8 @@ export const paths = {
     analytics: {
       root: '/dashboard/analytics',
     },
-    Merchant: '/dashboard/merchant'
+    Merchant: '/dashboard/merchant',
+    settings: '/dashboard/settings', // Added settings path
   },
   
 };
