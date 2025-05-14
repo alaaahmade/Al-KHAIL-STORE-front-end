@@ -12,8 +12,7 @@ export type JWTContextType = {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   logout: () => Promise<void>;
-  forgotPassword: (email: string) => Promise<void>;
-  resetPassword: (token: string, password: string) => Promise<void>;
+  forgotPassword: (data: any) => Promise<void>;
 };
 
 export const AuthContext = createContext({} as JWTContextType);

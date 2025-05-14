@@ -20,7 +20,7 @@ import {
   createBusinessType,
   updateBusinessType,
   deleteBusinessType,
-} from 'src/redux/slices/businessSlice';
+} from '@/redux/slices/businessSlice';
 import { useSnackbar } from 'notistack';
 import BusinessTypeDialog from '../business-type-dialog';
 import BusinessTypeTableRow from '../business-type-table-row';

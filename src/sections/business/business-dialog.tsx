@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 import { IBusiness } from 'src/types/business';
 import { IUser } from 'src/types/user';
 import { useAppSelector, useAppDispatch } from 'src/redux/hooks';
-import { fetchBusinessTypes } from 'src/redux/slices/businessSlice';
+import { fetchBusinessTypes } from '@/redux/slices/businessSlice';
 
 const BusinessSchema = Yup.object().shape({
   name: Yup.string().required('Business name is required'),
