@@ -18,6 +18,7 @@ import InterestsSlice from './slices/InterestsSlice';
 import PlansSlice from './slices/PlanSlice';
 import ordersSlice from './slices/ordersSlice';
 import reviewsSlice from './slices/reviewsSlice';
+import serviceSlice from './slices/serviceSlice';
 
 // ----------------------------------------------------------------------
 
@@ -42,7 +43,8 @@ const store = configureStore({
     InterestsSlice,
     PlansSlice,
     ordersSlice,
-    reviewsSlice
+    reviewsSlice,
+    serviceSlice
     // theme: themeReducer,
   },
   middleware: (getDefaultMiddleware) =>

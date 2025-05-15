@@ -51,8 +51,9 @@ export default function AccountPopover() {
   const handleLogout = async () => {
     try {
       await logout();
-      popover.onClose();
-      router.replace('/');
+      window.location.reload();
+      // popover.onClose();
+      // router.replace('/');
     } catch (error) {
       console.error(error);
     }

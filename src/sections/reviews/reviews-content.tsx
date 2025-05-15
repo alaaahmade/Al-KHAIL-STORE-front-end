@@ -12,7 +12,6 @@ import ProductDetailsReview from './reviews-details-review';
 
 function DashboardContent() {
   const settings = useSettingsContext();
-  const theme = useTheme();
   const reviews = useAppSelector(state => state.reviewsSlice.reviews)    
   return (
     <Container sx={{ display: 'flex', flexDirection: 'column', gap: 5, p: 0 }} maxWidth={settings.themeStretch ? false : 'xl'}>

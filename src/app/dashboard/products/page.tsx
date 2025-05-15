@@ -1,7 +1,7 @@
 'use client';
 
-import { ProductsListView } from '@/sections/Products/view';
+import SellerProductsListView from '@/sections/products/view/view';
 
 export default function ServicesListPage() {
-  return <ProductsListView/>;
+  return <SellerProductsListView/>;
 } 

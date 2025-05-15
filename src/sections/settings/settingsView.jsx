@@ -160,7 +160,6 @@ const SettingsView = () => {
           </Card>
         </Grid>
 
-        {/* Review Management */}
         <Grid item xs={12}>
           <Card sx={{ p: 3 }}>
             <Typography variant="h6" sx={{ mb: 2 }}>

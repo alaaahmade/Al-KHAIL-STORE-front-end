@@ -18,7 +18,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export const AdminDashboardLayout = ({ children }: Props) => {
+export default function DashboardLayout({ children }: Props) {
   const settings = useSettingsContext();
 
   const lgUp = useResponsive('up', 'lg');

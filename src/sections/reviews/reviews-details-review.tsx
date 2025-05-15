@@ -79,14 +79,14 @@ export default function ProductDetailsReview({
       sx={{
         color: 'text.secondary',
         bgcolor: 'background.neutral',
-        borderRadius: 2,
+        borderRadius: 1,
         gap: 1,
         fontSize: '14px',
         '&:hover': { bgcolor: 'background.neutral' },
       }}
     >
     <Iconify icon="iconoir:filter-solid" />
-    filter
+    Filter
     </IconButton>
         <IconButton
       sx={{
