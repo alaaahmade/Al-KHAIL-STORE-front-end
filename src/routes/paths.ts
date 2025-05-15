@@ -89,6 +89,7 @@ export const paths = {
     },
     contactManagement: { 
       root: '/dashboard/contact-management',
+      chat: (id: string) => `/dashboard/contact-management/chat/${id}`,
     },
     contact: {
       root: '/dashboard/contact',

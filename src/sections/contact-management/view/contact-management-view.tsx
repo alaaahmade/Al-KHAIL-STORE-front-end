@@ -32,6 +32,7 @@ import { useAuthContext } from '@/auth/hooks';
 import { fetchChats } from '@/redux/slices/ContactSlice';
 import { timeAgo } from '@/utils/format-time';
 import { useRouter } from 'next/navigation';
+import { paths } from '@/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -241,7 +242,7 @@ export default function ContactManagementView() {
                   <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent={'flex-start'}
                   >
                   <Avatar
-                    onClick={() => navigate.push(`/dashboard/contacts/${ticket.participants[0].id}`)}
+                    onClick={() => navigate.push(paths.dashboard.contactManagement.chat(ticket.id))}
                     sx={{
                       cursor: 'pointer',
                       border: '1px solid transparent', 
@@ -252,7 +253,7 @@ export default function ContactManagementView() {
                   src={ticket.participants[0].photo} alt={ticket.participants[0].firstName + ticket.participants[0].lastName} />
                     <Stack direction="column" spacing={0} alignItems="flex-start" justifyContent={'center'}>
                       <Typography
-                          onClick={() => navigate.push(`/dashboard/contacts/${ticket.participants[0].id}`)}
+                          onClick={() => navigate.push(paths.dashboard.contactManagement.chat(ticket.id))}
                           sx={{
                             cursor: 'pointer',
                             border: '1px solid transparent', 
