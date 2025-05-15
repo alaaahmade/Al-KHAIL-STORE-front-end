@@ -39,7 +39,7 @@ import {
 import { IUserItem, IUserTableFilterValue } from 'src/types/user';
 //
 import { Typography } from '@mui/material';
-import { deleteCustomer, fetchCustomers, gitCustomers, setCustomer } from 'src/redux/slices/customerSignSlice';
+import { deleteCustomer, fetchCustomers, gitCustomers, setCustomer } from '@/redux/slices/ContactSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import UserTableRow from '../customer-table-row';

@@ -19,6 +19,8 @@ import {
   AccountPopover,
   NotificationsPopover,
 } from '../_common';
+import Label from 'src/components/label';
+import { useAuthContext } from '@/auth/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +30,8 @@ type Props = {
 
 export default function Header({ onOpenNav }: Props) {
   const theme = useTheme();
+
+  const {user} = useAuthContext()
 
   const settings = useSettingsContext();
 
@@ -51,6 +55,18 @@ export default function Header({ onOpenNav }: Props) {
         </IconButton>
       )}
 
+
+      {user?.role.toLowerCase() === 'seller' && 
+      <Label
+        // color="info"
+        sx={{
+          ml: 1,
+          backgroundColor: 'rgba(252, 231, 243, 1) !important',
+          color: 'primary.main',
+        }}
+      >
+        Merchant Dashboard
+      </Label>  }
       <Stack
         flexGrow={1}
         direction="row"
@@ -58,6 +74,7 @@ export default function Header({ onOpenNav }: Props) {
         justifyContent="flex-end"
         spacing={{ xs: 0.5, sm: 1 }}
       >
+        
         <NotificationsPopover />
 
         <AccountPopover />
@@ -101,6 +118,7 @@ export default function Header({ onOpenNav }: Props) {
         }}
       >
         {renderContent}
+
       </Toolbar>
     </AppBar>
   );
