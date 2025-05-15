@@ -30,6 +30,8 @@ import { useSettingsContext } from 'src/components/settings';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useAuthContext } from '@/auth/hooks';
 import { fetchChats } from '@/redux/slices/ContactSlice';
+import { timeAgo } from '@/utils/format-time';
+import { useRouter } from 'next/navigation';
 
 // ----------------------------------------------------------------------
 
@@ -74,9 +76,10 @@ export default function ContactManagementView() {
   const {user} = useAuthContext()
   const {chats} = useAppSelector(state => state.contactManagement)
   const [currentFilter, setCurrentFilter] = useState('all');
+  const [currentCHats, setCurrentCHats] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
-
+  const navigate = useRouter()  
   const dispatch = useAppDispatch()
 
   const handleFilterChange = (filterId: string) => {
@@ -96,6 +99,14 @@ export default function ContactManagementView() {
       dispatch(fetchChats(user.id))
     }
   }, [])
+
+  useEffect(() => {
+    if(chats && chats?.length > 0){
+      setCurrentCHats(chats)
+    }else {
+      setCurrentCHats([])
+    }
+  }, [chats])
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -173,22 +184,41 @@ export default function ContactManagementView() {
               </Select>
             </Card>
 
-            {mockTickets.map((ticket) => (
-              <Card key={ticket.id} sx={{ p: 2 }}>
+            {currentCHats.map((ticket) => (
+              <Card key={ticket.participants[0].id} sx={{ p: 2 }}>
                 <Stack direction="column" spacing={2} alignItems="flex-start" justifyContent={'center'} sx={{position: 'relative'}}>
-                  <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent={'flex-start'}>
-                  <Avatar src={ticket.avatarUrl} alt={ticket.title} />
+                  <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent={'flex-start'}
+                  >
+                  <Avatar
+                    onClick={() => navigate.push(`/dashboard/contacts/${ticket.participants[0].id}`)}
+                    sx={{
+                      cursor: 'pointer',
+                      border: '1px solid transparent', 
+                      '&:hover': {
+                        border: '1px solid #FF308D', 
+                      },
+                    }}
+                  src={ticket.participants[0].photo} alt={ticket.participants[0].firstName + ticket.participants[0].lastName} />
                     <Stack direction="column" spacing={0} alignItems="flex-start" justifyContent={'center'}>
-                      <Typography variant="subtitle1">
-                          {ticket.title} {ticket.id}
+                      <Typography
+                          onClick={() => navigate.push(`/dashboard/contacts/${ticket.participants[0].id}`)}
+                          sx={{
+                            cursor: 'pointer',
+                            border: '1px solid transparent', 
+                            '&:hover': {
+                              borderBottom: '2px solid #ccc', 
+                            },
+                          }}
+                      variant="subtitle1">
+                          {ticket.participants[0].firstName + ticket.participants[0].lastName}
                         </Typography>
                         <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
-                          {ticket.description}
+                          {ticket.messages[0].content}
                         </Typography>
                         <Stack mt={1} direction="row" alignItems="center" spacing={2}>
                         <Label color={getStatusLabelColor(ticket.status)} sx={{ textTransform: 'capitalize', borderRadius: 50}}>{ticket.status}</Label>
                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                          {ticket.time}
+                          {timeAgo(ticket.messages[0].createdAt)}
                         </Typography>
                       </Stack>
 
