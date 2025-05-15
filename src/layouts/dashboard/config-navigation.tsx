@@ -4,6 +4,7 @@ import { paths } from 'src/routes/paths';
 // components
 import SvgColor from 'src/components/svg-color';
 import { Icon } from '@iconify/react';
+import { useAuthContext } from '@/auth/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +33,9 @@ const ICONS = {
 // ----------------------------------------------------------------------
 
 export function useNavData() {
-  const data = useMemo(
+  const {user} = useAuthContext()
+  
+  const AdminData = useMemo(
     () => [
       // OVERVIEW
       {
@@ -40,7 +43,7 @@ export function useNavData() {
         items: [
           { title: 'Dashboard', path: paths.dashboard.root, icon: ICONS.dashboard },
           { title: 'Analytics', path: paths.dashboard.analytics.root, icon: ICONS.analytics },
-          { title: 'Products', path: paths.dashboard.products, icon: ICONS.products },
+          { title: 'Products', path: paths.dashboard.Products, icon: ICONS.products },
           { title: 'Orders', path: paths.dashboard.orders.root, icon: ICONS.orders },
           {title: 'Reviews', path:  paths.dashboard.reviews.root, icon: ICONS.Reviews},
           // { title: 'Customers', path: paths.dashboard.customers, icon: ICONS.customers },
@@ -74,5 +77,22 @@ export function useNavData() {
     []
   );
 
-  return data;
+  const SellerData = useMemo(
+    () => [
+      // OVERVIEW
+      {
+        subheader: 'MANAGEMENT',
+        items: [
+          { title: 'Products', path: paths.dashboard.products.root, icon: ICONS.products },
+          { title: 'Contact Management', path: paths.dashboard.root, icon: ICONS.dashboard },
+          { title: 'Store Settings', path: paths.dashboard.analytics.root, icon: ICONS.analytics },
+          { title: 'Store', path: paths.dashboard.orders.root, icon: ICONS.orders },
+          {title: 'Account Settings', path:  paths.dashboard.reviews.root, icon: ICONS.Reviews},
+        ],
+      },
+    ],
+    []
+  );
+
+  return user?.role.toLowerCase(  ) === 'admin' ? AdminData : user?.role.toLowerCase(  ) === 'seller' ? SellerData : [];
 }

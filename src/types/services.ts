@@ -19,6 +19,10 @@ export type Availability = {
 
 
 export interface ListingInterface {
+  standardPrice: any;
+  productDate: any;
+  store: any;
+  productName: any;
   id?: string;
   title: string;
   credits: string;

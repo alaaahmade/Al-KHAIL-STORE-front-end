@@ -49,19 +49,19 @@ export const StyledLabel = styled(Box)(({
     ...(ownerState.color !== 'default' && {
       // FILLED
       ...(filledVariant && {
-        color: theme.palette[ownerState.color].contrastText,
-        backgroundColor: theme.palette[ownerState.color].main,
+        color: theme.palette[ownerState.color]?.contrastText,
+        backgroundColor: theme.palette[ownerState?.color]?.main || ownerState.color,
       }),
       // OUTLINED
       ...(outlinedVariant && {
         backgroundColor: 'transparent',
         color: theme.palette[ownerState.color].main,
-        border: `2px solid ${theme.palette[ownerState.color].main}`,
+        border: `2px solid ${theme.palette[ownerState?.color]?.main}` || ownerState.color,
       }),
       // SOFT
       ...(softVariant && {
         color: theme.palette[ownerState.color][isLight ? 'dark' : 'light'],
-        backgroundColor: alpha(theme.palette[ownerState.color].main, 0.16),
+        backgroundColor: alpha(theme.palette[ownerState?.color]?.main, 0.16) || ownerState.color,
       }),
     }),
   };

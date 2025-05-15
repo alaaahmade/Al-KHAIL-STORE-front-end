@@ -71,7 +71,12 @@ export const paths = {
     advertisements: '/dashboard/advertisements',
     categories: '/dashboard/categories',
     interests: '/dashboard/interests',
-    products: '/dashboard/products',
+    Products: '/dashboard/Products',
+    products : {
+      root: '/dashboard/products',
+      create: '/dashboard/products/create',
+      edit: (id: string) => `/dashboard/products/${id}/edit`,
+    },
     orders: {
       root: '/dashboard/orders',
       // edit: (id: string) => `/dashboard/orders/${id}/edit`,
