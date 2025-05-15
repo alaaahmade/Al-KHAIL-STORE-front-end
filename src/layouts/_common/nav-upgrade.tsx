@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 // hooks
 import { useDispatch } from 'react-redux';
-import { openDialog } from 'src/redux/slices/customerSignSlice';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +43,6 @@ export default function NavUpgrade() {
             color: '#fff',
           }
         }}  variant="contained" onClick={() => {
-            dispatch(openDialog()); 
         }} rel="noopener">
           Enter Code 
         </Button>

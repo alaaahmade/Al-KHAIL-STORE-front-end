@@ -8,7 +8,7 @@ import businessReducer from './slices/businessSlice';
 import roleReducer from './slices/roleSlice';
 import permissionReducer from './slices/permissionSlice';
 import userReducer from './slices/userSlice';
-import signDialogSlice  from './slices/customerSignSlice';
+import signDialogSlice  from './slices/ContactSlice';
 import NotificationsSlice from './slices/notificationSlice';
 import TransactionsSlice from './slices/transactionsSlice';
 import SubscriptionsSlice from './slices/subscriptionsSlice';
@@ -19,6 +19,7 @@ import PlansSlice from './slices/PlanSlice';
 import ordersSlice from './slices/ordersSlice';
 import reviewsSlice from './slices/reviewsSlice';
 import serviceSlice from './slices/serviceSlice';
+import contactManagement from './slices/ContactSlice';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +45,8 @@ const store = configureStore({
     PlansSlice,
     ordersSlice,
     reviewsSlice,
-    serviceSlice
+    serviceSlice,
+    contactManagement
     // theme: themeReducer,
   },
   middleware: (getDefaultMiddleware) =>

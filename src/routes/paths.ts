@@ -87,8 +87,14 @@ export const paths = {
     analytics: {
       root: '/dashboard/analytics',
     },
+    contactManagement: { 
+      root: '/dashboard/contact-management',
+    },
+    contact: {
+      root: '/dashboard/contact',
+    },
     Merchant: '/dashboard/merchant',
-    settings: '/dashboard/settings', // Added settings path
+    settings: '/dashboard/settings', 
   },
   
 };

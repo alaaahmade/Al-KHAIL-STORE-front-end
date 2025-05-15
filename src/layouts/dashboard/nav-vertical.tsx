@@ -15,11 +15,10 @@ import Scrollbar from 'src/components/scrollbar';
 import { usePathname } from 'src/routes/hooks';
 import { NavSectionVertical } from 'src/components/nav-section';
 //
-import SignDialog from 'src/components/sign-dialog/sign-dialog';
-import StatusDialog from 'src/components/sign-dialog/customer-sigin-status';
 import { NAV } from '../config-layout';
 import { useNavData } from './config-navigation';
 import { NavToggleButton, NavUpgrade } from '../_common';
+import { Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -55,7 +54,15 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
         },
       }}
     >
-      <Logo sx={{ mt: 3, ml: 4, mb: 1 }} />
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="flex-start"
+        gap={1}
+        sx={{ mt: 3, ml: 4, mb: 1 }}>
+        <Logo  />
+        <Typography color={'primary.main'} variant='h6'>AL KHAIL STORE</Typography>
+      </Stack>
 
       <NavSectionVertical
         data={navData}
@@ -67,8 +74,6 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
       <Box sx={{ flexGrow: 1 }} />
 
       <NavUpgrade />
-      <SignDialog/>
-      <StatusDialog />
     </Scrollbar>
   );
 

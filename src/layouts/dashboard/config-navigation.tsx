@@ -24,10 +24,12 @@ const ICONS = {
   products : <Icon icon="ix:product" width="512" height="512" />,
   orders: <Icon icon="mdi:cart" width="14" height="14"/>,
   Reviews: <Icon icon="fa-solid:comments" width="14" height="14" />,
+  star_review: <Icon icon="solar:star-bold" width="14" height="14" />,
   persons: <Icon icon="fontisto:persons" width="14" height="14" />,
   analytics: <Icon icon="streamline:money-graph-analytics-business-product-graph-data-chart-analysis" width="14" height="14" />,
   store: <Icon icon="fa6-solid:store" width="14" height="14" />,
   settings: <Icon icon="carbon:settings" width="14" height="14" />,
+  contacts: <Icon icon="lets-icons:message-alt-fill" width="14" height="14" />
 };
 
 // ----------------------------------------------------------------------
@@ -83,11 +85,13 @@ export function useNavData() {
       {
         subheader: 'MANAGEMENT',
         items: [
+          { title: 'Dashboard', path: paths.dashboard.root, icon: icon('ic_dashboard') },
           { title: 'Products', path: paths.dashboard.products.root, icon: ICONS.products },
-          { title: 'Contact Management', path: paths.dashboard.root, icon: ICONS.dashboard },
-          { title: 'Store Settings', path: paths.dashboard.analytics.root, icon: ICONS.analytics },
-          { title: 'Store', path: paths.dashboard.orders.root, icon: ICONS.orders },
-          {title: 'Account Settings', path:  paths.dashboard.reviews.root, icon: ICONS.Reviews},
+          { title: 'Orders', path: paths.dashboard.orders.root, icon: ICONS.orders },
+          { title: 'Reviews', path: paths.dashboard.reviews.root, icon: ICONS.star_review },
+          { title: 'Analytics', path: paths.dashboard.analytics.root, icon: ICONS.analytics },
+          { title: 'Contact Management', path: paths.dashboard.contactManagement.root, icon: ICONS.contacts },
+          { title: 'Settings', path: paths.dashboard.settings, icon: ICONS.settings },
         ],
       },
     ],
