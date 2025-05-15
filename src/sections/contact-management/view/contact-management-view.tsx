@@ -94,11 +94,62 @@ export default function ContactManagementView() {
     return 'default';
   };
 
+  const applyFilters = () => {
+    let filtered = [...chats];
+  
+    // Filter by ticket status
+    if (currentFilter !== 'all') {
+      filtered = filtered.filter((ticket) => ticket.status === currentFilter);
+    }
+  
+    // Search by participant name or message content
+    if (searchTerm.trim()) {
+      const lowerSearch = searchTerm.toLowerCase();
+      filtered = filtered.filter((ticket) => {
+        const name =
+          ticket.participants[0].firstName.toLowerCase() +
+          ' ' +
+          ticket.participants[0].lastName.toLowerCase();
+        const message = ticket.messages[0].content.toLowerCase();
+        return name.includes(lowerSearch) || message.includes(lowerSearch);
+      });
+    }
+  
+    // Sort by time or priority (you may want to enhance this based on actual data)
+    if (sortBy === 'newest') {
+      filtered.sort(
+        (a, b) =>
+          new Date(b.messages[0].createdAt).getTime() -
+          new Date(a.messages[0].createdAt).getTime()
+      );
+    } else if (sortBy === 'oldest') {
+      filtered.sort(
+        (a, b) =>
+          new Date(a.messages[0].createdAt).getTime() -
+          new Date(b.messages[0].createdAt).getTime()
+      );
+    } else if (sortBy === 'priority') {
+      const priorityOrder = { urgent: 0, pending: 1, resolved: 2 };
+      filtered.sort(
+        (a, b) => ((priorityOrder as  any)[a.status] ?? 3) - ((priorityOrder as  any)[b.status] ?? 3)
+      );
+    }
+  
+    setCurrentCHats(filtered);
+  };
+  
+
+  useEffect(() => {
+    applyFilters();
+  }, [chats, searchTerm, sortBy, currentFilter]);
+
   useEffect(() => {
     if(user && user.id){
       dispatch(fetchChats(user.id))
     }
   }, [])
+
+
 
   useEffect(() => {
     if(chats && chats?.length > 0){
