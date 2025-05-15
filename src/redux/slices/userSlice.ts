@@ -7,10 +7,12 @@ interface UserState {
   currentUser: IUser | null;
   loading: boolean;
   error: string | null;
+  userSettings: any
 }
 
 const initialState: UserState = {
   users: [],
+  userSettings: {},
   currentUser: null,
   loading: false,
   error: null,
@@ -37,6 +39,18 @@ export const createUser = createAsyncThunk(
   }
 );
 
+export const updateUserStore = createAsyncThunk(
+  'user/updateUserStore',
+  async (storeData: Partial<IUser>, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(`/v1/stores/${storeData.id}`, storeData);
+      return response.data.user; // Make sure we return the created user data
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to create user');
+    }
+  }
+)
+
 export const updateUser = createAsyncThunk(
   'user/updateUser',
   async ({ id, data }: { id: number; data: any }, { rejectWithValue }) => {
@@ -61,6 +75,18 @@ export const deleteUser = createAsyncThunk(
     }
   }
 );
+
+export const fetchUserSettings = createAsyncThunk(
+  'user/fetchUserSettings',
+  async (userId: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/users/${userId}`);      
+      return response.data.data.user;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch user settings');
+    }
+  }
+)
 
 const userSlice = createSlice({
   name: 'user',
@@ -96,6 +122,19 @@ const userSlice = createSlice({
       // Delete user
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.users = state.users.filter((user) => user.id !== action.payload);
+      })
+      // Fetch user settings
+      .addCase(fetchUserSettings.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserSettings.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userSettings = action.payload;
+      })
+      .addCase(fetchUserSettings.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

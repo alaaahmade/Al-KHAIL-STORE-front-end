@@ -4,7 +4,7 @@ import { JwtLoginView } from 'src/sections/auth/jwt';
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Admin: Login',
+  title: 'Login',
 };
 
 export default function LoginPage() {

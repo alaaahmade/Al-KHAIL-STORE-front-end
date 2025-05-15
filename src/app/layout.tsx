@@ -5,6 +5,8 @@ import 'simplebar-react/dist/simplebar.min.css';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import "react-datepicker/dist/react-datepicker.css";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 // ----------------------------------------------------------------------
@@ -88,6 +90,7 @@ export default function RootLayout({ children }: Props) {
                         <SettingsDrawer />
                         <ProgressBar />
                         <AuthConsumer>{children}</AuthConsumer>
+                        <ToastContainer position="top-right" autoClose={3000} />
                       </MotionLazy>
                     </ThemeProvider>
                   </SettingsProvider>
