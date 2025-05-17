@@ -16,6 +16,11 @@ import { useAuthContext } from '@/auth/hooks';
 import { useSettingsContext } from 'src/components/settings';
 import Iconify from '@/components/iconify';
 import NotificationsSettings from '../notifications-content';
+import AccountSettings from '../AccountSettings';
+import SecuritySettings from '../SecuritySettings';
+import PaymentMethods from '../PaymentMethods';
+import ShippingAddress from '../ShippingAddress';
+import StoreInformation from '../StoreInformation';
 
 
 const tabs = [
@@ -68,9 +73,14 @@ export const SellerSettingsView = () => {
           </Card>
         </Grid>
 
-        {currentTap === 'Notifications' && <Grid item xs={12} md={9}>
-              <NotificationsSettings />
-        </Grid>}
+        <Grid item xs={12} md={9}>
+          {currentTap === 'Notifications' && <NotificationsSettings />}
+          {currentTap === 'Account' && <AccountSettings />}
+          {currentTap === 'Security' && <SecuritySettings />}
+          {currentTap === 'Payment Methods' && <PaymentMethods />}
+          {currentTap === 'Shipping' && <ShippingAddress />}
+          {currentTap === 'Store Information' && <StoreInformation   />}
+        </Grid>
       </Grid>
     </Container>
   );
