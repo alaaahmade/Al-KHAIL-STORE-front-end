@@ -95,7 +95,10 @@ export const paths = {
       root: '/dashboard/contact',
     },
     Merchant: '/dashboard/merchant',
-    settings: '/dashboard/settings', 
+    settings: {
+      admin: '/dashboard/settings/admin',
+      seller: '/dashboard/settings/seller',
+    }, 
     store: {
       view: 'dashboard/store',
     },
