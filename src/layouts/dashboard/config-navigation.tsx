@@ -29,7 +29,8 @@ const ICONS = {
   analytics: <Icon icon="streamline:money-graph-analytics-business-product-graph-data-chart-analysis" width="14" height="14" />,
   store: <Icon icon="fa6-solid:store" width="14" height="14" />,
   settings: <Icon icon="carbon:settings" width="14" height="14" />,
-  contacts: <Icon icon="lets-icons:message-alt-fill" width="14" height="14" />
+  contacts: <Icon icon="lets-icons:message-alt-fill" width="14" height="14" />,
+  newPage: <Icon icon="material-symbols:new-releases" width="14" height="14" />,
 };
 
 // ----------------------------------------------------------------------
@@ -91,6 +92,7 @@ export function useNavData() {
           { title: 'Reviews', path: paths.dashboard.reviews.root, icon: ICONS.star_review },
           { title: 'Analytics', path: paths.dashboard.analytics.root, icon: ICONS.analytics },
           { title: 'Contact Management', path: paths.dashboard.contactManagement.root, icon: ICONS.contacts },
+          // { title: 'Store View', path: paths.dashboard.store.view, icon: ICONS.newPage },
           { title: 'Settings', path: paths.dashboard.settings, icon: ICONS.settings },
         ],
       },

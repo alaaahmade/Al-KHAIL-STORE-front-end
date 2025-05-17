@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 // routes
-import { useRouter } from 'src/routes/hooks';
+import { usePathname, useRouter } from 'src/routes/hooks';
 // hooks
 import { useAuthContext } from 'src/auth/hooks';
 // components
@@ -113,12 +113,21 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack sx={{ p: 1 }}>
+          {user?.role.toLowerCase() === 'seller' && (
+            <MenuItem 
+              onClick={() => {
+                router.push('/dashboard/profile/store')
+              }}>
+                Store Profile
+              </MenuItem>
+          )}
           {OPTIONS.map((option) => (
             <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
               {option.label}
             </MenuItem>
           ))}
         </Stack>
+
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
