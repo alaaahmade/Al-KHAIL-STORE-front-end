@@ -41,7 +41,7 @@ const NotificationsSettings = () => {
       await dataSchema.validateSync({ notifications: updatedSettings }, { abortEarly: false });
       await axiosInstance.patch(`/v1/sellers/${user?.seller?.id}`, {
         ...user?.seller,
-        setting: { notifications: updatedSettings },
+        setting: { notifications: updatedSettings, ...user?.seller?.setting },
       });
     } catch (error) {
       console.error('Validation or request error:', error);
