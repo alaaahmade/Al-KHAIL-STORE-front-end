@@ -3,6 +3,7 @@ import axios from 'src/utils/axios';
 
 interface SellersState {
   sellers: any[];
+  sellerStore: any,
   open: boolean;
   isHome: boolean;
   newSeller: {
@@ -22,6 +23,7 @@ interface SellersState {
 
 const initialState: SellersState = {
   sellers:[],
+  sellerStore: null,
   open: false,
   editMode: false,
   isHome: false,
@@ -63,6 +65,18 @@ export const createSeller = createAsyncThunk(
       return response.data.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to create seller');
+    }
+  }
+)
+
+export const fetchSellerStore = createAsyncThunk(
+  'sellers/fetchSellerStore',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response =await axios.get(`/v1/sellers/${userId}`)      
+      return response.data.data.store;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch seller store');
     }
   }
 )
@@ -117,6 +131,16 @@ const SellersSlice = createSlice({
         state.loadingB = false;
       })
       .addCase(createSeller.rejected, (state) => {
+        state.loadingB = false;
+      })
+      .addCase(fetchSellerStore.pending, (state) => {
+        state.loadingB = true;
+      })
+      .addCase(fetchSellerStore.fulfilled, (state, action) => {
+        state.sellerStore = action.payload;
+        state.loadingB = false;
+      })
+      .addCase(fetchSellerStore.rejected, (state) => {
         state.loadingB = false;
       });
   }

@@ -96,6 +96,11 @@ export const paths = {
     },
     Merchant: '/dashboard/merchant',
     settings: '/dashboard/settings', 
+    store: {
+      view: 'dashboard/store',
+    },
   },
   
 };
+
+export const NEW_PAGE = '/dashboard/new-page';

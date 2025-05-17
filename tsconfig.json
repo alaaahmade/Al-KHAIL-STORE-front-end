@@ -6,9 +6,11 @@
       "@/*": ["./src/*"],
       "@/validation/*": ["./src/validation/*"],
       "@/app/*": ["./src/app/*"],
-      "@/components/*": ["./src/app/components/*"],
+      "@/components/*": ["./src/components/*"],
       "@/auth/*": ["./src/auth/*"],
       "@/layouts/*": ["./src/layouts/*"],
+      "@/pages/*": ["./src/pages/*"],
+
       "src/*": ["./src/*"],
     },
     "lib": [

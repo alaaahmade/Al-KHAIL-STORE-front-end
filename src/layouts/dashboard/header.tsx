@@ -21,6 +21,8 @@ import {
 } from '../_common';
 import Label from 'src/components/label';
 import { useAuthContext } from '@/auth/hooks';
+import { usePathname } from 'next/navigation';
+import { Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -45,8 +47,27 @@ export default function Header({ onOpenNav }: Props) {
 
   const offsetTop = offset && !isNavHorizontal;
 
+  const pathName = usePathname()
+
+  const isProfile = pathName.includes('/dashboard/profile/store/') 
+  
+
   const renderContent = (
     <>
+      {isProfile && 
+      <Stack
+        direction="row" alignItems="center" gap={0}
+        sx={{
+          position: 'absolute',
+          left: 10,
+          top: 15
+        }}
+        >
+          <Logo sx={{ mr: 2.5 }} />
+          <Typography color={'primary.main'} variant="h5">AL KHAIL STORE</Typography>
+          </Stack>
+          
+        }
       {lgUp && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
 
       {!lgUp && (
@@ -60,7 +81,7 @@ export default function Header({ onOpenNav }: Props) {
       <Label
         // color="info"
         sx={{
-          ml: 1,
+          ml: isProfile ? 30 : 1,
           backgroundColor: 'rgba(252, 231, 243, 1) !important',
           color: 'primary.main',
         }}
@@ -109,12 +130,16 @@ export default function Header({ onOpenNav }: Props) {
             width: `calc(100% - ${NAV.W_MINI + 1}px)`,
           }),
         }),
+        ...(isProfile && {
+          width: 1,
+        }),
       }}
     >
       <Toolbar
         sx={{
           height: 1,
           px: { lg: 5 },
+          position: 'relative'
         }}
       >
         {renderContent}
