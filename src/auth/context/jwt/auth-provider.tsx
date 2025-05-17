@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useReducer, useCallback, useMemo } from 'react';
+import { useEffect, useReducer, useCallback, useMemo, useRef, useState } from 'react';
 // utils
 import axios, { endpoints } from 'src/utils/axios';
 //
+import { io, Socket } from 'socket.io-client';
+
 
 import { AuthContext } from './auth-context';
 import { isValidToken, setSession } from './utils';
@@ -198,21 +200,45 @@ export function AuthProvider({ children }: Props) {
 
   const status = state.loading ? 'loading' : checkAuthenticated;
 
-  const contextValue = useMemo(
-    () => ({
-      user: state.user,
-      method: 'jwt',
-      loading: status === 'loading',
-      authenticated: status === 'authenticated',
-      unauthenticated: status === 'unauthenticated',
-      login,
-      register,
-      logout,
-      forgotPassword,
-      resetPassword,
-    }),
-    [login, logout, register, forgotPassword, resetPassword, state.user, status]
-  );
 
+  const socketRef = useRef<Socket | null>(null);
+
+const [socket, setSocket] = useState<Socket | null>(null);
+
+useEffect(() => {
+  if (status === 'authenticated' && state.user) {
+    const socketInstance = io(process.env.SERVER_BASE_URL || 'http://localhost:3000', {
+      auth: { userId: state.user.id },
+    });
+
+    socketInstance.on('connect', () => {
+      console.log('Socket connected:', socketInstance.id);
+    });
+
+    socketRef.current = socketInstance;
+    setSocket(socketInstance); // update state here so context re-renders
+
+    return () => {
+      socketInstance.disconnect();
+      setSocket(null);
+    };
+  }
+}, [status, state.user]);
+
+const contextValue = useMemo(() => ({
+  user: state.user,
+  method: 'jwt',
+  loading: status === 'loading',
+  authenticated: status === 'authenticated',
+  unauthenticated: status === 'unauthenticated',
+  login,
+  register,
+  logout,
+  forgotPassword,
+  resetPassword,
+  socket,  // <-- use state variable here
+}), [state.user, status, socket, login, register, logout, forgotPassword, resetPassword]);
+  
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
+  
 }

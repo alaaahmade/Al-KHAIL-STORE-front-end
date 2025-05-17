@@ -13,9 +13,10 @@ import Lightbox, { useLightBox } from 'src/components/lightbox';
 type Props = {
   messages: any[];
   participants: any[];
+  handleDeleteMessage: (id: string) => void;
 };
 
-export default function ChatMessageList({ messages = [], participants }: Props) {
+export default function ChatMessageList({ messages = [], participants, handleDeleteMessage }: Props) {
   const { messagesEndRef } = useMessagesScroll(messages);
 
   const slides = messages
@@ -23,6 +24,9 @@ export default function ChatMessageList({ messages = [], participants }: Props) 
     .map((message) => ({ src: message.body }));
 
   const lightbox = useLightBox(slides);
+
+
+  
 
   return (
     <>
@@ -34,6 +38,8 @@ export default function ChatMessageList({ messages = [], participants }: Props) 
               message={message}
               participants={participants}
               onOpenLightbox={() => lightbox.onOpen(message.body)}
+              onDelete={handleDeleteMessage} // 👈 Pass function here
+
             />
           ))}
         </Box>
