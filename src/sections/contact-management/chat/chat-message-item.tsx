@@ -71,8 +71,8 @@ export default function ChatMessageItem({ message, participants, onDelete, onOpe
         typography: 'body2',
         bgcolor: 'background.neutral',
         ...(me && {
-          color: 'grey.800',
-          bgcolor: 'primary.lighter',
+          color: '#fff',
+          bgcolor: 'primary.main',
         }),
         ...(hasImage && {
           p: 0,
