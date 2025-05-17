@@ -1,5 +1,5 @@
 import { sub } from 'date-fns';
-import { useRef, useState, useCallback, useMemo } from 'react';
+import { useRef, useState, useCallback, useMemo, useEffect } from 'react';
 // @mui
 import Stack from '@mui/material/Stack';
 import InputBase from '@mui/material/InputBase';
@@ -15,6 +15,7 @@ import { useMockedUser } from 'src/hooks/use-mocked-user';
 import Iconify from 'src/components/iconify';
 import uuidv4 from '@/utils/uuidv4';
 import { createConversation, sendMessage } from '@/app/api/chat';
+import { useAuthContext } from '@/auth/hooks';
 // types
 // ----------------------------------------------------------------------
 
@@ -33,8 +34,8 @@ export default function ChatMessageInput({
   selectedConversationId,
 }: Props) {
   const router = useRouter();
-
-  const { user } = useMockedUser();
+  
+  const { user, socket } = useAuthContext();
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -46,11 +47,11 @@ export default function ChatMessageInput({
       role: user.role,
       email: user.email,
       address: user.address,
-      name: user.displayName,
+      name: user.firstName + ' ' + user.lastName,
       lastActivity: new Date(),
-      avatarUrl: user.photoURL,
+      avatarUrl: user.lastActiveAt,
       phoneNumber: user.phoneNumber,
-      status: 'online' as 'online' | 'offline' | 'alway' | 'busy',
+      status: user.isActive ? 'online' :'online' 
     }),
     [user]
   );
@@ -88,20 +89,56 @@ export default function ChatMessageInput({
     setMessage(event.target.value);
   }, []);
 
+  useEffect(() => {
+    if (socket) {
+      console.log('Socket in component:', socket);
+  
+      // Wait until socket is connected
+      if (!socket.connected) {
+        socket.on('connect', () => {
+          console.log('Socket connected in component:', socket.id);
+          
+          // safe to use socket here
+          socket.emit('some-event', { data: 'example' });
+        });
+      } else {
+        // already connected
+        console.log('Socket already connected:', socket.id);
+        socket.emit('some-event', { data: 'example' });
+      }
+  
+      return () => {
+        socket.off('connect');
+      };
+    }
+  }, [socket]);
+  
   const handleSendMessage = useCallback(
     async (event: React.KeyboardEvent<HTMLInputElement>) => {
       try {
-        if (event.key === 'Enter') {
-          if (message) {
-            if (selectedConversationId) {
-              await sendMessage(selectedConversationId, messageData);
-            } else {
-              const res = await createConversation(conversationData);
-
-              router.push(`${paths.dashboard.chat}?id=${res.conversation.id}`);
-
-              onAddRecipients([]);
+        if (event.key === 'Enter' && message.trim()) {
+          if (selectedConversationId) {
+            if (!socket) {
+              console.warn('No socket available');
+              return;
             }
+  
+            if (!socket.connected) {
+              // wait for connect event once
+              await new Promise<void>((resolve) => {
+                socket.once('connect', () => resolve());
+              });
+            }
+  
+            socket.emit('message', {
+              romeId: selectedConversationId,
+              senderId: myContact.id,
+              content: message,
+            });
+          } else {
+            const res = await createConversation(conversationData);
+            router.push(`${paths.dashboard.chat}?id=${res.conversation.id}`);
+            onAddRecipients([]);
           }
           setMessage('');
         }
@@ -109,8 +146,9 @@ export default function ChatMessageInput({
         console.error(error);
       }
     },
-    [conversationData, message, messageData, onAddRecipients, router, selectedConversationId]
+    [message, myContact.id, selectedConversationId, socket, conversationData, router, onAddRecipients]
   );
+  
 
   return (
     <>

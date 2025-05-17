@@ -20,9 +20,10 @@ type Props = {
   message: any;
   participants: any[];
   onOpenLightbox: (value: string) => void;
+  onDelete: (id: string) => void;
 };
 
-export default function ChatMessageItem({ message, participants, onOpenLightbox }: Props) {
+export default function ChatMessageItem({ message, participants, onDelete, onOpenLightbox }: Props) {
   const { user } = useAuthContext();
   
   const { me, senderDetails, hasImage } = useGetMessage({
@@ -35,6 +36,11 @@ export default function ChatMessageItem({ message, participants, onOpenLightbox 
   const { firstName, avatarUrl } = senderDetails;
 
   const { content, createdAt } = message;
+
+
+  const handleDeleteMessage = () => {
+    onDelete(message.id); 
+  };
 
   const renderInfo = (
     <Typography
@@ -121,7 +127,9 @@ export default function ChatMessageItem({ message, participants, onOpenLightbox 
       <IconButton size="small">
         <Iconify icon="eva:smiling-face-fill" width={16} />
       </IconButton>
-      <IconButton size="small">
+      <IconButton
+        onClick={handleDeleteMessage}
+      size="small">
         <Iconify icon="solar:trash-bin-trash-bold" width={16} />
       </IconButton>
     </Stack>

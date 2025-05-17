@@ -13,6 +13,7 @@ export type JWTContextType = {
   register: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   logout: () => Promise<void>;
   forgotPassword: (data: any) => Promise<void>;
+  socket: any
 };
 
 export const AuthContext = createContext({} as JWTContextType);
