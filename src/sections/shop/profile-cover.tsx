@@ -56,11 +56,11 @@ export default function ProfileCover({ name, avatarUrl, totalFollowers, totalPro
         <ListItemText
           sx={{
             mt: 3,
-            ml: { md: 3 },
+            ml: { md: 5 },
             textAlign: { xs: 'center', md: 'unset' },
           }}
-          primary={name}
-          secondary={<Stack
+            primary={name}
+            secondary={<Stack
             direction={"row"}
             alignItems={"center"}
             justifyContent={'center'}

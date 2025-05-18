@@ -12,9 +12,12 @@ import { _userAbout, _userFeeds, _userFriends, _userGallery, _userFollowers } fr
 import { useSettingsContext } from 'src/components/settings';
 import ProfileCover from '../profile-cover';
 import ProfileGallery from '../profile-gallery';
+import ShopAboutSection from '../shop-about-section';
+import ShopPoliciesSection from '../shop-policies-section';
+import ShopContactSection from '../shop-contact-section';
 import { useAuthContext } from '@/auth/hooks';
 import { SplashScreen } from 'src/components/loading-screen';
-import { fetchSellerStore, fetchShopeProfile } from '@/redux/slices/SellersSlice';
+import { fetchShopeProfile } from '@/redux/slices/SellersSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useParams } from 'next/navigation';
 
@@ -26,8 +29,12 @@ const TABS = [
     label: 'Products',
   },
   {
-    value: 'Reviews',
-    label: 'Reviews',
+    value: 'About',
+    label: 'About',
+  },
+  {
+    value: 'Policies',
+    label: 'Policies',
   },
 ];
 
@@ -67,10 +74,6 @@ export default function ShopProfileView() {
     setCurrentTab(newValue);
   }, []);
 
-  const handleSearchFriends = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchFriends(event.target.value);
-  }, []);
-
   useEffect(() => {
     if(user && user.id){
       dispatch(fetchShopeProfile(shopId))
@@ -101,9 +104,9 @@ export default function ShopProfileView() {
           name={store?.name}
           avatarUrl={store?.logo}
           totalReview={Number(getStoreAverageRating(store)).toFixed(1)}
-          totalProducts= {store?.products?.length || 0}
+          totalProducts={String(store?.products?.length || 0)}
           numberOfReviews={store?.products?.length || 0}
-          totalFollowers= {12000}
+          totalFollowers={String(12000)}
         />
       </Card>
 
@@ -113,27 +116,46 @@ export default function ShopProfileView() {
           p: 2
         }}
       >
-      <Tabs
+        <Tabs
           value={currentTab}
           onChange={handleChangeTab}
+          centered
           sx={{
             width: 1,
             bottom: 0,
             zIndex: 9,
+            pl:2,
             bgcolor: 'background.paper',
             [`& .${tabsClasses.flexContainer}`]: {
-              pr: { md: 3 },
               justifyContent: 'flex-start',
+            },
+            [`& .MuiTab-root`]: {
+              color: '#6B7280',
+              fontWeight: 600,
+              fontSize: 16,
+              '&.Mui-selected': {
+                color: '#EC4899',
+              },
+            },
+            [`& .MuiTabs-indicator`]: {
+              backgroundColor: '#EC4899',
+              height: 3,
+              borderRadius: 2,
             },
           }}
         >
           {TABS.map((tab) => (
-            <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
+            <Tab key={tab.value} value={tab.value}label={tab.label} />
           ))}
         </Tabs>
       </Card>
 
-      {currentTab === 'Products' && store?.products &&  <ProfileGallery products={store?.products} />}
+      {currentTab === 'About' && <ShopAboutSection />}
+      {currentTab === 'Reviews' && <div>Reviews section coming soon.</div>}
+      {currentTab === 'Products' && store?.products && <ProfileGallery products={store?.products} />}
+      {currentTab === 'Policies' && <ShopPoliciesSection />}
+      {currentTab === 'Contact' && <ShopContactSection />}
     </Container>
   );
 }
+
