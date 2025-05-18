@@ -22,6 +22,7 @@ export default function Layout({ children }: Props) {
   if(user?.role.toLowerCase() === 'user'){
     return redirect('/shop')
   }
+
   return (
     <AuthGuard>
       <DashboardLayout>{children}</DashboardLayout>
