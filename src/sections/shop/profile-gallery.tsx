@@ -20,12 +20,14 @@ export default function ProfileProducts({ products }: Props) {
   const [category, setCategory] = useState('All');
   const [price, setPrice] = useState('all');
   const dispatch = useAppDispatch();
+  const [sort, setSort] = useState('Featured');
+
   const { categories } = useAppSelector((state) => state.serviceSlice);
 
   const itemsPerPage = 8;
 
-  // Filter products by category and price
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = products
+  .filter((product) => {
     const categoryMatch =
       category === 'All' || product.category?.some((c: any) => c.categoryName === category);
 
@@ -39,7 +41,19 @@ export default function ProfileProducts({ products }: Props) {
     }
 
     return categoryMatch && priceMatch;
+  })
+  .sort((a, b) => {
+    if (sort === 'Newest') {
+      return new Date(b.productDate).getTime() - new Date(a.productDate).getTime();
+    }
+    if (sort === 'Oldest') {
+      return new Date(a.productDate).getTime() - new Date(b.productDate).getTime();
+    }
+    return 0; // Featured (default) - no sort
   });
+
+
+
 
   // Pagination after filtering
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
@@ -57,13 +71,15 @@ export default function ProfileProducts({ products }: Props) {
   }, []);
 
   // Reset to page 1 when filters change
-  useEffect(() => {
-    setPage(1);
-  }, [category, price]);
+useEffect(() => {
+  setPage(1);
+}, [category, price, sort]);
+
 
   return (
     <>
-      <Stack
+    <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+    <Stack
         width={'20em'}
         spacing={2}
         direction={'row'}
@@ -93,6 +109,16 @@ export default function ProfileProducts({ products }: Props) {
           </Select>
         </FormControl>
       </Stack>
+    <FormControl sx={{ minWidth: 160 }}>
+    <InputLabel>Sort</InputLabel>
+    <Select value={sort} label="Sort" onChange={(e) => setSort(e.target.value)}>
+      <MenuItem value="Featured">Featured</MenuItem>
+      <MenuItem value="Newest">Newest</MenuItem>
+      <MenuItem value="Oldest">Oldest</MenuItem>
+    </Select>
+  </FormControl>
+    </Stack>
+
 
       <Typography variant="h4" sx={{ my: 5 }}>
         Products
