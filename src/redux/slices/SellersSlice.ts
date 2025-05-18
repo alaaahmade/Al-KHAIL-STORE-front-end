@@ -3,6 +3,7 @@ import axios from 'src/utils/axios';
 
 interface SellersState {
   sellers: any[];
+  shop: any;
   sellerStore: any,
   open: boolean;
   isHome: boolean;
@@ -24,6 +25,7 @@ interface SellersState {
 const initialState: SellersState = {
   sellers:[],
   sellerStore: null,
+  shop: null,
   open: false,
   editMode: false,
   isHome: false,
@@ -65,6 +67,20 @@ export const createSeller = createAsyncThunk(
       return response.data.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to create seller');
+    }
+  }
+)
+
+export const fetchShopeProfile = createAsyncThunk(
+  'sellers/fetchShopeProfile',
+  async (shopId: string, {rejectWithValue}) => {
+    try {
+      const response = await axios.get(`/v1/stores/${shopId}`);
+      console.log(response.data.data);
+      
+      return response.data.data.store;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch shop profile');
     }
   }
 )
@@ -142,7 +158,17 @@ const SellersSlice = createSlice({
       })
       .addCase(fetchSellerStore.rejected, (state) => {
         state.loadingB = false;
-      });
+      })
+      .addCase(fetchShopeProfile.pending, (state) => {
+        state.loadingB = true;
+      })
+      .addCase(fetchShopeProfile.fulfilled, (state, action) => {
+        state.shop = action.payload;
+        state.loadingB = false;
+      })
+      .addCase(fetchShopeProfile.rejected, (state) => {
+        state.loadingB = false;
+      })
   }
 });
 

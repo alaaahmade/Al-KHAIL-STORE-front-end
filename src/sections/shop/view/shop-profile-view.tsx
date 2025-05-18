@@ -14,8 +14,9 @@ import ProfileCover from '../profile-cover';
 import ProfileGallery from '../profile-gallery';
 import { useAuthContext } from '@/auth/hooks';
 import { SplashScreen } from 'src/components/loading-screen';
-import { fetchSellerStore } from '@/redux/slices/SellersSlice';
+import { fetchSellerStore, fetchShopeProfile } from '@/redux/slices/SellersSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useParams } from 'next/navigation';
 
 // ----------------------------------------------------------------------
 
@@ -30,16 +31,32 @@ const TABS = [
   },
 ];
 
+const getStoreAverageRating = (store: any) => {
+  let totalRating = 0;
+  let totalComments = 0;
+
+  store?.products?.forEach((product: any) => {
+    product?.comments?.forEach((comment: any) => {
+      totalRating += comment.rating;
+      totalComments++;
+    });
+  });
+
+  return totalComments > 0 ? totalRating / totalComments : 0;
+};
 // ----------------------------------------------------------------------
 
-export default function UserProfileView() {
+export default function ShopProfileView() {
   const settings = useSettingsContext();
   const { user } = useAuthContext();
   const [store, setStore] = useState<any>(null)
-  const {sellerStore, loadingB} = useAppSelector(store => store.SellersSlice)
+  const {shop, loadingB} = useAppSelector(store => store.SellersSlice)
+  const {shopId} = useParams()
   const dispatch = useAppDispatch()
 
   console.log(store);
+  console.log(shopId);
+  
   
 
   const [searchFriends, setSearchFriends] = useState('');
@@ -56,14 +73,14 @@ export default function UserProfileView() {
 
   useEffect(() => {
     if(user && user.id){
-      dispatch(fetchSellerStore(user?.seller.id))
+      dispatch(fetchShopeProfile(shopId))
     }
-  }, [user, dispatch])
+  }, [ dispatch, shopId])
 
   useEffect(() => {
-    if(sellerStore)
-    setStore(sellerStore)
-  }, [user, sellerStore])
+    if(shop)
+    setStore(shop)
+  }, [user, shop])
 
   if(loadingB) return <SplashScreen/>
 
@@ -83,7 +100,7 @@ export default function UserProfileView() {
         <ProfileCover
           name={store?.name}
           avatarUrl={store?.logo}
-          totalReview={Number(store?.totalReview).toFixed(1)}
+          totalReview={Number(getStoreAverageRating(store)).toFixed(1)}
           totalProducts= {store?.products?.length || 0}
           numberOfReviews={store?.products?.length || 0}
           totalFollowers= {12000}
