@@ -21,7 +21,7 @@ const ICONS = {
   advertisements: <Icon icon="entypo:blackboard" width="20" height="20" />,
   category: <Icon icon="carbon:collapse-categories" width="32" height="32" />,
   interests: <Icon icon="material-symbols:interests-outline" width="14" height="14"/>,
-  products : <Icon icon="ix:product" width="512" height="512" />,
+  products : <Icon icon="fa-solid:box" width="512" height="512" />,
   orders: <Icon icon="mdi:cart" width="14" height="14"/>,
   Reviews: <Icon icon="fa-solid:comments" width="14" height="14" />,
   star_review: <Icon icon="solar:star-bold" width="14" height="14" />,
