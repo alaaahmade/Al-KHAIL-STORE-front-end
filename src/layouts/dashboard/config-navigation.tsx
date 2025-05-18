@@ -76,5 +76,24 @@ export function useNavData() {
     []
   );
 
+
+  const BayerData = useMemo(
+    () => [
+      // OVERVIEW
+      {
+        subheader: 'MANAGEMENT',
+        items: [
+          { title: 'Products', path: paths.dashboard.products.root, icon: ICONS.products },
+          { title: 'Contact Management', path: paths.dashboard.contactManagement.root, icon: ICONS.contacts },
+          { title: 'Orders', path: paths.dashboard.orders.root, icon: ICONS.orders },
+          { title: 'Reviews', path: paths.dashboard.reviews.root, icon: ICONS.star_review },
+          { title: 'Analytics', path: paths.dashboard.analytics.root, icon: ICONS.analytics },
+          { title: 'Settings', path: paths.dashboard.settings.seller, icon: ICONS.settings },
+        ],
+      },
+    ],
+    []
+  );
+
   return user?.role.toLowerCase(  ) === 'admin' ? AdminData : user?.role.toLowerCase(  ) === 'seller' ? SellerData : [];
 }
