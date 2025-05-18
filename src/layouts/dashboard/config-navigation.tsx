@@ -49,31 +49,9 @@ export function useNavData() {
           { title: 'Products', path: paths.dashboard.Products, icon: ICONS.products },
           { title: 'Orders', path: paths.dashboard.orders.root, icon: ICONS.orders },
           {title: 'Reviews', path:  paths.dashboard.reviews.root, icon: ICONS.Reviews},
-          // { title: 'Customers', path: paths.dashboard.customers, icon: ICONS.customers },
-          // { title: 'Advertisements', path: paths.dashboard.advertisements, icon: ICONS.advertisements },
-          // { title: 'Categories', path: paths.dashboard.categories, icon: ICONS.category },
-          // { title: 'Interests', path: paths.dashboard.interests, icon: ICONS.interests,  },
           { title: 'User MANAGEMENT', path: paths.dashboard.user.list , icon: ICONS.persons },
           { title: 'Merchant MANAGEMENT', path: paths.dashboard.Merchant , icon: ICONS.store },
           { title: 'Settings', path: paths.dashboard.settings.admin, icon: ICONS.settings },
-        ],
-      },
-
-      // MANAGEMENT
-      {
-        subheader: 'management',
-        items: [
-          {
-            title: 'Users',
-            path: paths.dashboard.user.root,
-            icon: ICONS.user,
-            children: [
-              { title: 'List', path: paths.dashboard.user.list },
-              { title: 'Create', path: paths.dashboard.user.create },
-              { title: 'Roles', path: paths.dashboard.user.role.list },
-              { title: 'Permissions', path: paths.dashboard.user.permission.list },
-            ],
-          },
         ],
       },
     ],
@@ -86,14 +64,12 @@ export function useNavData() {
       {
         subheader: 'MANAGEMENT',
         items: [
-          { title: 'Dashboard', path: paths.dashboard.root, icon: icon('ic_dashboard') },
           { title: 'Products', path: paths.dashboard.products.root, icon: ICONS.products },
+          { title: 'Contact Management', path: paths.dashboard.contactManagement.root, icon: ICONS.contacts },
           { title: 'Orders', path: paths.dashboard.orders.root, icon: ICONS.orders },
           { title: 'Reviews', path: paths.dashboard.reviews.root, icon: ICONS.star_review },
           { title: 'Analytics', path: paths.dashboard.analytics.root, icon: ICONS.analytics },
-          { title: 'Contact Management', path: paths.dashboard.contactManagement.root, icon: ICONS.contacts },
           { title: 'Settings', path: paths.dashboard.settings.seller, icon: ICONS.settings },
-          // { title: 'Settings', path: paths.dashboard.settings, icon: ICONS.settings },
         ],
       },
     ],
