@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
+
 // ----------------------------------------------------------------------
 
 // theme
@@ -89,7 +90,8 @@ export default function RootLayout({ children }: Props) {
                       <MotionLazy>
                         <SettingsDrawer />
                         <ProgressBar />
-                        <AuthConsumer>{children}</AuthConsumer>
+                            <AuthConsumer>{children}</AuthConsumer>
+                          {/* </Elements> */}
                         <ToastContainer position="top-right" autoClose={3000} />
                       </MotionLazy>
                     </ThemeProvider>
