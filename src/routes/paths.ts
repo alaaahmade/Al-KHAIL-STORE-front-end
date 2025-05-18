@@ -102,6 +102,15 @@ export const paths = {
     store: {
       view: 'dashboard/store',
     },
+    shop: {
+      root: '/dashboard/shop',
+      products: '/dashboard/shop/products',
+      orders: '/dashboard/shop/orders',
+      customers: '/dashboard/shop/customers',
+      reviews: '/dashboard/shop/reviews',
+      analytics: '/dashboard/shop/analytics',
+      settings: '/dashboard/shop/settings',
+    }
   },
   
 };
