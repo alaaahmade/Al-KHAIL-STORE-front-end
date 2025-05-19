@@ -4,6 +4,9 @@ import { fCurrency } from '@/utils/format-number';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import Iconify from '@/components/iconify';
+import axiosInstance from '@/utils/axios';
+import { useAuthContext } from '@/auth/hooks';
+import { toast } from 'react-toastify';
 
 interface ProductCardProps {
   productName: string;
@@ -29,6 +32,24 @@ export function ProductCard({product}: {product: ProductCardProps}) {
   const totalRating = comments.reduce((sum, review) => sum + review.rating, 0);
   const numberOfReviews = comments.length;
   const averageRating = totalRating > 0 ?  (totalRating / numberOfReviews).toFixed(1) : 0;  
+  const {user} = useAuthContext()
+  
+  const addToCart = async(productId: string) => {
+    try {
+      const response = await axiosInstance.post(`/v1/carts/${user?.cart?.id}/items`, {
+        productId,
+        quantity: 1,
+        price: standardPrice,
+      })
+
+      console.log(response)
+      toast.success('Product added to cart')
+    } catch (error) {
+      console.log(error);
+      
+      toast.error(error.message)
+    }
+  }
 
   return (
     <Box 
@@ -43,7 +64,6 @@ export function ProductCard({product}: {product: ProductCardProps}) {
         cursor: 'pointer',
         position: 'relative'
       }}
-      onClick={() => router.push(`/dashboard/services/${id}`) }
       
     >
       <Label
@@ -69,7 +89,10 @@ export function ProductCard({product}: {product: ProductCardProps}) {
           borderBottomRightRadius: 0,
           backgroundSize: 'cover',
           backgroundImage: `url(${productImage})`,
+          
         }} 
+      onClick={() => router.push(`/shop/products/${id}`) }
+
       />
       <Box
       sx={{p:'0 1em', m: 0}}
@@ -80,7 +103,10 @@ export function ProductCard({product}: {product: ProductCardProps}) {
         {`⭐ ${averageRating}`}
         </Typography>
         </Stack>
-      <Typography  mt={1} color="#000" >{productName}</Typography>
+      <Typography 
+      onClick={() => router.push(`/shop/products/${id}`) }
+      
+      mt={1} color="#000" >{productName}</Typography>
         <Box
         sx={{
           mt: '0.5em',
@@ -116,7 +142,7 @@ export function ProductCard({product}: {product: ProductCardProps}) {
           <Button
             sx={{bgcolor: 'primary.main', color: '#fff', width: '48%',  borderRadius: 50}}
             size="small"
-            onClick={() => router.push(`/dashboard/services/${id}`) }
+            onClick={() => addToCart(id) }
           >
             Add to cart
           </Button>

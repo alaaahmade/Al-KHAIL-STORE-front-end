@@ -2,22 +2,14 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Card,
-  CardContent,
-  Avatar,
   Typography,
-  Button,
   Grid,
   TextField,
   InputAdornment,
   MenuItem,
   Pagination,
-  Chip,
-  Stack,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import StarIcon from '@mui/icons-material/Star';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ShopCard from '../shop-card';
 
 const mockShops = [
