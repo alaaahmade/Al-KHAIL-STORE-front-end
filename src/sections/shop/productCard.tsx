@@ -1,12 +1,13 @@
 'use client';
 import Label from 'src/components/label';
 import { fCurrency } from '@/utils/format-number';
-import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import Iconify from '@/components/iconify';
 
 interface ProductCardProps {
   productName: string;
+  description: string;
   productImage: string[];
   hours?: number; 
   store?: {

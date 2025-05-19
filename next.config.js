@@ -8,7 +8,7 @@ const nextConfig = {
   },
 
   images: {
-    domains: ['stgs3yourpass.fra1.digitaloceanspaces.com', 's3-alpha-sig.figma.com'],
+    domains: ['stgs3yourpass.fra1.digitaloceanspaces.com', 's3-alpha-sig.figma.com', 'thumbs.dreamstime.com'],
   },
 
   reactStrictMode: true,
@@ -44,6 +44,7 @@ const nextConfig = {
     });
     return config;
   },
+
 };
 
 module.exports = nextConfig;
