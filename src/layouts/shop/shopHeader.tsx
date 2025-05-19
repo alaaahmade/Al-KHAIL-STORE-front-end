@@ -12,7 +12,6 @@ import { useOffSetTop } from 'src/hooks/use-off-set-top';
 import { useResponsive } from 'src/hooks/use-responsive';
 // components
 import Logo from 'src/components/logo';
-import SvgColor from 'src/components/svg-color';
 import { useSettingsContext } from 'src/components/settings';
 //
 import { HEADER, NAV } from '../config-layout';
@@ -20,25 +19,13 @@ import {
   AccountPopover,
   NotificationsPopover,
 } from '../_common';
-import Label from 'src/components/label';
-import { useAuthContext } from '@/auth/hooks';
-import { usePathname } from 'next/navigation';
-import { Box, InputAdornment, TextField, Typography } from '@mui/material';
-import NavVertical from '../dashboard/nav-vertical';
-import ShopNavBar from './ShopNavBar';
+import { InputAdornment, TextField, Typography } from '@mui/material';
 import Iconify from '@/components/iconify';
+import Label from '@/components/label';
 
 // ----------------------------------------------------------------------
-
-type Props = {
-  onOpenNav?: VoidFunction;
-};
-
 export default function ShopHeader() {
   const theme = useTheme();
-
-  const {user} = useAuthContext()
-
   const settings = useSettingsContext();
 
   const isNavHorizontal = settings.themeLayout === 'horizontal';
@@ -92,7 +79,32 @@ export default function ShopHeader() {
       <IconButton color="default">
         <Iconify icon="mdi:heart-outline" width="20" height="20" />
       </IconButton>
-      <IconButton color="default">
+      <IconButton
+        component="a" href="/shop/cart"
+      color="default"
+            sx={{
+              position: 'relative',
+            }}
+      >
+        <Label
+          color="warning"
+          sx={{
+            top: 8,
+            right: 8,
+            position: 'absolute',
+            transform: 'translate(50%, -50%)',
+            borderRadius: 50
+          }}
+        >
+          <Iconify icon="carbon:dot-mark" width="32" height="32" />
+        </Label>
+        {
+          isNavMini && {
+            top: 0,
+            right: 0,
+            position: 'absolute',
+            transform: 'translate(50%, -50%)',
+          }}
         <Iconify icon="mdi:cart" width="20" height="20" />
       </IconButton>
       <NotificationsPopover />

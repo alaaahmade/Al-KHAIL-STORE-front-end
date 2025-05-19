@@ -5,10 +5,15 @@ import Label from '@/components/label';
 import { Icon } from '@iconify/react';
 import { ProductImageGallery } from '../productImageGallery';
 import { ProductTabs } from '../product-taps';
+import axiosInstance from '@/utils/axios';
+import { useAuthContext } from '@/auth/hooks';
+import { toast } from 'react-toastify';
 
 const mockProduct = {
+  id: 1,
   title: 'Luxury Face Cream',
   price: 89.99,
+  standardPrice: 99.99,
   isOnSale: true,
   description: 'Advanced anti-aging formula enriched with premium ingredients for youthful, radiant skin. Clinically proven to reduce fine lines and wrinkles.',
   highlights: ['Reduces fine lines and wrinkles', 'Improves skin elasticity', 'Enhances skin resilience'],
@@ -80,6 +85,23 @@ const mockProduct = {
 
 
 function ProductInfo({ product }: { product: typeof mockProduct }) {
+
+  const { user } = useAuthContext();
+
+  const addToCart = async(productId: string) => {
+    try {
+      const response = await axiosInstance.post(`/v1/carts/${user?.cart?.id}/items`, {
+        productId,
+        quantity: 1,
+        price: product.standardPrice,
+      })
+      toast.success('Product added to cart')
+    } catch (error) {
+      console.log(error);
+      
+      toast.error(error.message)
+    }
+  }
   return (
     <Box>
       <Stack direction="row" alignItems="center" spacing={1} justifyContent={'space-between'}>
@@ -136,7 +158,9 @@ function ProductInfo({ product }: { product: typeof mockProduct }) {
         </Box>
       </Stack>
       <Stack direction="row" alignItems="center" spacing={2} sx={{ mt: 2 }}>
-        <Button variant="contained" color="primary" sx={{ borderRadius: 8, px: 5, color: '#fff' }}>
+        <Button
+          onClick={() => addToCart(String(product?.id))}
+        variant="contained" color="primary" sx={{ borderRadius: 8, px: 5, color: '#fff' }}>
           Add to Cart
         </Button>
         <Button variant="outlined" color="primary" sx={{ borderRadius: 8, px: 5 }}>
@@ -154,6 +178,7 @@ function ProductInfo({ product }: { product: typeof mockProduct }) {
 
 
 export default function ShopProductView() {
+
   return (
     <Box sx={{ background: '#f7f8fa', minHeight: '100vh', py: 0 }}>
       <Box sx={{ maxWidth: 1100, mx: 'auto', background: '#fff', borderRadius: 4, p: 1}}>

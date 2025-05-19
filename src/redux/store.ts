@@ -20,6 +20,7 @@ import ordersSlice from './slices/ordersSlice';
 import reviewsSlice from './slices/reviewsSlice';
 import serviceSlice from './slices/serviceSlice';
 import contactManagement from './slices/ContactSlice';
+import cartSlice from './slices/cartSlice';
 
 // ----------------------------------------------------------------------
 
@@ -46,8 +47,8 @@ const store = configureStore({
     ordersSlice,
     reviewsSlice,
     serviceSlice,
-    contactManagement
-    // theme: themeReducer,
+    contactManagement,
+    cartSlice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

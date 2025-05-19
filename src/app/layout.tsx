@@ -63,6 +63,8 @@ type Props = {
   children: React.ReactNode;
 };
 
+import { CheckoutProvider } from '@/auth/context/checkout-context';
+
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={primaryFont.className}>
@@ -76,26 +78,28 @@ export default function RootLayout({ children }: Props) {
             <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''}>
               <AuthProvider>
                 <LocalizationProvider>
-                  <SettingsProvider
-                    defaultSettings={{
-                      themeMode: 'light', // 'light' | 'dark'
-                      themeDirection: 'ltr', //  'rtl' | 'ltr'
-                      themeContrast: 'default', // 'default' | 'bold'
-                      themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
-                      themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
-                      themeStretch: false,
-                    }}
-                  >
-                    <ThemeProvider>
-                      <MotionLazy>
-                        <SettingsDrawer />
-                        <ProgressBar />
-                            <AuthConsumer>{children}</AuthConsumer>
-                          {/* </Elements> */}
-                        <ToastContainer position="top-right" autoClose={3000} />
-                      </MotionLazy>
-                    </ThemeProvider>
-                  </SettingsProvider>
+                  <CheckoutProvider>
+                    <SettingsProvider
+                      defaultSettings={{
+                        themeMode: 'light', // 'light' | 'dark'
+                        themeDirection: 'ltr', //  'rtl' | 'ltr'
+                        themeContrast: 'default', // 'default' | 'bold'
+                        themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
+                        themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
+                        themeStretch: false,
+                      }}
+                    >
+                      <ThemeProvider>
+                        <MotionLazy>
+                          <SettingsDrawer />
+                          <ProgressBar />
+                              <AuthConsumer>{children}</AuthConsumer>
+                            {/* </Elements> */}
+                          <ToastContainer position="top-right" autoClose={3000} />
+                        </MotionLazy>
+                      </ThemeProvider>
+                    </SettingsProvider>
+                  </CheckoutProvider>
                 </LocalizationProvider>
               </AuthProvider>
             </GoogleOAuthProvider>
