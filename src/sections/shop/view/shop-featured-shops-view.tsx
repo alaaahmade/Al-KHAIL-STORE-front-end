@@ -1,5 +1,5 @@
-'use client'
-import React, { useState } from 'react';
+'use client';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -11,50 +11,8 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ShopCard from '../shop-card';
-
-const mockShops = [
-  {
-    id: 1,
-    name: 'Beauty Haven',
-    description: 'Premium skincare and makeup products',
-    rating: 4.8,
-    reviews: '2.4k',
-    products: 245,
-    followers: '12k',
-    verified: true,
-    avatar: 'https://randomuser.me/api/portraits/women/1.jpg',
-    gradient: 'linear-gradient(90deg, #d53369 0%, #daae51 100%)',
-  },
-  {
-    id: 2,
-    name: 'Glow & Glamour',
-    description: 'Luxury cosmetics and fragrances',
-    rating: 4.7,
-    reviews: '1.8k',
-    products: 189,
-    followers: '8.5k',
-    verified: true,
-    avatar: 'https://randomuser.me/api/portraits/men/2.jpg',
-    gradient: 'linear-gradient(90deg, #43cea2 0%, #185a9d 100%)',
-  },
-  {
-    id: 3,
-    name: 'Natural Beauty Co.',
-    description: 'Organic and natural beauty products',
-    rating: 4.9,
-    reviews: '3.2k',
-    products: 156,
-    followers: '15k',
-    verified: true,
-    avatar: 'https://randomuser.me/api/portraits/women/3.jpg',
-    gradient: 'linear-gradient(90deg, #d53369 0%, #daae51 100%)',
-  },
-];
-
-const shopList = [
-  ...mockShops,
-  ...mockShops,
-];
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { fetchStores } from '@/redux/slices/SellersSlice';
 
 const sortOptions = [
   { value: 'featured', label: 'Featured' },
@@ -66,16 +24,45 @@ export default function ShopFeaturedShopsView() {
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('featured');
   const [page, setPage] = useState(1);
+  const dispatch = useAppDispatch();
+  const { stores } = useAppSelector((state) => state.SellersSlice);
 
-  // Pagination logic (6 per page)
-  const perPage = 6;
-  const filtered = shopList.filter(
+  useEffect(() => {
+    dispatch(fetchStores());
+  }, [dispatch]);
+
+  const enrichedStores = stores.map((store) => ({
+    ...store,
+    rating: store.rating || 4.5,
+    reviews: store.reviews || '1.2k',
+    products: store.products?.length || 0,
+    followers: store.followers || '10k',
+    verified: store.isActive,
+    avatar: store.logo,
+    gradient: 'linear-gradient(90deg, #43cea2 0%, #185a9d 100%)',
+  }));
+
+  const filtered = enrichedStores.filter(
     (shop) =>
       shop.name.toLowerCase().includes(search.toLowerCase()) ||
       shop.description.toLowerCase().includes(search.toLowerCase())
   );
-  const totalPages = Math.ceil(filtered.length / perPage);
-  const shopsToShow = filtered.slice((page - 1) * perPage, page * perPage);
+
+  const sorted = [...filtered].sort((a, b) => {
+    if (sort === 'rating') return b.rating - a.rating;
+    if (sort === 'followers') {
+      const parseFollowers = (val) =>
+        typeof val === 'string' && val.includes('k')
+          ? parseFloat(val) * 1000
+          : parseFloat(val);
+      return parseFollowers(b.followers) - parseFollowers(a.followers);
+    }
+    return 0; // featured or default
+  });
+
+  const perPage = 6;
+  const totalPages = Math.ceil(sorted.length / perPage);
+  const shopsToShow = sorted.slice((page - 1) * perPage, page * perPage);
 
   return (
     <Box sx={{ p: { xs: 2, md: 4 } }}>
@@ -85,6 +72,7 @@ export default function ShopFeaturedShopsView() {
       <Typography variant="body2" color="text.secondary" mb={3}>
         Home {'>'} Shops
       </Typography>
+
       <Box
         sx={{
           display: 'flex',
@@ -128,8 +116,8 @@ export default function ShopFeaturedShopsView() {
       </Box>
 
       <Grid container spacing={3}>
-        {shopsToShow.map((shop, idx) => (
-          <ShopCard key={shop.id + '-' + idx} shop={shop}/>
+        {shopsToShow.map((shop) => (
+          <ShopCard key={shop.id} shop={shop} />
         ))}
       </Grid>
 

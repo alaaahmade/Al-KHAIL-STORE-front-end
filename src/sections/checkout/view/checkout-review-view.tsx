@@ -10,6 +10,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { redirect, useRouter } from 'next/navigation';
 import { fCurrency } from '@/utils/format-number';
 import { changeOrder } from '@/redux/slices/cartSlice';
+import Iconify from '@/components/iconify';
 
 // Remove hardcoded data, use context and cart
 
@@ -44,12 +45,11 @@ export default function CheckoutReviewView() {
       console.error(error);
     }
   };
-  console.log(cart);
   
 
-  if(!cart || !shipping.address || !payment.cardNumber) {
-    return redirect('/checkout/details');
-  }
+  // if(!cart || !shipping.address || !payment.cardNumber) {
+  //   return redirect('/checkout/details');
+  // }
 
   return (
     <Box sx={{ background: '#f7f8fa', minHeight: '100vh', py: 4 }}>
@@ -121,7 +121,7 @@ export default function CheckoutReviewView() {
                 </IconButton>
               </Stack>
               <Stack direction="row" alignItems="center" spacing={1} mt={2}>
-                <Avatar src="/visa.svg" alt="Visa" sx={{ width: 32, height: 20 }} />
+                <Iconify color={'#2563eb'} icon="cib:cc-visa" width={42} height={42} />
                 <Typography sx={{ fontFamily: 'serif', fontSize: '0.95em' }}>**** **** **** {payment.cardNumber.slice(-4)}</Typography>
 <Box flex={1} />
 <Typography sx={{ fontFamily: 'serif', fontSize: '0.95em' }}>Expires {payment.expiry}</Typography>

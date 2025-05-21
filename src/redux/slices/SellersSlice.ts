@@ -5,6 +5,7 @@ interface SellersState {
   sellers: any[];
   shop: any;
   sellerStore: any,
+  products: any[]
   open: boolean;
   isHome: boolean;
   newSeller: {
@@ -20,15 +21,20 @@ interface SellersState {
   }
   editMode: boolean
   loadingB: boolean
+  stores: any []
+  featuredProducts: any[]
 }
 
 const initialState: SellersState = {
   sellers:[],
+  stores: [],
+  featuredProducts: [],
   sellerStore: null,
   shop: null,
   open: false,
   editMode: false,
   isHome: false,
+  products: [],
   newSeller: {
     firstName: '',
     lastName: '',
@@ -96,6 +102,44 @@ export const fetchSellerStore = createAsyncThunk(
     }
   }
 )
+
+export const fetchStores = createAsyncThunk(
+  'sellers/fetchStores',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get('/v1/stores');      
+      return response.data.data.stores;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch stores');
+    }
+  }
+)
+
+export const fetchFeaturedProducts = createAsyncThunk(
+  'products/fetchFeaturedProducts',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get('/v1/products/featured');
+      return response.data.data.products;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch featured products');
+    }
+  }
+);
+
+export const fetchAllProducts = createAsyncThunk(
+  'products/fetchAllProducts',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get('/v1/products');
+      console.log(response.data.data);
+      
+      return response.data.data.products;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch featured products');
+    }
+  }
+);
 
 const SellersSlice = createSlice({
   name: 'Sellers',
@@ -169,6 +213,37 @@ const SellersSlice = createSlice({
       .addCase(fetchShopeProfile.rejected, (state) => {
         state.loadingB = false;
       })
+      .addCase(fetchStores.pending, (state) => {
+        state.loadingB = true;
+      })
+      .addCase(fetchStores.fulfilled, (state, action) => {
+        state.stores = action.payload;
+        state.loadingB = false;
+      })
+      .addCase(fetchStores.rejected, (state) => {
+        state.loadingB = false;
+      })
+      .addCase(fetchFeaturedProducts.pending, (state) => {
+        state.loadingB = true;
+      })
+      .addCase(fetchFeaturedProducts.fulfilled, (state, action) => {
+        state.featuredProducts = action.payload;
+        state.loadingB = false;
+      })
+      .addCase(fetchFeaturedProducts.rejected, (state) => {
+        state.loadingB = false;
+      })
+      .addCase(fetchAllProducts.pending, (state) => {
+        state.loadingB = true;
+      })
+      .addCase(fetchAllProducts.fulfilled, (state, action) => {
+        state.products = action.payload;
+        state.loadingB = false;
+      })
+      .addCase(fetchAllProducts.rejected, (state) => {
+        state.loadingB = false;
+      })
+
   }
 });
 

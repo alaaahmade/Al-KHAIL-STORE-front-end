@@ -14,7 +14,7 @@ interface ServiceState {
   services: ListingInterface[];
   featuredServices: ListingInterface[];
   categories: IServiceCategory[];
-  currentService: ListingInterface | null;
+  currentProduct: ListingInterface | null;
   loading: boolean;
   error: string | null;
 }
@@ -23,7 +23,7 @@ const initialState: ServiceState = {
   services: [],
   featuredServices: [],
   categories: [],
-  currentService: null,
+  currentProduct: null,
   loading: false,
   error: null,
 };
@@ -44,10 +44,10 @@ export const fetchServices = createAsyncThunk(
 
 export const fetchServiceById = createAsyncThunk(
   'service/fetchServiceById',
-  async (id: number, { rejectWithValue }) => {
+  async (id: string, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/services/${id}`);
-      return response.data;
+      const response = await axios.get(`/v1/products/${id}`);
+      return response.data.data.product;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch service details');
     }
@@ -189,7 +189,7 @@ const serviceSlice = createSlice({
       })
       .addCase(fetchServiceById.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentService = action.payload;
+        state.currentProduct = action.payload;
       })
       .addCase(fetchServiceById.rejected, (state, action) => {
         state.loading = false;
@@ -235,16 +235,16 @@ const serviceSlice = createSlice({
         if (index !== -1) {
           state.services[index] = action.payload;
         }
-        if (state.currentService?.id === action.payload.id) {
-          state.currentService = action.payload;
+        if (state.currentProduct?.id === action.payload.id) {
+          state.currentProduct = action.payload;
         }
       })
 
       // Delete Service
       .addCase(deleteService.fulfilled, (state, action) => {
         state.services = state.services.filter((service) => String(service.id) !== String(action.payload));
-        if (String(state.currentService?.id) === String(action.payload)) {
-          state.currentService = null;
+        if (String(state.currentProduct?.id) === String(action.payload)) {
+          state.currentProduct = null;
         }
       })
 
@@ -276,13 +276,13 @@ const serviceSlice = createSlice({
           }
           state.services[serviceIndex].ratings!.push(rating);
         }
-        if (String(state.currentService?.id) === String(serviceId)) {
-          if (!state?.currentService?.ratings) {
-            if (state.currentService) {
-              state.currentService.ratings = [];
+        if (String(state.currentProduct?.id) === String(serviceId)) {
+          if (!state?.currentProduct?.ratings) {
+            if (state.currentProduct) {
+              state.currentProduct.ratings = [];
             }
           }
-          state?.currentService?.ratings.push(rating);
+          state?.currentProduct?.ratings.push(rating);
         }
       });
   },

@@ -1,5 +1,6 @@
 import Iconify from '@/components/iconify'
 import { Avatar, Box, Button, Card, CardContent, Chip, Grid, Stack, Typography } from '@mui/material'
+import Link from 'next/link'
 import React from 'react'
 
 const ShopCard = ({shop}: {shop: any}) => {
@@ -71,6 +72,8 @@ const ShopCard = ({shop}: {shop: any}) => {
             color="secondary"
             size="small"
             sx={{ borderRadius: 2, bgcolor: '#f72585', color: '#fff', fontWeight: 600, px: 2, '&:hover': { bgcolor: '#d61e6e' } }}
+            component={Link}
+            href={`/shop/shops/${shop.id}`}
           >
             Visit Shop
           </Button>

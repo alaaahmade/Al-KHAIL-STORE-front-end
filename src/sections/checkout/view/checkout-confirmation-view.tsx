@@ -11,8 +11,10 @@ import { useAuthContext } from '@/auth/hooks';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { fetchOrder } from '@/redux/slices/cartSlice';
 import { fCurrency } from '@/utils/format-number';
+import Link from 'next/link';
+import Iconify from '@/components/iconify';
 
-// Use context and cart/order data instead of hardcoded
+// Use context and cart/order data instead of hardcodedo
 
 export default function CheckoutConfirmationView() {
   const searchParams = useSearchParams();
@@ -24,16 +26,8 @@ export default function CheckoutConfirmationView() {
   const shippingFee = 9.99;
   const tax = 27.0;
   const router = useRouter();
-  
-  
-  useEffect(() => {
-    async function emptyCart() {
-      if(user?.cart?.id){
-        await axiosInstance.delete(`/v1/carts/${user?.cart?.id}/items`);
-      }
-    }
-    emptyCart();
-  }, [user, cart]);
+
+
 
   useEffect(() => {
     const sessionId = searchParams.get('session_id');
@@ -122,19 +116,19 @@ export default function CheckoutConfirmationView() {
             <Paper sx={{ p: 2, borderRadius: 2, flex: 1 }}>
               <Typography sx={{ fontWeight: 500, fontFamily: 'serif', mb: 1 }}>Payment Method</Typography>
               <Stack direction="row" alignItems="center" spacing={1}>
-                <Avatar src="/visa.svg" alt="Visa" sx={{ width: 32, height: 20 }} />
-                <Typography sx={{ fontFamily: 'serif', fontSize: '0.95em' }}>Visa ending in {payment.cardNumber.slice(-4)}</Typography>
-</Stack>
+              <Iconify color={'#2563eb'} icon="cib:cc-visa" width={42} height={42} />
+              <Typography sx={{ fontFamily: 'serif', fontSize: '0.95em' }}>Visa ending in {payment.cardNumber.slice(-4)}</Typography>
+              </Stack>
 <Typography sx={{ fontFamily: 'serif', fontSize: '0.95em', mt: 0.5 }}>Expiring {payment.expiry}</Typography>
             </Paper>
           </Stack>
         </Paper>
         {/* Action Buttons */}
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} mt={4} justifyContent="center">
-          <Button variant="contained" sx={{ bgcolor: '#E91E63', color: '#fff', borderRadius: 2, fontWeight: 600, fontFamily: 'serif', textTransform: 'none', fontSize: 16, px: 4 }}>
+          <Button component={Link} href={`/shop/products/review/${order?.cart?.items[order?.cart?.items.length - 1].id}`} variant="contained" sx={{ bgcolor: '#E91E63', color: '#fff', borderRadius: 2, fontWeight: 600, fontFamily: 'serif', textTransform: 'none', fontSize: 16, px: 4 }}>
             Track Order
           </Button>
-          <Button variant="outlined" sx={{ borderColor: '#E91E63', color: '#E91E63', borderRadius: 2, fontWeight: 600, fontFamily: 'serif', textTransform: 'none', fontSize: 16, px: 4 }}>
+          <Button component={Link} href={'/shop'} variant="outlined" sx={{ borderColor: '#E91E63', color: '#E91E63', borderRadius: 2, fontWeight: 600, fontFamily: 'serif', textTransform: 'none', fontSize: 16, px: 4 }}>
             Continue Shopping
           </Button>
         </Stack>

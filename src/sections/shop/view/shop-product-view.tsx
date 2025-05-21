@@ -1,5 +1,5 @@
 'use client'
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Button, Typography, Avatar, Rating, Chip, Stack, Paper } from '@mui/material';
 import Label from '@/components/label';
 import { Icon } from '@iconify/react';
@@ -8,6 +8,10 @@ import { ProductTabs } from '../product-taps';
 import axiosInstance from '@/utils/axios';
 import { useAuthContext } from '@/auth/hooks';
 import { toast } from 'react-toastify';
+import { useParams } from 'next/navigation';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { fetchServiceById } from '@/redux/slices/serviceSlice';
+import { LoadingScreen } from '@/components/loading-screen';
 
 const mockProduct = {
   id: 1,
@@ -178,6 +182,17 @@ function ProductInfo({ product }: { product: typeof mockProduct }) {
 
 
 export default function ShopProductView() {
+  const {productId} = useParams()
+  const {currentProduct, loading} = useAppSelector(state => state.serviceSlice)
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(fetchServiceById(productId))
+  }, [dispatch, productId])
+  
+  console.log(currentProduct);
+  
+  if(loading) return <LoadingScreen/>
 
   return (
     <Box sx={{ background: '#f7f8fa', minHeight: '100vh', py: 0 }}>

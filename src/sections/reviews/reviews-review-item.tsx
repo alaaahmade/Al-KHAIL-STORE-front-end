@@ -74,7 +74,7 @@ const {commentReplies} = review;
             Reply
           </Button>
       </Stack>
-</Stack>
+      </Stack>
     </Stack>
   );
 
