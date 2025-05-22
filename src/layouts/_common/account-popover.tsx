@@ -1,3 +1,4 @@
+'use client';
 import { m } from 'framer-motion';
 // @mui
 import { alpha } from '@mui/material/styles';
@@ -16,11 +17,11 @@ import { useAuthContext } from 'src/auth/hooks';
 import { varHover } from 'src/components/animate';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { AuthContext } from 'src/auth/context/jwt';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
 
-const OPTIONS = [
+const OPTIONSs = [
   {
     label: 'Home',
     linkTo: '/',
@@ -31,7 +32,7 @@ const OPTIONS = [
   },
   {
     label: 'Settings',
-    linkTo: '/#2',
+    linkTo: '/#1',
   },
 ];
 
@@ -39,7 +40,7 @@ const OPTIONS = [
 
 export default function AccountPopover() {
   const router = useRouter();
-
+  const [OPTIONS, setOPTIONS] = useState(OPTIONSs);
   // const { user } = useMockedUser();
   const {user} = useContext(AuthContext)
   
@@ -63,6 +64,38 @@ export default function AccountPopover() {
     popover.onClose();
     router.push(path);
   };
+
+  useEffect(() => {
+    if(user){
+      if(user.role.toLowerCase() === 'user'){
+        setOPTIONS([
+          ...OPTIONSs,
+          {
+            label: 'Settings',
+            linkTo: '/shop/settings',
+          },
+        ])
+      }
+      if(user.role.toLowerCase() === 'seller'){
+        setOPTIONS([
+          ...OPTIONSs,
+          {
+            label: 'Settings',
+            linkTo: '/dashboard/settings/seller',
+          },
+        ])
+      }
+      if(user.role.toLowerCase() === 'admin'){
+        setOPTIONS([
+          ...OPTIONSs,
+          {
+            label: 'Settings',
+            linkTo: '/dashboard/settings/admin',
+          },
+        ])
+      }
+    }
+  }, [user])
 
   return (
     <>

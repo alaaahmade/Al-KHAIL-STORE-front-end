@@ -24,8 +24,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 
 const tabs = [
-  { label: 'Notifications', icon: <Iconify icon="mingcute:notification-fill" width="24" height="24" /> },
   { label: 'Account', icon: <Iconify icon="material-symbols:person" width="24" height="24" /> },
+  { label: 'Notifications', icon: <Iconify icon="mingcute:notification-fill" width="24" height="24" /> },
   { label: 'Payment Methods', icon: <Iconify icon="fluent:payment-16-filled" width="24" height="24" /> },
   { label: 'Shipping', icon: <Iconify icon="fa-solid:shipping-fast" width="24" height="24" /> },
   { label: 'Store Information', icon: <Iconify icon="fa6-solid:store" width="576" height="512" />},
@@ -50,7 +50,7 @@ export const ShopSettingsView = () => {
   useEffect(() => {
     if(!tapSearch){
       const params = new URLSearchParams(searchParams.toString());
-      params.set('tapSearch', 'Notifications');
+      params.set('tapSearch', 'Account');
       router.push(`?${params.toString()}`);
     }
   }, [router, searchParams, tapSearch])
@@ -60,7 +60,7 @@ export const ShopSettingsView = () => {
       <Typography variant="h4" sx={{ mb: 2 }}>
         Account Settings
       </Typography>
-      <Typography variant="subtitle2" sx={{ color: 'text.secondary', mb: 5 }}>
+      <Typography variant="subtitle2" sx={{ color: 'text.secondary', mb: 1 }}>
         Home &gt; Settings
       </Typography>
 
@@ -93,11 +93,11 @@ export const ShopSettingsView = () => {
         <Grid item xs={12} md={9}>
           {
             tapSearch === 'Store Information' ? <StoreInformation   /> 
-            : tapSearch === 'Account' ? <AccountSettings /> 
+            : tapSearch === 'Notifications' ? <NotificationsSettings /> 
             : tapSearch === 'Security' ? <SecuritySettings />
             : tapSearch === 'Payment Methods' ? <PaymentMethods />
             : tapSearch === 'Shipping' ? <ShippingAddress />
-            : <NotificationsSettings />
+            : <AccountSettings /> 
         }
 
         </Grid>

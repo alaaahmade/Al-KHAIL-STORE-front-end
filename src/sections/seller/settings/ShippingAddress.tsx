@@ -18,7 +18,6 @@ const ShippingAddress = () => {
   const [open, setOpen] = useState(false);
    const [currentSettings, setCurrentSettings] = useState<any>(null);
     const {user} = useAuthContext()
-    console.log(currentSettings);
     
     useEffect(() => {
       if (user?.settings) {

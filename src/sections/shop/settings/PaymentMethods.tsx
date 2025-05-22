@@ -7,9 +7,6 @@ import {
   Divider,
   Stack,
   Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
   IconButton,
 } from '@mui/material';
 import Iconify from '@/components/iconify';
@@ -19,6 +16,7 @@ import axiosInstance from '@/utils/axios';
 import { toast } from 'react-toastify';
 
 interface StripeCard {
+  card: any;
   id: string;
   brand: string;
   last4: string;
@@ -48,19 +46,17 @@ const PaymentMethods = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  console.log(cards);
   
   const fetchCards = async () => {
     setLoading(true);
     setError(null);
     try {
       const res = await axiosInstance.get('/v1/payments/payment-methods');
-      // If your backend marks default card, use that. Otherwise, mark first as default for demo.
-      let fetchedCards = res.data;
+      const fetchedCards = res.data;
       
       if (Array.isArray(fetchedCards) && fetchedCards.length > 0) {
         // Optionally, determine default card (if backend doesn't mark it)
-        // fetchedCards[0].isDefault = true;
+        fetchedCards[0].card.isDefault = true;
       }
       setCards(fetchedCards);
     } catch (err: any) {
@@ -187,23 +183,8 @@ const PaymentMethods = () => {
           </Box>
         </Stack>
       </Card>
-
-      {/* Add Card Dialog */}
-      {/* <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-        <DialogTitle>
-          Add New Card
-          <IconButton
-            aria-label="close"
-            onClick={handleCloseDialog}
-            sx={{ position: 'absolute', right: 8, top: 8 }}
-          >
-            <Iconify icon="ic:round-close" />
-          </IconButton> */}
-        {/* </DialogTitle> */}
-        {/* <DialogContent dividers> */}
           <AddCardForm open={open} onClose={handleCloseDialog} onCardAdded={handleCardAdded} />
-        {/* </DialogContent> */}
-      {/* </Dialog> */}
+
     </>
   );
 };
