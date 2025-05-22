@@ -152,13 +152,14 @@ export function AuthProvider({ children }: Props) {
 
   // REGISTER
   const register = useCallback(
-    async (email: string, password: string, firstName: string, lastName: string) => {
+    async (email: string, password: string, firstName: string, lastName: string, phoneNumber: string) => {
       const response = await axios.post(endpoints.auth.register, {
         email,
         password,
-        fullName: `${firstName} ${lastName}`,
-      });
-
+        firstName,
+        lastName,
+        phoneNumber
+      });      
       const { accessToken, user } = response.data;
 
       sessionStorage.setItem(STORAGE_KEY, accessToken);

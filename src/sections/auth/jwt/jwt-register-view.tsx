@@ -11,12 +11,11 @@ import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
-import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Box } from '@mui/material';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // routes
 import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
 import { useSearchParams, useRouter, usePathname } from 'src/routes/hooks';
 // config
 import { PATH_AFTER_LOGIN } from 'src/config-global';
@@ -25,8 +24,6 @@ import { useAuthContext } from 'src/auth/hooks';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
-import { DatePicker } from '@mui/x-date-pickers'
-import { fBerthDate } from 'src/utils/format-time';
 import { Icon } from '@iconify/react';
 import { StyledAuthWrapper, SubmitButton } from 'src/components/auth-components';
 import { useTheme } from '@mui/material/styles';
@@ -35,6 +32,7 @@ import { useTheme } from '@mui/material/styles';
 
 export default function JwtRegisterView() {
   const { register } = useAuthContext();
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
   const pathName = usePathname();
@@ -52,8 +50,7 @@ export default function JwtRegisterView() {
     lastName: Yup.string().required('Last name required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required'),
-    gender: Yup.string().required('Gender is required'),
-    dateOfBirth: Yup.string().required('Date of birth is required'),
+    phone: Yup.string().required('Phone number is required'),
   });
 
   const defaultValues = {
@@ -61,8 +58,7 @@ export default function JwtRegisterView() {
     lastName: '',
     email: '',
     password: '',
-    gender: '',
-    dateOfBirth: '',
+    phone: '',
   };
 
   const methods = useForm({
@@ -73,15 +69,18 @@ export default function JwtRegisterView() {
   const {
     handleSubmit,
     setValue,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = methods;
-
-  const onSubmit = handleSubmit(async (data) => {
+  console.log(errors);
+  
+  const onSubmit = handleSubmit(async (data) => {    
     try {
-      await register?.(data.email, data.password, data.firstName, data.lastName);
-
+      setLoading(true);
+      const response = await register?.(data.email, data.password, data.firstName, data.lastName, data.phone);      
       router.push(returnTo || PATH_AFTER_LOGIN);
+      setLoading(false);
     } catch (error: any) {
+      setLoading(false);
       console.error(error);
       setErrorMsg(
         error.response?.data?.message || error.message || 'Something went wrong. Please try again.'
@@ -137,7 +136,9 @@ m: 0,
 
 
   const renderForm = (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
+    <FormProvider methods={methods}
+    //  onSubmit={onSubmit}
+     >
       <Stack spacing={2.5}>
         {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
 
@@ -145,36 +146,7 @@ m: 0,
           <RHFTextField name="firstName" label="First name" />
           <RHFTextField name="lastName" label="Last name" />
         </Stack>
-        <Stack direction={{ xs: 'column', sm: 'row', }} alignItems='center' spacing={2}>
-
-        <FormControl fullWidth
-            sx={{width: '50%'}}
-
-        >
-          <InputLabel id="demo-simple-select-label">Gender</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            // value={age}
-            name='gender'
-            label="Gender"
-            // onChange={handleChange}
-            onChange={(event) => setValue('gender', String(event.target.value))}
-          >
-            <MenuItem value='Male'> Male</MenuItem>
-            <MenuItem value='Female'>Female</MenuItem>
-          </Select>
-        </FormControl>
-        <DatePicker
-          label="Date of Birth"
-          name="dateOfBirth"
-          maxDate={new Date('2007-01-01')}
-          onChange={(newValue) => setValue('dateOfBirth', fBerthDate(newValue))}
-      sx={{
-        width: '50%'
-      }}
-/>
-        </Stack>
+        <RHFTextField name="phone" label="Phone Number" />
         <RHFTextField name="email" label="Email address" />
 
         <RHFTextField
@@ -196,15 +168,16 @@ m: 0,
           fullWidth
           color="inherit"
           size="large"
-          type="submit"
+          // type="submit"
+          onClick={onSubmit}
           variant="contained"
-          loading={isSubmitting}
+          loading={loading}
         >
           Create account
 
 
           <InputAdornment position="end">
-            <IconButton onClick={password.onToggle} edge="end">
+            <IconButton  edge="end">
               <Icon icon="eva:arrow-ios-forward-fill" width="24" height="24" color='#fff' />
             </IconButton>
           </InputAdornment>
