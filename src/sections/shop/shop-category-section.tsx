@@ -1,7 +1,9 @@
 'use client'
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Box, Typography, Stack, Paper } from '@mui/material';
 import Iconify from '@/components/iconify';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const categories = [
   { label: 'Skincare', icon: <Iconify icon="mdi:flower-lotus" width="24" height="24" /> },
@@ -12,7 +14,20 @@ const categories = [
   { label: 'Gift Sets', icon: <Iconify icon="fa-solid:gifts" width="640" height="512" /> },
 ];
 
-const ShopCategorySection = () => (
+const ShopCategorySection = () =>{ 
+
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  const gitUrl = useCallback(
+      (newValue: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('category', newValue);
+        router.push(`products?${params.toString()}`);
+      },
+      [searchParams, router]
+    );
+  return(
   <Box sx={{
     background: '#fff',
     px: { xs: 2, md: 0 },
@@ -42,6 +57,12 @@ const ShopCategorySection = () => (
           bgcolor: 'rgba(253, 242, 248, 1)',
           width: '100%',
           height: '100%',
+          cursor: 'pointer',
+        }}
+        // component={Link}
+        // href={getUrl(cat.label)}
+        onClick={() => {
+          gitUrl(cat.label)
         }}
       >
         <Box mb={1} fontSize={32} color="primary.main">{cat.icon}</Box>
@@ -51,6 +72,6 @@ const ShopCategorySection = () => (
   ))}
 </Stack>
   </Box>
-);
+)};
 
 export default ShopCategorySection;

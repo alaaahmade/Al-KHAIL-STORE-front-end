@@ -7,10 +7,14 @@ import React, { useEffect, useState } from 'react'
 import { ProductCard } from '../productCard'
 import { fetchCategories } from '@/redux/slices/serviceSlice'
 import Iconify from '@/components/iconify'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 const ShopProductsView = () => {
 
     const {products, loadingB} = useAppSelector(state => state.SellersSlice)
+
+    const searchParams = useSearchParams()
+    const categoryP = searchParams.get('category')
 
     const dispatch = useAppDispatch()
 
@@ -20,7 +24,7 @@ const ShopProductsView = () => {
     }, [dispatch])
 
     
-
+    const router = useRouter()
     const [page, setPage] = useState(1);
     const [category, setCategory] = useState('All');
     const [price, setPrice] = useState('all');
@@ -28,7 +32,11 @@ const ShopProductsView = () => {
     const { categories } = useAppSelector((state) => state.serviceSlice);
     const [search, setSearch] = useState('');
 
-    
+    useEffect(() => {
+      if(categoryP) {
+        setCategory(categoryP)
+      }
+    }, [categoryP])
     
     const itemsPerPage = 8;
     
@@ -95,13 +103,19 @@ const ShopProductsView = () => {
   setPage(1);
 }, [category, price, sort, search]);
 
+const handleChangeCat = (value: string) => {
+ const params = new URLSearchParams(searchParams.toString());
+  params.set('category', value);
+  router.push(`?${params.toString()}`);
+}
+
 if(loadingB) return <LoadingScreen/>
 
   return (
     <Container  sx={{px: 8, py: 1}}>
 
 <Typography variant="h4" sx={{ my: 5 }}>
-        Products
+       {categoryP && categoryP + ' '} Products
       </Typography>
 
     <Stack sx={{width: '100%', mb: 5 }} gap= {5} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
@@ -129,7 +143,8 @@ if(loadingB) return <LoadingScreen/>
           <Stack direction={"row"} alignItems={'center'} justifyContent={'flex-end'} gap={3}>
       <FormControl sx={{ minWidth: 160 }}>
           <InputLabel>Category</InputLabel>
-          <Select size='small' value={category} label="Category" onChange={(e) => setCategory(e.target.value)}>
+          <Select size='small' value={category} label="Category"
+          onChange={(e) => handleChangeCat(e.target.value)}>
             <MenuItem value="All">All</MenuItem>
             {Array.isArray(categories) &&
               categories.map((cat: any) => (
@@ -166,10 +181,18 @@ if(loadingB) return <LoadingScreen/>
           sm: 'repeat(2, 1fr)',
           md: 'repeat(4, 1fr)',
         }}
+        
       >
-        {paginatedProducts.map((product) => (
+        {paginatedProducts.length > 0 ? paginatedProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
-        ))}
+        )) : 
+          <Typography
+          width={'100%'}
+            textAlign={'center'}
+          >
+            There is no Products found
+          </Typography>
+        }
       </Box>
 
       <Box mt={4} display="flex" justifyContent="center">
