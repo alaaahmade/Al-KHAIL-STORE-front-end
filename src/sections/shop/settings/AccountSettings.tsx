@@ -1,18 +1,206 @@
-import { Card, Stack, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Card,
+  Stack,
+  Typography,
+  Avatar,
+  Button,
+  TextField,
+  Switch,
+  Divider,
+} from '@mui/material';
+import Iconify from '@/components/iconify';
+import { useAuthContext } from '@/auth/hooks';
+import { toast } from 'react-toastify';
+import axiosInstance from '@/utils/axios';
 
 const AccountSettings = () => {
+  const [orderUpdates, setOrderUpdates] = useState(true);
+  const [promotions, setPromotions] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const {user} = useAuthContext();
+  const [currentSettings, setCurrentSettings] = useState<any>({
+    firstName: 'John Doe',
+    lastName: 'Doe',
+    email: '5o4Hb@example.com',
+    phone: '1234567890',
+  });
+  
+  useEffect(() => {
+    if(user) {
+      setCurrentSettings({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phone: user.phoneNumber,
+        photo: user.photo
+      });
+    }
+  }, [user])
+
+  const handleChangeField = (e: any) => {
+    setCurrentSettings({
+      ...currentSettings,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSave = async () => {
+    if(!edit){
+      setEdit(true);
+      return
+    }
+    try {
+      const response = await axiosInstance.patch(`/users/${user?.id}`, currentSettings);
+      console.log(response);
+      setEdit(false);
+      
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message)
+      
+    }
+  }
+
+  
+
   return (
-    <Card sx={{ p: 3 }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Profile Information
-      </Typography>
-      <Stack spacing={1}>
-        <Typography variant="body2">Name: John Doe</Typography>
-        <Typography variant="body2">Email: john@example.com</Typography>
-        <Typography variant="body2">Phone: +1 234 567 890</Typography>
-      </Stack>
-    </Card>
+        <Box sx={{ flex: 1 }}>
+          <Card sx={{ p: { xs: 2, md: 4 }, position: 'relative', boxShadow: 0 }}>
+            {/* Profile Info */}
+            <Button
+              sx={{
+                position: 'absolute',
+                top: 16,
+                right: 16,
+              }}
+              color='primary'
+              startIcon={edit ? <Iconify icon="eva:save-fill" width="24" height="24" />  : <Iconify icon="mage:edit" width="24" height="24" />}
+              onClick={handleSave}
+            >
+              {edit ? 
+                'Save'
+              : 'Edit'}
+            </Button>
+            <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
+              Profile Information
+            </Typography>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} alignItems="center" sx={{ mb: 3 }}>
+                <Avatar
+                  src={user?.photo}
+                  alt="Profile"
+                  sx={{ width: 72, height: 72, mb: 1 }}
+                />
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                <Button
+                
+                variant="contained" color="primary" size="small" sx={{ textTransform: 'none', mb: 0.5, color: '#fff' }}>
+                  Change Photo
+                </Button>
+                <Typography variant="caption" color="text.secondary">
+                  Maximum file size: 2MB
+                </Typography>
+              </Box>
+            </Stack>
+              <Box sx={{ flex: 1 }}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 2 }}>
+                  <TextField
+                    label="First Name"
+                    size="small"
+                    value={currentSettings.firstName}
+                    name='firstName'
+                    onChange={handleChangeField}
+                    disabled={!edit}
+                    fullWidth
+                    InputProps={{ readOnly: !edit }}
+                  />
+                  <TextField
+                    label="Last Name"
+                    size="small"
+                    name='lastName'
+                    onChange={handleChangeField}
+                    value={currentSettings.lastName}
+                    disabled={!edit}
+                    fullWidth
+                    InputProps={{ readOnly: !edit  }}
+                  />
+                </Stack>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                  <TextField
+                    label="Email"
+                    size="small"
+                    name='email'
+                    onChange={handleChangeField}
+                    value={currentSettings.email}
+                    disabled={!edit}
+                    fullWidth
+                    InputProps={{ readOnly: !edit  }}
+                  />
+                  <TextField
+                    label="Phone"
+                    size="small"
+                    name='phone'
+                    onChange={handleChangeField}
+                    value={currentSettings.phone}
+                    disabled={!edit}
+                    fullWidth
+                    InputProps={{ readOnly: !edit  }}
+                  />
+
+                </Stack>
+              </Box>
+            <Divider sx={{ my: 3 }} />
+            {/* Email Preferences */}
+            <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
+              Email Preferences
+            </Typography>
+            <Stack spacing={2}>
+              <Stack direction="row" alignItems="center" justifyContent="space-between">
+                <Box>
+                  <Typography variant="body2" fontWeight={500}>Order Updates</Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Receive updates about your orders
+                  </Typography>
+                </Box>
+                <Switch
+                  checked={orderUpdates}
+                  onChange={e => setOrderUpdates(e.target.checked)}
+                  color="primary"
+                  sx={{
+                    '& .MuiSwitch-switchBase.Mui-checked': {
+                      color: 'primary.main',
+                    },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                      backgroundColor: 'primary.main',
+                    },
+                  }}
+                />
+              </Stack>
+              <Stack direction="row" alignItems="center" justifyContent="space-between">
+                <Box>
+                  <Typography variant="body2" fontWeight={500}>Promotions</Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Receive promotional offers and discounts
+                  </Typography>
+                </Box>
+                <Switch
+                  checked={promotions}
+                  onChange={e => setPromotions(e.target.checked)}
+                  color="secondary"
+                  sx={{
+                    '& .MuiSwitch-switchBase.Mui-checked': {
+                      color: 'secondary.main',
+                    },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                      backgroundColor: 'primary.main',
+                    },
+                  }}
+                />
+              </Stack>
+            </Stack>
+          </Card>
+      </Box>
   );
 };
 

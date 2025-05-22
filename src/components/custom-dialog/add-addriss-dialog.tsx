@@ -17,11 +17,12 @@ import {
 } from '@mui/material';
 
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Iconify from '../iconify';
 import * as Yup from 'yup';
 import axiosInstance from '@/utils/axios';
 import { useAuthContext } from '@/auth/hooks';
+import { toast } from 'react-toastify';
 
 const addressSchema = Yup.object().shape({
   label: Yup.string().required('label is required'),
@@ -33,8 +34,9 @@ const addressSchema = Yup.object().shape({
   phone: Yup.string().required('Phone is required'),
 });
 
-export const AddAddressDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
+export const AddAddressDialog = ({ open, onClose, currentAddress }: { open: boolean; onClose: () => void, currentAddress: any }) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  
   const [address, setAddress] = useState<{
     label: string;
     name: string;
@@ -43,7 +45,7 @@ export const AddAddressDialog = ({ open, onClose }: { open: boolean; onClose: ()
     country: string;
     isDefault: boolean;
     phone: string;
-  }>({
+  }>(currentAddress ? currentAddress : {
     label: '',
     name: '',
     address: '',
@@ -80,23 +82,44 @@ export const AddAddressDialog = ({ open, onClose }: { open: boolean; onClose: ()
 
   const handleSubmit = async () => {
     await validateAddress();
-    try {
-      if (Object.keys(errors).length > 0) return;
-        const response = await axiosInstance.patch(`/v1/sellers/${user?.settings?.id}`, {
-          ...user?.settings,
-          shipping_Address: [...user?.settings?.shipping_Address, address],
-        });
-        // if(response.ok
-          onClose();
-          window.location.reload();
-        // }        
-    } catch (error) {
-      console.error(error);
-      
+    if(currentAddress){
+      try {
+        if (Object.keys(errors).length > 0) return;
+        const filterAds = user?.settings?.shipping_Address.filter((addr: any) => addr.address !== currentAddress.address);        
+          const response = await axiosInstance.patch(`/v1/sellers/${user?.settings?.id}`, {
+            ...user?.settings,
+            shipping_Address: [...filterAds, address],
+          });
+            onClose();
+            window.location.reload();
+      } catch (error) {
+        console.error(error);
+        toast.error(error.message)
+      }      
+    }else {
+      try {
+        if (Object.keys(errors).length > 0) return;
+          const response = await axiosInstance.patch(`/v1/sellers/${user?.settings?.id}`, {
+            ...user?.settings,
+            shipping_Address: [...user?.settings?.shipping_Address, address],
+          });
+          // if(response.ok
+            onClose();
+            window.location.reload();
+          // }        
+      } catch (error) {
+        console.error(error);
+      }
+        
     }
-      
     // onClose(address);
   };
+
+  useEffect(() => {
+    if(currentAddress){
+      setAddress(currentAddress)
+    }
+  }, [currentAddress]);
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>

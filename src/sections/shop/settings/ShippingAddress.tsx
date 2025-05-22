@@ -4,27 +4,27 @@ import { useAuthContext } from '@/auth/hooks';
 import { AddAddressDialog } from '@/components/custom-dialog/add-addriss-dialog';
 import Iconify from '@/components/iconify';
 import Label from '@/components/label';
+import axiosInstance from '@/utils/axios';
 import {
   Box,
   Button,
   Card,
-  Chip,
-  IconButton,
   Stack,
   Typography,
-  Divider,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 
 const ShippingAddress = () => {
   const [open, setOpen] = useState(false);
    const [currentSettings, setCurrentSettings] = useState<any>(null);
+   const [currentAddress, setCurrentAddress] = useState<any>(null);
     const {user} = useAuthContext()
-  
+    
     useEffect(() => {
-      if (user?.seller?.setting) {
-        setCurrentSettings(user.seller.setting.shipping_Address);
+      if (user?.settings) {
+        setCurrentSettings(user.settings.shipping_Address);
       }
     }, [user]);
 
@@ -34,6 +34,25 @@ const ShippingAddress = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleDeleteShipping =async (address: string) => {
+    const filterAds = currentSettings.filter((addr: any) => addr.address !== address);
+    setCurrentSettings(currentSettings.filter((addr: any) => addr.address !== address));
+    try {
+      const response = await axiosInstance.patch(`/v1/sellers/${user?.settings?.id}`, {
+        ...user?.settings,
+        shipping_Address: [...filterAds],
+      });
+
+      if (response.status === 200) {
+        toast.success('Address deleted successfully');
+      }
+      
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
   };
     
   return (
@@ -48,7 +67,7 @@ const ShippingAddress = () => {
       </Stack>
 
       <Stack spacing={2}>
-        {currentSettings?.length > 0 && currentSettings?.map((addr, idx) => (
+        {currentSettings?.length > 0 && currentSettings?.map((addr: any, idx: any) => (
           <Card key={idx} variant="outlined" sx={{ p: 2 }}>
             <Stack direction="row" justifyContent="space-between">
               <Box>
@@ -75,6 +94,12 @@ const ShippingAddress = () => {
                   startIcon={<Iconify icon="cuida:edit-outline" width="24" height="24" />}
                   size="small"
                   sx={{ textTransform: 'none', color: 'primary.main' }}
+                  onClick={() => {
+                    setCurrentAddress(addr)
+                    handleOpen()
+                  }
+
+                  }
                 >
                   Edit
                 </Button>
@@ -82,6 +107,7 @@ const ShippingAddress = () => {
                   startIcon={<Iconify icon="material-symbols:delete" width="24" height="24" />}
                   size="small"
                   color="inherit"
+                  onClick={() => handleDeleteShipping(addr.address)}
                   sx={{ textTransform: 'none', color: '#6b7280' }}
                 >
                   Delete
@@ -94,6 +120,8 @@ const ShippingAddress = () => {
       <AddAddressDialog
         open={open}
         onClose={handleClose}
+        // onCardAdded={() => {}}
+        currentAddress={currentAddress}
       />
     </Box>
   );
