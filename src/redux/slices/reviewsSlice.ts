@@ -50,8 +50,6 @@ export const createCommentReply = createAsyncThunk(
   'reviews/createCommentReply',
   async (data: any, { rejectWithValue }) => {
     try {
-      console.log(data);
-      
       const response = await axios.post('/v1/comment-replies', data);
       return response.data;
     } catch (error: any) {
@@ -77,7 +75,6 @@ export const fetchCommentsByProduct = createAsyncThunk(
   async(productId: string, {rejectWithValue}) => {
     try {
       const {data} = await axios.get(`/v1/reviews/product/${productId}`)
-      console.log(data.data);
       return data.data
     } catch (error) {
       rejectWithValue(error?.response?.data?.message || 'Failed to fetch reviews')

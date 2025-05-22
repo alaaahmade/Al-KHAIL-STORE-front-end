@@ -5,13 +5,16 @@ import Stack from '@mui/material/Stack';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 // routes
+import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 // hooks
+import { useMockedUser } from 'src/hooks/use-mocked-user';
+// utils
 // api
 // components
 import Iconify from 'src/components/iconify';
 import uuidv4 from '@/utils/uuidv4';
-import { createConversation } from '@/app/api/chat';
+import { createConversation, sendMessage } from '@/app/api/chat';
 import { useAuthContext } from '@/auth/hooks';
 // types
 // ----------------------------------------------------------------------
@@ -40,15 +43,15 @@ export default function ChatMessageInput({
 
   const myContact = useMemo(
     () => ({
-      id: user?.id,
-      role: user?.role,
-      email: user?.email,
-      address: user?.address,
-      name: user?.firstName + ' ' + user?.lastName,
+      id: user.id,
+      role: user.role,
+      email: user.email,
+      address: user.address,
+      name: user.firstName + ' ' + user.lastName,
       lastActivity: new Date(),
-      avatarUrl: user?.lastActiveAt,
-      phoneNumber: user?.phoneNumber,
-      status: user?.isActive ? 'online' :'online' 
+      avatarUrl: user.lastActiveAt,
+      phoneNumber: user.phoneNumber,
+      status: user.isActive ? 'online' :'online' 
     }),
     [user]
   );
@@ -90,10 +93,12 @@ export default function ChatMessageInput({
     if (socket) {
       console.log('Socket in component:', socket);
   
+      // Wait until socket is connected
       if (!socket.connected) {
         socket.on('connect', () => {
           console.log('Socket connected in component:', socket.id);
           
+          // safe to use socket here
           socket.emit('some-event', { data: 'example' });
         });
       } else {
@@ -132,7 +137,7 @@ export default function ChatMessageInput({
             });
           } else {
             const res = await createConversation(conversationData);
-            // router.push(`${paths.dashboard.chat}?id=${res.conversation.id}`);
+            router.push(`${paths.dashboard.chat}?id=${res.conversation.id}`);
             onAddRecipients([]);
           }
           setMessage('');

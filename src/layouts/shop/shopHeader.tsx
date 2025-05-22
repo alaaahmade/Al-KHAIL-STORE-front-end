@@ -54,8 +54,9 @@ export default function ShopHeader() {
       <Stack direction="row" spacing={2}>
         <Typography component="a" href="/shop" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Home</Typography>
         <Typography component="a" href="/shop/shops" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Shop</Typography>
-        <Typography component="a" href="/shop/brands" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Brands</Typography>
-        <Typography component="a" href="/shop/become-seller" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Become a Seller</Typography>
+        <Typography component="a" href="/shop/products" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Products</Typography>
+        <Typography component="a" href="/shop/category" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Categories</Typography>
+        <Typography component="a" href="/shop/messages" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Messages</Typography>
       </Stack>
           <TextField
             type="text"

@@ -36,7 +36,6 @@ export default function RHFMultiSelect({
   ...other
 }: Props) {
   const { control } = useFormContext();
-  console.log(options, 'options');
 
   return (
     <Controller

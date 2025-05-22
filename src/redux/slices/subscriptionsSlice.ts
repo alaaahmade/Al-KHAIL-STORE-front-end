@@ -52,8 +52,6 @@ export const fetchHistory = createAsyncThunk(
   'subscriptions/fetchHistory',
   async (id: string, { rejectWithValue }) => {
     try {
-      console.log(id);
-      
       const response = await axios.get(`/subscriptions/history/${id}`);
       return response.data;
     } catch (error: any) {

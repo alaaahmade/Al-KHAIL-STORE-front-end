@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchCategories } from '@/redux/slices/serviceSlice';
 // components
 import { ProductCard } from './productCard';
+import { LoadingScreen } from '@/components/loading-screen';
 
 type Props = {
   products: any[];
@@ -25,6 +26,18 @@ export default function ProfileProducts({ products }: Props) {
   const { categories } = useAppSelector((state) => state.serviceSlice);
 
   const itemsPerPage = 8;
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, []);
+
+  // Reset to page 1 when filters change
+useEffect(() => {
+  setPage(1);
+}, [category, price, sort]);
+
+
+  if(!products) return <LoadingScreen/>
 
   const filteredProducts = products
   .filter((product) => {
@@ -65,15 +78,6 @@ export default function ProfileProducts({ products }: Props) {
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
-
-  useEffect(() => {
-    dispatch(fetchCategories());
-  }, []);
-
-  // Reset to page 1 when filters change
-useEffect(() => {
-  setPage(1);
-}, [category, price, sort]);
 
 
   return (

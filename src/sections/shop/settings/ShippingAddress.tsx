@@ -8,8 +8,11 @@ import {
   Box,
   Button,
   Card,
+  Chip,
+  IconButton,
   Stack,
   Typography,
+  Divider,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 
@@ -18,11 +21,10 @@ const ShippingAddress = () => {
   const [open, setOpen] = useState(false);
    const [currentSettings, setCurrentSettings] = useState<any>(null);
     const {user} = useAuthContext()
-    console.log(currentSettings);
-    
+  
     useEffect(() => {
-      if (user?.settings) {
-        setCurrentSettings(user.settings.shipping_Address);
+      if (user?.seller?.setting) {
+        setCurrentSettings(user.seller.setting.shipping_Address);
       }
     }, [user]);
 
@@ -46,7 +48,7 @@ const ShippingAddress = () => {
       </Stack>
 
       <Stack spacing={2}>
-        {currentSettings?.length > 0 && currentSettings?.map((addr: any, idx: any) => (
+        {currentSettings?.length > 0 && currentSettings?.map((addr, idx) => (
           <Card key={idx} variant="outlined" sx={{ p: 2 }}>
             <Stack direction="row" justifyContent="space-between">
               <Box>
@@ -81,7 +83,6 @@ const ShippingAddress = () => {
                   size="small"
                   color="inherit"
                   sx={{ textTransform: 'none', color: '#6b7280' }}
-
                 >
                   Delete
                 </Button>

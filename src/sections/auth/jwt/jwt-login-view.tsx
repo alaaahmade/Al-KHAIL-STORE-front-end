@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
@@ -25,7 +24,6 @@ import { useAuthContext } from 'src/auth/hooks';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
-import { Icon } from '@iconify/react';
 import { StyledAuthWrapper, SubmitButton } from 'src/components/auth-components';
 import { Box, Button, Checkbox, Divider, FormControlLabel, Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -33,12 +31,10 @@ import { useTheme } from '@mui/material/styles';
 // ----------------------------------------------------------------------
 
 export default function JwtLoginView() {
-  const { login, user } = useAuthContext();
+  const { login } = useAuthContext();
   const pathName = usePathname();
   const theme = useTheme()
 
-  console.log({user})
-  
   const router = useRouter();
 
   const [errorMsg, setErrorMsg] = useState('');
@@ -150,7 +146,7 @@ m: 0,
           href={paths.auth.jwt.forgotPassword}
           variant="body2"
           color="inherit"
-          underline="none"
+          // underline="none"
           sx={{ color: theme.palette.primary.main,
             textDecoration: 'none',
            }}

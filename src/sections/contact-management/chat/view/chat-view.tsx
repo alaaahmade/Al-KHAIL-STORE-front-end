@@ -10,8 +10,6 @@
     import { paths } from 'src/routes/paths';
     import { useRouter, useSearchParams } from 'src/routes/hooks';
     // hooks
-    import { useMockedUser } from 'src/hooks/use-mocked-user';
-    // components
     import { useSettingsContext } from 'src/components/settings';
 
     //
@@ -21,10 +19,11 @@
     import ChatMessageInput from '../chat-message-input';
     import ChatHeaderDetail from '../chat-header-detail';
     import ChatHeaderCompose from '../chat-header-compose';
-    import { useGetContacts, useGetConversation, useGetConversations } from '@/app/api/chat';
+    import {  useGetConversation, } from '@/app/api/chat';
     import { useAppDispatch, useAppSelector } from '@/redux/hooks';
   import { fetchChats } from '@/redux/slices/ContactSlice';
   import { useAuthContext } from '@/auth/hooks';
+import Iconify from '@/components/iconify';
 
     // ----------------------------------------------------------------------
 
@@ -48,10 +47,10 @@
 
       const [recipients, setRecipients] = useState<any[]>([]);
 
-      const [ contacts, setContacts ] = useState([]);
+      // const [ contacts ] = useState([]);
 
 
-      const { conversation, conversationError } = useGetConversation(`${selectedConversationId}`);    
+      const { conversation } = useGetConversation(`${selectedConversationId}`);    
       const participants: any[] = conversation
         ? conversation.participants.filter(
             (participant: any) => participant.id !== user?.id
@@ -62,7 +61,7 @@
         if (!chat || !chatId ) {        
           router.push(paths?.dashboard?.contactManagement.root);
         }
-      }, [chat, chatId]);
+      }, [chat, chatId, router]);
 
       const handleAddRecipients = useCallback((selected: any[]) => {
         setRecipients(selected);
@@ -70,7 +69,7 @@
 
       useEffect(() => {
         dispatch(fetchChats(user?.id));
-      }, []);
+      }, [dispatch, user]);
       
       useEffect(() => {
         if (chat?.messages) {
@@ -86,7 +85,7 @@
           console.log('New message received:', newMessage);
           
           if (String(newMessage.chatRoom.id) === String(chat.id)) {
-            setMessages((prevMessages) => {
+            setMessages((prevMessages: any) => {
               const updatedMessages = [...prevMessages, newMessage];
               return sortMessages(updatedMessages);
             });
@@ -104,7 +103,7 @@
       const details = !!conversation;
 
       const handleDeleteMessage = (messageId: string) => {
-        setMessages((prev) => prev.filter((m) => m.id !== messageId));
+        setMessages((prev: any) => prev.filter((m: any) => m.id !== messageId));
       
         socket?.emit('delete', { id: messageId });
       };
@@ -126,8 +125,8 @@
 
       const renderNav = (
         <ChatNav
-          contacts={contacts}
-          conversations={contacts}
+          contacts={chats}
+          conversations={chats}
           loading={loading}
           selectedConversationId={chatId}
         />
@@ -139,11 +138,15 @@
             width: 1,
             height: 1,
             overflow: 'hidden',
+            position: 'relative'
           }}
         >
-          {/* <ChatMessageList messages={chat?.messages} participants={chat.participants} /> */}
           <ChatMessageList messages={messages} participants={chat.participants} handleDeleteMessage={handleDeleteMessage} />
-
+          <Iconify sx={{position: 'absolute',
+                transform: 'translate(50%, 50%)',
+                bottom: '50%', right: '50%',  zIndex: -1,
+                opacity: '0.5'
+          }} icon="mynaui:chat-messages-solid" width={200} height={200} />
           <ChatMessageInput
             recipients={recipients}
             onAddRecipients={handleAddRecipients}

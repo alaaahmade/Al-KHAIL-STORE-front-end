@@ -119,8 +119,6 @@ export function CatView() {
     }
   };
   
-  // console.log(categories);
-
   useEffect(() => {
     async function fetchData() {
       dispatch(setIsLoading(true));

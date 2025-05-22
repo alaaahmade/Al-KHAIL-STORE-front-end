@@ -82,9 +82,9 @@ export const AddAddressDialog = ({ open, onClose }: { open: boolean; onClose: ()
     await validateAddress();
     try {
       if (Object.keys(errors).length > 0) return;
-        const response = await axiosInstance.patch(`/v1/sellers/${user?.seller?.id}`, {
-          ...user?.seller,
-          setting: {...user?.seller?.setting, shipping_Address: [...user?.seller?.setting?.shipping_Address, address] },
+        const response = await axiosInstance.patch(`/v1/sellers/${user?.settings?.id}`, {
+          ...user?.settings,
+          shipping_Address: [...user?.settings?.shipping_Address, address],
         });
         // if(response.ok
           onClose();

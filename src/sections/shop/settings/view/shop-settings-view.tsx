@@ -32,7 +32,7 @@ const tabs = [
   { label: 'Security', icon: <Iconify icon="line-md:security-twotone" width="24" height="24" /> },
 ];
 
-export const SellerSettingsView = () => {
+export const ShopSettingsView = () => {
   const settings = useSettingsContext();
   const searchParams = useSearchParams()
   const tapSearch = searchParams.get('tapSearch')
