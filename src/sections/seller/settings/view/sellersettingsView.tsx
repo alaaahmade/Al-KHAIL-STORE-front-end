@@ -28,8 +28,6 @@ import { useAuthContext } from '@/auth/hooks';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchUserSettings, updateUserStore } from '@/redux/slices/userSlice';
 import { toast } from 'react-toastify';
-import { LoadingButton } from '@mui/lab';
-
 
 const tabs = [
   { label: 'Notifications', icon: <Iconify icon="mingcute:notification-fill" width="24" height="24" /> },
