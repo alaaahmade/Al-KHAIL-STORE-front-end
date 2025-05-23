@@ -34,8 +34,10 @@ export const endpoints = {
     me: '/auth/me',
     login: '/auth/login',
     register: '/auth/register',
-    forgotPassword: '/auth/forgot-password',
-    resetPassword: '/auth/update-password',
+    forgotPassword: '/auth/forgot-password', // for account settings
+    resetPassword: '/auth/update-password',  // for account settings
+    forgotPasswordCode: '/auth/forgot-password', // public reset step 1
+    resetPasswordCode: '/auth/reset-password',   // public reset step 2
   },
   mail: {
     list: '/mail/list',

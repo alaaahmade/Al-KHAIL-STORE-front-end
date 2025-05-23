@@ -11,10 +11,14 @@ type Props = {
   children: React.ReactNode;
 };
 
+import { PublicResetProvider } from 'src/auth/context/jwt/public-reset-context';
+
 export default function Layout({ children }: Props) {
   return (
     <GuestGuard>
-      <AuthClassicLayout>{children}</AuthClassicLayout>
+      <PublicResetProvider>
+        <AuthClassicLayout>{children}</AuthClassicLayout>
+      </PublicResetProvider>
     </GuestGuard>
   );
 }
