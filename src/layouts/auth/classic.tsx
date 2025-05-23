@@ -48,9 +48,6 @@ export default function AuthClassicLayout({ children, image, title }: Props) {
         zIndex: 9,
       }}
     ><Logo
-      sx={{
-
-      }}
     />
     <Typography
       variant="h5"

@@ -34,6 +34,7 @@ export const endpoints = {
     me: '/auth/me',
     login: '/auth/login',
     register: '/auth/register',
+    sellerRegister: '/auth/become-seller',
     forgotPassword: '/auth/forgot-password', // for account settings
     resetPassword: '/auth/update-password',  // for account settings
     forgotPasswordCode: '/auth/forgot-password', // public reset step 1

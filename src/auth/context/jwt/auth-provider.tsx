@@ -173,6 +173,48 @@ export function AuthProvider({ children }: Props) {
     []
   );
 
+  // CREATE A SELLER
+  const createASeller = useCallback(
+    async ({
+      firstName,
+      lastName,
+      email,
+      password,
+      storeName,
+      description,
+      category,
+      phoneNumber,
+    }: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      password: string;
+      storeName: string;
+      description: string;
+      category: string;
+      phoneNumber: string;
+    }) => {
+      const response = await axios.post(endpoints.auth.sellerRegister, {
+        firstName,
+        lastName,
+        email,
+        password,
+        storeName,
+        description,
+        category,
+        phoneNumber,
+      });
+      const { accessToken, user } = response.data;
+      sessionStorage.setItem(STORAGE_KEY, accessToken);
+      setSession(accessToken);
+      dispatch({
+        type: Types.REGISTER,
+        payload: { user },
+      });
+    },
+    []
+  );
+
   // LOGOUT
   const logout = useCallback(async () => {
     sessionStorage.removeItem(STORAGE_KEY);
@@ -234,11 +276,12 @@ const contextValue = useMemo(() => ({
   unauthenticated: status === 'unauthenticated',
   login,
   register,
+  createASeller,
   logout,
   forgotPassword,
   resetPassword,
   socket,  // <-- use state variable here
-}), [state.user, status, socket, login, register, logout, forgotPassword, resetPassword]);
+}), [state.user, status, socket, login, register, createASeller, logout, forgotPassword, resetPassword]);
   
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
   
