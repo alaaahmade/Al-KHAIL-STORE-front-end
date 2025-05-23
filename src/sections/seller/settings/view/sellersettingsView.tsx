@@ -71,11 +71,8 @@ export const SellerSettingsView = () => {
 
   const { user } = useAuthContext();
   const {userSettings} = useAppSelector(state => state.user)
-  const [currentStoreSetting, setCurrentStoreSetting] = useState({});
-  const [errors, setErrors] = useState([]);
   const dispatch = useAppDispatch()
 
-  const [currentTab, setCurrentTab] = useState('store_information');
   const [storeInfo, setStoreInfo] = useState({
     logo: '',
     name: '',
@@ -165,13 +162,9 @@ export const SellerSettingsView = () => {
     if(user && user.id){
       dispatch(fetchUserSettings(user.id))
     }
-  }, [user])
+  }, [user, dispatch])
 
   useEffect(()=>{
-    setCurrentStoreSetting(prev => ({
-      ...prev,
-      ...userSettings
-    }))
     setStoreInfo(prev => ({
       ...prev,
       ...userSettings?.seller?.store
