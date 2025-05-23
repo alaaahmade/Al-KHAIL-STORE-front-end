@@ -68,7 +68,6 @@ export default function JwtRegisterView() {
 
   const {
     handleSubmit,
-    setValue,
     formState: { isSubmitting, errors },
   } = methods;
   console.log(errors);
