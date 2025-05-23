@@ -23,6 +23,7 @@ interface SellersState {
   editMode: boolean
   loadingB: boolean
   stores: any []
+  categoriesProducts: any[]
   featuredProducts: any[]
 }
 
@@ -30,6 +31,7 @@ const initialState: SellersState = {
   sellers:[],
   stores: [],
   featuredProducts: [],
+  categoriesProducts: [],
   sellerStore: null,
   shop: null,
   open: false,
@@ -136,6 +138,18 @@ export const fetchAllProducts = createAsyncThunk(
     }
   }
 );
+
+export const fetchCategoriesProducts = createAsyncThunk(
+  'products/categoriesProducts',
+  async (_, {rejectWithValue}) => {
+    try {
+      const response = await axios.get('/v1/products/categories');      
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch featured categories products')     
+    }
+  }
+)
 
 const SellersSlice = createSlice({
   name: 'Sellers',
@@ -271,6 +285,21 @@ const SellersSlice = createSlice({
 
       })
       .addCase(fetchAllProducts.rejected, (state) => {
+        state.loadingB = false;
+        state.error = 'Failed to fetch all products'
+      })
+      .addCase(fetchCategoriesProducts.pending, (state) => {
+        state.loadingB = true;
+        state.error = null
+
+      })
+      .addCase(fetchCategoriesProducts.fulfilled, (state, action) => {
+        state.categoriesProducts = action.payload;
+        state.loadingB = false;
+        state.error = null
+
+      })
+      .addCase(fetchCategoriesProducts.rejected, (state) => {
         state.loadingB = false;
         state.error = 'Failed to fetch all products'
       })

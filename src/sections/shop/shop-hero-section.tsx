@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Grid, Typography, Button } from '@mui/material';
+import Link from 'next/link';
 
 const ShopHeroSection = () => (
   <Box
@@ -54,6 +55,8 @@ const ShopHeroSection = () => (
             fontSize: '1rem',
             '&:hover': { background: '#c80055' },
           }}
+          component={Link}
+          href='products'
         >
           Shop Now
         </Button>

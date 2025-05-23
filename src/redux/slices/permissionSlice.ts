@@ -20,11 +20,11 @@ export const fetchPermissions = createAsyncThunk(
   'permission/fetchPermissions',
   async (params: { resource?: string; action?: string } | undefined, { rejectWithValue }) => {
     try {
-      const searchParams = new URLSearchParams();
-      if (params?.resource) searchParams.append('resource', params.resource);
-      if (params?.action) searchParams.append('action', params.action);
+      const ms = new URLms();
+      if (params?.resource) ms.append('resource', params.resource);
+      if (params?.action) ms.append('action', params.action);
 
-      const response = await axios.get(`/permissions?${searchParams.toString()}`);
+      const response = await axios.get(`/permissions?${ms.toString()}`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch permissions');

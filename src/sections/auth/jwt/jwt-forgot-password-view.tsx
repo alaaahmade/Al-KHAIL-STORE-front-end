@@ -13,18 +13,19 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 // hooks
-import { useAuthContext } from 'src/auth/hooks';
+import { usePublicResetContext } from 'src/auth/hooks';
 // components
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
-import { IconButton, InputAdornment } from '@mui/material';
+import { Box, IconButton, InputAdornment } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { useBoolean } from '@/hooks/use-boolean';
 import { StyledAuthWrapper, SubmitButton } from 'src/components/auth-components';
+import JwtResetPasswordView from './jwt-reset-password-view';
 
 // ----------------------------------------------------------------------
 
 export default function JwtForgotPasswordView() {
-  const { forgotPassword } = useAuthContext();
+  const { sendResetCode } = usePublicResetContext();
 
   const [errorMsg, setErrorMsg] = useState('');
   const [sent, setSent] = useState(false);
@@ -50,12 +51,12 @@ export default function JwtForgotPasswordView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await forgotPassword(data.email);
+      await sendResetCode(data.email);
       setSent(true);
       setErrorMsg('');
     } catch (error: any) {
       console.error(error);
-      setErrorMsg(error.response?.data?.message || 'Something went wrong');
+      setErrorMsg(error?.message || 'Something went wrong');
     }
   });
 
@@ -73,10 +74,6 @@ export default function JwtForgotPasswordView() {
   const renderForm = (
     <Stack spacing={2.5}>
       {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
-
-      {sent && (
-        <Alert severity="success">We have sent a password reset link to your email address.</Alert>
-      )}
 
       <RHFTextField name="email" label="Email address" />
 
@@ -113,16 +110,68 @@ export default function JwtForgotPasswordView() {
     </Stack>
   );
 
+    const renderWelcome = (
+      <Stack
+      alignItems={'center'}
+      justifyContent={'center'}
+      spacing={2}
+      sx={{
+      borderTopLeftRadius: 'inherit',
+      borderBottomLeftRadius: 'inherit',
+      width: '50%',
+      height: '100%',
+      backgroundImage: `
+      linear-gradient(to top right, rgba(236, 72, 153, 0.8),  rgba(139, 92, 246, 0.8)),
+      url('/assets/background/authForm.png')
+    `,    backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      color: '#FFFFFF',
+      }}>
+        <Typography variant="h5">Welcome to AL KHAIL</Typography>
+        <Typography sx={{
+          maxWidth: '50%',
+          textAlign: 'center',
+        }} variant="body2">A store specializing in selling hair and skin care supplies</Typography>
+      </Stack>
+    );
+
+
   return (
-        <StyledAuthWrapper
+    <Stack
+      sx={{ height: '100dvh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      p: 4,
+      position: 'relative',
+
+    }}
+    
+    >
+    <StyledAuthWrapper
+      sx={{
+        width: '60% !important',
+        height: '83% !important',
+        maxHeight: '650px',
+        boxShadow: '0px 10px 15px 0px rgba(0, 0, 0, 0.1), 0px 4px 6px 0px rgba(0, 0, 0, 0.1) ',
+
+      }}
+    >
+    {renderWelcome}
+      <Box
         sx={{
-          p: 4 
+          width:'50%',
+          p: '2em !important',
         }}
       >
-    <FormProvider methods={methods} onSubmit={onSubmit}>
+
+    {sent ? <JwtResetPasswordView setSent={setSent} sent={sent}/> : <FormProvider
+      methods={methods} onSubmit={onSubmit}>
       {renderHead}
       {renderForm}
-    </FormProvider>
+    </FormProvider>}
+    </Box>
     </StyledAuthWrapper>
+    </Stack>
   );
 }
