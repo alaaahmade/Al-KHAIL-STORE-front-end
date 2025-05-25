@@ -12,8 +12,13 @@ import { useAuthContext } from '@/auth/hooks';
 import axiosInstance, { endpoints } from '@/utils/axios';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useEffect } from 'react';
-import { fetchLatestReviews } from '@/redux/slices/reviewsSlice';
+import { fetchLatestReviews, fetchReviews } from '@/redux/slices/reviewsSlice';
 import ProductDetailsReview from '../product-details-review';
+import { fetchLatestOrders } from '@/redux/slices/ordersSlice';
+import { useDispatch } from 'react-redux';
+import { fetchSellers } from '@/redux/slices/SellersSlice';
+import { fetchCustomers, fetchUsers } from '@/redux/slices/userSlice';
+import { fetchProducts } from '@/redux/slices/productsReducer';
 
 // ----------------------------------------------------------------------
 
@@ -24,8 +29,11 @@ export default function OneView() {
 
   useEffect(() => {
     appDispatch(fetchLatestReviews())
+    appDispatch(fetchReviews())
+    appDispatch(fetchCustomers())
+    appDispatch(fetchLatestOrders())
+    appDispatch(fetchProducts())
   }, [])
-  
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>  

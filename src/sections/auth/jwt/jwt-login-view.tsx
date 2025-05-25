@@ -164,36 +164,6 @@ m: 0,
       >
         Sign In
       </SubmitButton>
-        <Divider>Or continue with</Divider>   
-        <Grid container spacing={2} sx={{ width: '100%', mb: 3 }}>
-          <Grid item xs={4}>
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            >
-              <Iconify icon="mdi:google" width={24} height={24} />
-            </Button>
-          </Grid>
-          <Grid item xs={4}>
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            >
-              <Iconify icon="mdi:facebook" width={24} height={24} />
-            </Button>
-          </Grid>
-          <Grid item xs={4}>
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            >
-              <Iconify icon="mdi:twitter" width={24} height={24} />
-            </Button>
-          </Grid>
-        </Grid>
     </Stack>
   );
 

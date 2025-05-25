@@ -1,8 +1,6 @@
 'use client'
 import React, { useEffect } from 'react';
 import { Box, Card, Typography, Button, TextField, MenuItem, Checkbox, FormControlLabel, Divider, Avatar, Stack } from '@mui/material';
-import GoogleIcon from '@mui/icons-material/Google';
-import FacebookIcon from '@mui/icons-material/Facebook';
 import Logo from '@/components/logo';
 import Iconify from '@/components/iconify';
 
@@ -144,11 +142,6 @@ const handleCreateSeller = async () => {
                 >
                   Next
                 </LoadingButton>
-                <Divider sx={{ my: 3 }}>Or continue with</Divider>
-                <Box display="flex" gap={2}>
-                  <Button variant="outlined" fullWidth startIcon={<GoogleIcon />} sx={{ textTransform: 'none', borderColor: '#eee', color: '#888' }}>Google</Button>
-                  <Button variant="outlined" fullWidth startIcon={<FacebookIcon />} sx={{ textTransform: 'none', borderColor: '#eee', color: '#888' }}>Facebook</Button>
-                </Box>
               </>
             )}
             {step === 2 && (

@@ -8,10 +8,12 @@ interface UserState {
   loading: boolean;
   error: string | null;
   userSettings: any
+  customers: IUser[]
 }
 
 const initialState: UserState = {
   users: [],
+  customers: [],
   userSettings: {},
   currentUser: null,
   loading: false,
@@ -26,6 +28,17 @@ export const fetchUsers = createAsyncThunk('user/fetchUsers', async (_, { reject
     return rejectWithValue(error.response?.data?.message || 'Failed to fetch users');
   }
 });
+
+export const fetchCustomers = createAsyncThunk('user/fetchCustomers', async (_, { rejectWithValue }) => {
+  try {
+    const response = await axios.get('/users/customers');
+    return response.data.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data?.message || 'Failed to fetch users');
+  }
+});
+
+
 
 export const createUser = createAsyncThunk(
   'user/createUser',
@@ -134,7 +147,20 @@ const userSlice = createSlice({
       .addCase(fetchUserSettings.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      });
+      })
+      // Fetch customers
+      .addCase(fetchCustomers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCustomers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.customers = action.payload;
+      })
+      .addCase(fetchCustomers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
   },
 });
 
