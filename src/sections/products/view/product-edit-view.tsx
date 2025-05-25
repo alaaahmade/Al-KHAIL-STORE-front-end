@@ -11,42 +11,33 @@ import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { useParams } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from 'src/redux/hooks';
-import { fetchServiceById } from 'src/redux/slices/serviceSlice';
 import { useSnackbar } from 'notistack';
 //
-import ServiceNewEditForm from '../service-new-edit-form';
+import { fetchProductById } from '@/redux/slices/productsReducer';
+import ProductNewEditForm from '../product-new-edit-form';
+import { LoadingScreen } from '@/components/loading-screen';
 
 // ----------------------------------------------------------------------
 
-export default function ServiceEditView() {
-  const { id } = useParams();
+export default function ProductEditView() {
+  const { productId } = useParams();
   const settings = useSettingsContext();
   const dispatch = useAppDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const serviceState = useAppSelector((state) => state.service);
-  const currentService = serviceState?.currentService ;
-  const loading = serviceState?.loading || false;
+  const ProductsState = useAppSelector((state) => state.products);
+  const currentProduct = ProductsState?.currentProduct ;
+  const loading = ProductsState?.loading || false;
 
+  console.log(ProductsState);
   
-
+  
   useEffect(() => {
-    if (id) {
-      dispatch(fetchServiceById(Number(id)))
-        .unwrap()
-        .catch((err) => {
-          enqueueSnackbar(err || 'Failed to fetch service details', { variant: 'error' });
-        });
+    if (productId) {
+      dispatch(fetchProductById(Number(productId)))
     }
-  }, [dispatch, id, enqueueSnackbar]);
+  }, [dispatch, productId, enqueueSnackbar]);
 
-  if (loading || !currentService) {
-    return (
-      <Container sx={{ textAlign: 'center', py: 5 }}>
-        <CircularProgress />
-      </Container>
-    );
-  }
-
+  if (loading) return <LoadingScreen/>
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
@@ -57,11 +48,11 @@ export default function ServiceEditView() {
             href: paths.dashboard.root,
           },
           {
-            name: 'Services',
-            href: paths.dashboard.service.root,
+            name: 'Products',
+            href: paths.dashboard.products.root,
           },
           {
-            name: currentService?.title || '',
+            name: currentProduct?.productName || '',
           },
         ]}
         sx={{
@@ -69,7 +60,7 @@ export default function ServiceEditView() {
         }}
       />
 
-      <ServiceNewEditForm currentService={currentService} />
+      <ProductNewEditForm currentProduct={currentProduct} />
     </Container>
   );
 }

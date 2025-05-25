@@ -4,24 +4,24 @@ import { Container } from '@mui/material';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { paths } from 'src/routes/paths';
-import ServiceNewEditForm from '../service-new-edit-form';
+import ProductNewEditForm from '../product-new-edit-form';
 
-export default function ServiceCreateView() {
+export default function ProductCreateView() {
   const settings = useSettingsContext();
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
-        heading="Create a new service"
+        heading="Create a new product"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Services', href: paths.dashboard.service.list },
-          { name: 'New Service' },
+          { name: 'Products', href: paths.dashboard.products.root },
+          { name: 'New Product' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <ServiceNewEditForm />
+      <ProductNewEditForm />
     </Container>
   );
 } 

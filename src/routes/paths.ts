@@ -74,8 +74,8 @@ export const paths = {
     Products: '/dashboard/Products',
     products : {
       root: '/dashboard/products',
-      create: '/dashboard/products/create',
-      edit: (id: string) => `/dashboard/products/${id}/edit`,
+      create: '/dashboard/products/new',
+      edit: (id: string) => `/dashboard/products/edit/${id}`,
     },
     orders: {
       root: '/dashboard/orders',

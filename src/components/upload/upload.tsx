@@ -1,4 +1,4 @@
-import { FileRejection, useDropzone } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 // @mui
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -93,7 +93,6 @@ export default function Upload({
       <Iconify icon="mingcute:close-line" width={18} />
     </IconButton>
   );
-
   const renderMultiPreview = hasFiles && (
     <>
       <Box sx={{ my: 3 }}>

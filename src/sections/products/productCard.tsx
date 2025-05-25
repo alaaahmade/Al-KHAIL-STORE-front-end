@@ -3,6 +3,12 @@ import { fCurrency } from '@/utils/format-number';
 import { Box, Button, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { paths } from '@/routes/paths';
+import axiosInstance from '@/utils/axios';
+import { enqueueSnackbar } from 'notistack';
+import { useAuthContext } from '@/auth/hooks';
+import { useAppDispatch } from '@/redux/hooks';
+import { fetchServices } from '@/redux/slices/serviceSlice';
+import { toast } from 'react-toastify';
 
 interface ProductCardProps {
   productName: string;
@@ -27,6 +33,19 @@ export function ProductCard({product}: {product: ProductCardProps}) {
   const totalRating = comments.reduce((sum, review) => sum + review.rating, 0);
   const numberOfReviews = comments.length;
   const averageRating = totalRating > 0 ?  (totalRating / numberOfReviews).toFixed(1) : 0;  
+  const {user} = useAuthContext()
+  const dispatch = useAppDispatch()
+
+  const handleDelete = async() => {
+    try {
+      const response =  await axiosInstance.delete(`/v1/products/${id}`);
+      dispatch(fetchServices(user.seller.store.id))
+      enqueueSnackbar('Product deleted successfully', { variant: 'success' });
+    } catch (error: any) {
+      enqueueSnackbar('somthing went wrong', { variant: 'error' });
+    }
+  }
+
 
   return (
     <Box
@@ -44,11 +63,8 @@ export function ProductCard({product}: {product: ProductCardProps}) {
         mb: 0.5,
         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
         borderRadius: 2,
-        cursor: 'pointer',
         position: 'relative'
       }}
-      onClick={() => router.push(`/dashboard/services/${id}`) }
-      
     >
       <Label
         variant="filled"
@@ -116,7 +132,7 @@ export function ProductCard({product}: {product: ProductCardProps}) {
           <Button
             sx={{bgcolor: 'rgba(243, 244, 246, 1)', width: '48%', borderRadius: 1}}
             size="small"
-            onClick={() => router.push(`/dashboard/services/${id}`) }
+            onClick={handleDelete}
           >
             delete
           </Button>

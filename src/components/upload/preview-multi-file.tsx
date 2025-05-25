@@ -12,17 +12,18 @@ import { varFade } from '../animate';
 import FileThumbnail, { fileData } from '../file-thumbnail';
 //
 import { UploadProps } from './types';
+import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
 export default function MultiFilePreview({ thumbnail, files, onRemove, sx }: UploadProps) {
+  
   return (
     <AnimatePresence initial={false}>
+      <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'center'} flexWrap={'wrap'}>
       {files?.map((file) => {
         const { key, name = '', size = 0 } = fileData(file);
-
-        const isNotFormatFile = typeof file === 'string';
-
+        
         if (thumbnail) {
           return (
             <Stack
@@ -80,36 +81,36 @@ export default function MultiFilePreview({ thumbnail, files, onRemove, sx }: Upl
             component={m.div}
             {...varFade().inUp}
             spacing={2}
-            direction="row"
+            direction="column"
             alignItems="center"
+            justifyContent="center"
             sx={{
               my: 1,
               py: 1,
               px: 1.5,
               borderRadius: 1,
               border: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.16)}`,
+              width: '45%',
+              position: 'relative',
               ...sx,
             }}
-          >
-            <FileThumbnail file={file} />
-
-            <ListItemText
-              primary={isNotFormatFile ? file : name}
-              secondary={isNotFormatFile ? '' : fData(size)}
-              secondaryTypographyProps={{
-                component: 'span',
-                typography: 'caption',
-              }}
-            />
+          >           
+          <Box sx={{ width: '100%', height: 140 }}
+          component="img"
+          src={file as string}
+          />
 
             {onRemove && (
-              <IconButton size="small" onClick={() => onRemove(file)}>
+              <IconButton
+              sx={{ position: 'absolute', top: 10, right: 10, color: 'common.white', bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48), '&:hover': { bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72) } }}
+              size="small" onClick={() => onRemove(file)}>
                 <Iconify icon="mingcute:close-line" width={16} />
               </IconButton>
             )}
           </Stack>
         );
       })}
+      </Stack>
     </AnimatePresence>
   );
 }

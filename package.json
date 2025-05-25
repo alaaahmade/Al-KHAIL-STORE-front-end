@@ -20,6 +20,8 @@
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.2.0",
+    "@aws-sdk/client-s3": "^3.817.0",
+    "@aws-sdk/s3-request-presigner": "^3.817.0",
     "@emotion/cache": "^11.10.5",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -42,6 +44,7 @@
     "dayjs": "^1.11.13",
     "firebase": "^11.4.0",
     "framer-motion": "^10.12.21",
+    "fs": "^0.0.1-security",
     "highlight.js": "^11.11.1",
     "i18next": "^24.2.2",
     "i18next-browser-languagedetector": "^8.0.4",

@@ -1,10 +1,11 @@
 import AWS from 'aws-sdk';
 import { S3_BUCKET } from 'src/config-global';
 
+
 const s3 = new AWS.S3({
   accessKeyId: S3_BUCKET.accessKeyId,
   secretAccessKey: S3_BUCKET.secretAccessKey,
-  endpoint: S3_BUCKET.endpoint,
+  endpoint: 'https://mysstore.fra1.digitaloceanspaces.com',
   region: S3_BUCKET.region,
   s3ForcePathStyle: true, // Required for DigitalOcean Spaces
 });
