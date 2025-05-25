@@ -69,7 +69,8 @@ export const updateUser = createAsyncThunk(
   async ({ id, data }: { id: number; data: any }, { rejectWithValue }) => {
     try {
       const response = await axios.patch(`/users/${id}`, data);
-      return response.data.user; // Make sure we return the updated user data
+      
+      return response.data.data.user; // Make sure we return the updated user data
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to update user');
     }
@@ -83,7 +84,9 @@ export const deleteUser = createAsyncThunk(
       await axios.delete(`/users/${id}`);
       return id;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to delete user');
+      console.log(error?.message);
+      
+      return rejectWithValue(error.response?.data?.message || error?.message || 'Failed to delete user');
     }
   }
 );
@@ -125,15 +128,22 @@ const userSlice = createSlice({
       })
       // Update user
       .addCase(updateUser.fulfilled, (state, action) => {
-        const index = state.users.findIndex((user) => user.id === action.payload.id);
+        const index = state.users.findIndex((user) => user?.id === action?.payload?.id);
         if (index !== -1) {
           // Replace the entire user object with the updated data
           state.users[index] = action.payload;
         }
       })
       // Delete user
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.users = state.users.filter((user) => user.id !== action.payload);
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       })
       // Fetch user settings
       .addCase(fetchUserSettings.pending, (state) => {

@@ -39,7 +39,7 @@ import UserTableRow from '../orders-table-row';
 import UserTableToolbar from '../orders-table-toolbar';
 import UserTableFiltersResult from '../orders-table-filters-result';
 import { useAppDispatch } from '@/redux/hooks';
-import { fetchOrders } from '@/redux/slices/ordersSlice';
+import { deleteOrders, fetchOrders } from '@/redux/slices/ordersSlice';
 import { IOrder } from '@/types/order';
 import Iconify from 'src/components/iconify';
 
@@ -116,10 +116,10 @@ export default function OrdersView() {
   );
 
   const handleDeleteRow = useCallback(
-    (id: string) => {
+    async (id: string) => {
       const updatedTransactions = orders.filter((row: { id: string;}) => row.id !== id);
-      // dispatch(transactions({ transactions: updatedTransactions }));
-      table.onUpdatePageDeleteRow(dataInPage.length);
+      await dispatch(deleteOrders(id))
+      dispatch(fetchOrders());
     },
     [orders, dataInPage.length, table]
   );
@@ -152,7 +152,6 @@ export default function OrdersView() {
     dispatch(fetchOrders());
   }, [])
 
-  console.log(filters.status)
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -258,7 +257,6 @@ export default function OrdersView() {
                         row={row}
                         selected={table.selected.includes(String(row.id))}
                         onDeleteRow={() => handleDeleteRow(String(row.id))}
-                        onEditRow={() => handleEditRow(String(row.id))}
                       />
                     ))}
 
@@ -336,10 +334,13 @@ function applyFilter({
 
   if (name) {
     inputData = inputData.filter(
-      (order: IOrder) => (order?.user?.firstName + ' ' + order?.user?.lastName).toLocaleLowerCase().includes(name.toLocaleLowerCase())||
-      inputData.filter((order: IOrder) => order?.cart?.items?.some((item: any) => item.product.productName.toLocaleLowerCase().includes(name.toLocaleLowerCase())) )
-    )
-
+      (order: IOrder) =>
+        (
+          ((order?.user?.firstName || '') + ' ' + (order?.user?.lastName || ''))
+            .toLocaleLowerCase()
+            .includes(name.toLocaleLowerCase())
+        )
+    );
   }
 
   if (status !== 'all') {

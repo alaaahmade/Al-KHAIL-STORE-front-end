@@ -8,6 +8,7 @@ import { UploadBox } from '../upload';
 import Iconify from '../iconify';
 import { Icon } from '@iconify/react';
 import { uploadFile } from '@/utils/s3.client';
+import axiosInstance from '@/utils/axios';
 
 interface CreateAdDialogProps {
   open: boolean;
@@ -44,7 +45,6 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
   const newSeller = useSelector((state: any) => state.SellersSlice.newSeller);
   const loadingB = useSelector((state: any) => state.SellersSlice.loadingB);
 
-  
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -57,68 +57,90 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
     password: '',
     confirmPassword: '',
     logoFile: null as File | null,
-    });
+    photo: '',
+  });
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+    
   
     const [logoPreview, setLogoPreview] = useState<string | null>(null);
   
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setForm({ ...form, [e.target.name]: e.target.value });
-    };
-  
-    const handleOnSave = async () => {
-      try {
-        await formSchema.validate(form, { abortEarly: false });
-        if(!form.logoFile){
-          // await uploadFile(form.logoFile as File, form.logoFile.name, form.logoFile.type);
-          setForm({ ...form, storeLogo: 'https://static.vecteezy.com/system/resources/previews/022/257/158/non_2x/store-logo-design-illustration-vector.jpg' });
-        }
-        await handleSave(form);
-        setForm({
-          firstName: '',
-          lastName: '',
-          email: '',
-          storeDescription: '',
-          contactNumber: '',
-          storeAddress: '',
-          storeLogo: '',
-          storeCategory: '',
-          password: '',
-          confirmPassword: '',
-          logoFile: null as File | null,
-          })
-      } catch (error: any) {
-        console.log(error);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleOnSave = async () => {
+    try {
+      setFormErrors({});
+      await formSchema.validate(form, { abortEarly: false });
+      if (!form.logoFile) {
+        setForm((prev) => ({ ...prev, storeLogo: 'https://static.vecteezy.com/system/resources/previews/022/257/158/non_2x/store-logo-design-illustration-vector.jpg' }));
       }
-    }
-  
-      const handleFileDrop = async (acceptedFiles: File[]) => {
-        console.log({ file: acceptedFiles[0] });
-        const file = acceptedFiles[0];
-        if (file) {
-          setLogoPreview(URL.createObjectURL(file));
-          setForm({ ...form, logoFile: file });
-
-          // dispatch(changeNewInterest({ value: file, field: 'image' }));
+      let imageUrl;
+      if (form.logoFile) {
+        const formData = new FormData();
+        formData.append('file', form.logoFile);
+        const data = await axiosInstance.post('/v1/files/upload', formData);
+        imageUrl = data.data.url;
+      }
+      await handleSave({ ...form, photo: imageUrl });
+      setForm({
+        firstName: '',
+        lastName: '',
+        email: '',
+        storeDescription: '',
+        contactNumber: '',
+        storeAddress: '',
+        storeLogo: '',
+        storeCategory: '',
+        password: '',
+        confirmPassword: '',
+        photo: '',
+        logoFile: null as File | null,
+      });
+    } catch (error: any) {
+      if (error.name === 'ValidationError') {
+        const errors: { [key: string]: string } = {};
+        if (error.inner && Array.isArray(error.inner)) {
+          error.inner.forEach((err: any) => {
+            if (err.path) errors[err.path] = err.message;
+          });
+        } else if (error.path) {
+          errors[error.path] = error.message;
         }
-      };
-    const handleSubmit =async (e: React.FormEvent) => {
-      e.preventDefault();
-      await handleOnSave();
+        setFormErrors(errors);
+      }
+      console.log(error);
+    }
+  }
 
-    };
-  
+  const handleFileDrop = async (acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    if (file) {
+      setLogoPreview(URL.createObjectURL(file));
+      setForm({ ...form, logoFile: file });
+
+      // dispatch(changeNewInterest({ value: file, field: 'image' }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await handleOnSave();
+
+  };
 
   return (
-    <Dialog 
-    open={open}
-    TransitionComponent={Transition}
-    fullWidth
-    keepMounted
-    onClose={onClose}
-    aria-describedby="alert-dialog-slide-description"
-    BackdropProps={{
-      sx: { backgroundColor: "rgba(0, 0, 0, 0.3)" },
-    }}
+    <Dialog
+      open={open}
+      TransitionComponent={Transition}
+      fullWidth
+      keepMounted
+      onClose={onClose}
+      aria-describedby="alert-dialog-slide-description"
+      BackdropProps={{
+        sx: { backgroundColor: "rgba(0, 0, 0, 0.3)" },
+      }}
     >
       <DialogTitle
         sx={{
@@ -128,23 +150,23 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
           p: 3,
         }}
       >
-                Add New Merchant
+        Add New Merchant
 
-      <IconButton onClick={onClose} sx={{  }}>
-        <Iconify icon="eva:close-fill" />
-      </IconButton>
+        <IconButton onClick={onClose} sx={{}}>
+          <Iconify icon="eva:close-fill" />
+        </IconButton>
 
       </DialogTitle>
       <DialogContent>
-      <Grid container spacing={2}>
-            <Grid item xs={12} sm={7}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: .5,
-                }}
-              >
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={7}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: .5,
+              }}
+            >
               <TextField
                 label="Store First Name"
                 name="firstName"
@@ -153,7 +175,9 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
                 fullWidth
                 required
                 size='small'
-                sx={{m: .5}}
+                sx={{ m: .5 }}
+                error={!!formErrors.firstName}
+                helperText={formErrors.firstName}
               />
               <TextField
                 label="Store Last Name"
@@ -163,111 +187,127 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
                 fullWidth
                 required
                 size='small'
-                sx={{m: .5}}
+                sx={{ m: .5 }}
+                error={!!formErrors.lastName}
+                helperText={formErrors.lastName}
               />
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={5}>
-              <TextField
-                label="Business Email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                fullWidth
-                required
-                sx={{m: .5}}
-                size='small'
-                type="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="Store Description"
-                name="storeDescription"
-                value={form.storeDescription}
-                onChange={handleChange}
-                fullWidth
-                required
-                size='small'
-                sx={{m: .5}}
-                multiline
-                minRows={2}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Password"
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                fullWidth
-                sx={{m: .5}}
-                size='small'
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Confirm Password"
-                name="confirmPassword"
-                value={form.confirmPassword}
-                onChange={handleChange}
-                size='small'
-                sx={{m: .5}}
-                fullWidth
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Contact Number"
-                name="contactNumber"
-                value={form.contactNumber}
-                onChange={handleChange}
-                size='small'
-                sx={{m: .5}}
-                fullWidth
-                required
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="Store Address"
-                name="storeAddress"
-                value={form.storeAddress}
-                onChange={handleChange}
-                fullWidth
-                sx={{m: .5}}
-                size='small'
-                required
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <UploadBox placeholder='Upload file' sx={{width: 1, height: '10em'}} 
-                onDrop={handleFileDrop}
-                preview={ logoPreview }
-                error={error && error.image}
-                helperText={error && error.image}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                select
-                label="Store Category"
-                name="storeCategory"
-                value={form.storeCategory}
-                sx={{m: .5}}
-                onChange={handleChange}
-                size='small'
-                fullWidth
-                required
-              >
-                {categories.map(cat => (
-                  <MenuItem key={cat} value={cat}>{cat}</MenuItem>
-                ))}
-              </TextField>
-            </Grid>
+            </Box>
           </Grid>
+          <Grid item xs={12} sm={5}>
+            <TextField
+              label="Business Email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              fullWidth
+              required
+              sx={{ m: .5 }}
+              size='small'
+              type="email"
+              error={!!formErrors.email}
+              helperText={formErrors.email}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Store Description"
+              name="storeDescription"
+              value={form.storeDescription}
+              onChange={handleChange}
+              fullWidth
+              required
+              size='small'
+              sx={{ m: .5 }}
+              multiline
+              minRows={2}
+              error={!!formErrors.storeDescription}
+              helperText={formErrors.storeDescription}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              fullWidth
+              sx={{ m: .5 }}
+              size='small'
+              required
+              error={!!formErrors.password}
+              helperText={formErrors.password}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Confirm Password"
+              name="confirmPassword"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              size='small'
+              sx={{ m: .5 }}
+              fullWidth
+              required
+              error={!!formErrors.confirmPassword}
+              helperText={formErrors.confirmPassword}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Contact Number"
+              name="contactNumber"
+              value={form.contactNumber}
+              onChange={handleChange}
+              size='small'
+              sx={{ m: .5 }}
+              fullWidth
+              required
+              error={!!formErrors.contactNumber}
+              helperText={formErrors.contactNumber}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Store Address"
+              name="storeAddress"
+              value={form.storeAddress}
+              onChange={handleChange}
+              fullWidth
+              sx={{ m: .5 }}
+              size='small'
+              required
+              error={!!formErrors.storeAddress}
+              helperText={formErrors.storeAddress}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <UploadBox placeholder='Upload file' sx={{ width: 1, height: '10em' }}
+              onDrop={handleFileDrop}
+              preview={logoPreview}
+              error={!!formErrors.storeLogo}
+              helperText={formErrors.storeLogo}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              select
+              label="Store Category"
+              name="storeCategory"
+              value={form.storeCategory}
+              sx={{ m: .5 }}
+              onChange={handleChange}
+              size='small'
+              fullWidth
+              required
+              error={!!formErrors.storeCategory}
+              helperText={formErrors.storeCategory}
+            >
+              {categories.map(cat => (
+                <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+        </Grid>
       </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
           <Button onClick={onClose} variant="outlined" color="inherit">

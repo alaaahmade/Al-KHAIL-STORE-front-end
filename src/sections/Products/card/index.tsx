@@ -18,10 +18,6 @@ type Props = {
 export default function ListingCard({ id, title, images, hours, vendor, credits }: Props) {
   const router = useRouter();
 
-  const handleClick = () => {
-    router.push(paths.dashboard.service.detail(id.toString()));
-  };
-
   return (
     <Card
       sx={{
@@ -32,7 +28,7 @@ export default function ListingCard({ id, title, images, hours, vendor, credits 
           boxShadow: (theme) => theme.shadows[10],
         },
       }}
-      onClick={handleClick}
+      onClick={() => {}}
     >
       <Box sx={{ position: 'relative' }}>
         <Image

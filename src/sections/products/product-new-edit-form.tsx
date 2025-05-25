@@ -74,6 +74,7 @@ export type ProductFormValues = {
 type Props = {
   currentProduct?: any;
 };
+export  const getFileNameFromUrl = (url: string) => url.split('/').pop() || '';
 
 const PRODUCT_STATUS_OPTIONS = ['active', 'inactive', 'draft'];
 
@@ -204,7 +205,6 @@ const {user} = useAuthContext()
     data.productGallery = updatedGallery;
 
     
-      const getFileNameFromUrl = (url: string) => url.split('/').pop() || '';
       const originalMainImage = currentProduct?.productImage;
       const originalGallery = Array.isArray(currentProduct?.productGallery)
         ? currentProduct.productGallery

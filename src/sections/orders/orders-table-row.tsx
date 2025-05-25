@@ -23,15 +23,13 @@ import { fCurrency } from '@/utils/format-number';
 
 type Props = {
   selected: boolean;
-  onEditRow: VoidFunction;
   row: IOrder;
-  onDeleteRow: VoidFunction;
+  onDeleteRow: (id: string) => void;
 };
 
 export default function UserTableRow({
   row,
   selected,
-  onEditRow,
   onDeleteRow,
 }: Props) {
   const { user, cart, createdAt, orderStatus, id } = row;  
@@ -88,44 +86,16 @@ export default function UserTableRow({
 
 
       <TableCell sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-        <Iconify color='#309dec' icon="mdi:eye" width={20} height={20} />
-        </IconButton>
-
-        <IconButton>
-          <Iconify icon="material-symbols:print" width={20} height={20} />
+        <IconButton color={popover.open ? 'inherit' : 'default'} 
+        onClick={() => {
+            confirm.onTrue();
+            popover.onClose();
+          }}>
+        <Iconify color='error.main' icon="solar:trash-bin-trash-bold" />
         </IconButton>
 
         </TableCell>
         </TableRow>
-
-      <CustomPopover
-        open={popover.open}
-        onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 140 }}
-      >
-        <MenuItem
-          onClick={() => {
-            confirm.onTrue();
-            popover.onClose();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            onEditRow();
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:pen-bold" />
-          Edit
-        </MenuItem>
-      </CustomPopover>
 
       <ConfirmDialog
         open={confirm.value}
@@ -133,7 +103,10 @@ export default function UserTableRow({
         title="Delete"
         content="Are you sure want to delete?"
         action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
+          <Button variant="contained" color="error" onClick={() =>  {
+            onDeleteRow(`${id}`)
+            confirm.onFalse();
+          }}>
             Delete
           </Button>
         }

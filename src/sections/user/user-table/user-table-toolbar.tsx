@@ -11,11 +11,13 @@ type Props = {
   filterName: string;
   onFilterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   numSelected: number;
+  currentRole: string;
+  setCurrentRole: (role: string) => void;
 };
 
-export default function UserTableToolbar({ filterName, onFilterName, numSelected }: Props) {
-    const {roles} = useAppSelector((state) => state.role)
-    const [currentRole, setCurrentRole] = useState('all')
+export default function UserTableToolbar({ filterName, onFilterName, numSelected, currentRole, setCurrentRole }: Props) {
+    const {roles = []} = useAppSelector((state) => state.role)
+
   return (
     <Stack spacing={2} alignItems="center" justifyContent={"space-between"} direction="row" sx={{ px: 2.5, py: 2 }}>
       <Typography>

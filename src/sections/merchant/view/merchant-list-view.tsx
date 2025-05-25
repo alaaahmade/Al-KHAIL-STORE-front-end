@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import MerchantCreateDialog from './merchant-create-dialog';
 import {
   Card,
   Container,
@@ -26,12 +25,7 @@ import SellerTableRow from '../seller-tabel-row';
 import { CreateAdDialog } from 'src/components/custom-dialog/createAdDialog';
 import { useAppDispatch } from '@/redux/hooks';
 import { createSeller } from '@/redux/slices/SellersSlice';
-const summaryStats = [
-  { label: 'Total Merchants', value: 156, icon: 'fa6-solid:store', color: 'rgba(252, 231, 243, 1)', iconColor: "#d72660" },
-  { label: 'Active Merchants', value: 142, icon: 'mdi:check-circle', color: 'rgba(209, 250, 229, 1)', iconColor: '#059669' },
-  { label: 'Pending Merchant', value: 8, icon: 'mdi:clock', color: 'rgba(254, 243, 199, 1)', iconColor: '#d97706' },
-  { label: 'Suspended', value: 6, icon: 'mdi:denied', color: 'rgba(254, 226, 226, 1)', iconColor: '#dc2626' },
-];
+
 
 export const statusColors: Record<string, string> = {
   Active: 'success',
@@ -46,7 +40,12 @@ export default function MerchantListView({sellers}: {sellers: any[]}) {
   const [openCreate, setOpenCreate] = useState(false);
   const rowsPerPage = 10;
   const dispatch = useAppDispatch();
-
+  const summaryStats = [
+    { label: 'Total Merchants', value: sellers.length, icon: 'fa6-solid:store', color: 'rgba(252, 231, 243, 1)', iconColor: "#d72660" },
+    { label: 'Active Merchants', value: sellers.filter((m) => m.isActive).length, icon: 'mdi:check-circle', color: 'rgba(209, 250, 229, 1)', iconColor: '#059669' },
+    { label: 'Pending Merchant', value: sellers.filter((m) => !m.isActive).length, icon: 'mdi:clock', color: 'rgba(254, 243, 199, 1)', iconColor: '#d97706' },
+    { label: 'Suspended', value: sellers.filter((m) => m.status === 'suspended').length, icon: 'mdi:denied', color: 'rgba(254, 226, 226, 1)', iconColor: '#dc2626' },
+  ];
   const filtered = sellers.filter(
     (m) =>
       (status === 'All' || m.isActive === Boolean(status === 'Active') || !m.isActive === Boolean(status === 'Pending')) &&

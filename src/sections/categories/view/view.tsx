@@ -13,16 +13,17 @@ import { CreateCatDialog } from 'src/components/custom-dialog/createCatDialog';
 import { LoadingScreen } from 'src/components/loading-screen';
 // import { gitCategories, setCategories, setError, setIsLoading } from 'src/redux/slices/CategoriesSlice';
 import { useDispatch } from 'react-redux';
-import { changeNewCat, closeCreateDialog, gitCategories, openCreateDialog, setCategories, setError, setIsLoading, setLadingB } from 'src/redux/slices/CategoriesSlice';
+import { changeNewCat, closeCreateDialog, fetchCategories, gitCategories, openCreateDialog, setCategories, setError, setIsLoading, setLadingB } from 'src/redux/slices/CategoriesSlice';
 import axiosInstance from '@/utils/axios';
 import { deleteFile, uploadFile } from '@/utils/s3.client';
 import CatCard from '../card';
+import { useAppDispatch } from '@/redux/hooks';
 // ----------------------------------------------------------------------
 
 export function CatView() {
   const settings = useSettingsContext();
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const categories = useSelector((state: any) => state.CategoriesSlice.categories);
   const  [refresh, setRefresh] = useState<boolean>(false);
@@ -40,65 +41,58 @@ export function CatView() {
   };
 
   const handleSave = async () => {
+    console.log(newCategory);
+
     try {
       const newErrors: any = {};
 
       if (!newCategory.name.trim()) {
         newErrors.name = 'Please enter a name for the category';
       }
-  
       if (!newCategory.icon) {
         newErrors.icon = 'Please upload an icon for the category';
       }
   
-      if (!newCategory.description.trim()) {
-        newErrors.description = 'Please enter a description for the category';
-      }
-  
       if (Object.keys(newErrors).length > 0) {
         dispatch(setError(newErrors));
+        console.log(newErrors);
+        
         return;
       }
   
       dispatch(setLadingB(true));
       let url;
       const iconFile = newCategory.icon;
-  
+      
       if (iconFile) {
         
         if (typeof iconFile === 'string') {
           url = iconFile;
         }else {
-
-          const mimeType = iconFile.type;
-          const fileBuffer = Buffer.from(await iconFile.arrayBuffer());
-    
-          url = await uploadFile(fileBuffer, `category/${iconFile.name + Date.now()}`, mimeType);
-    
+          const formData = new FormData();
+          formData.append('file', iconFile);
+          const data = await axiosInstance.post('/v1/files/upload', formData);
+          url = data.data.url;
           await dispatch(changeNewCat({ value: url, field: 'icon' }));
-    
           if (editMode) {
-            await deleteFile('iconFile');
+            await deleteFile(iconFile);
           }
     
         }
       }
       if(!editMode){
-      await axiosInstance.post('/services/categories', {
-        name: newCategory.name,
-        icon: url  || newCategory.icon,
-        description: newCategory.description,
-        isActive: true,
+      await axiosInstance.post('/v1/categories', {
+        categoryName: newCategory.name,
+        categoryImage: {url: url} || {url: newCategory.icon} ,
+        status: true,
       });
       setRefresh((prev) => !prev);
     } else {
-      console.log(editMode);
       
-      await axiosInstance.patch(`/services/categories/${editMode}`, {
-        name: newCategory.name,
-        icon: url  || newCategory.icon,
-        description: newCategory.description,
-        isActive: true,
+      await axiosInstance.patch(`/v1/categories/${editMode}`, {
+        categoryName: newCategory.name,
+        categoryImage: {url: url} || {url: newCategory.icon} ,
+        status: true,
       });
       setRefresh((prev) => !prev);
     }
@@ -107,7 +101,6 @@ export function CatView() {
       dispatch(setLadingB(false));
       dispatch(changeNewCat({ value: '', field: 'name' }));
       dispatch(changeNewCat({ value: '', field: 'icon' }));
-      dispatch(changeNewCat({ value: '', field: 'description' }));
       dispatch(changeNewCat({ value: '', field: 'id' }));
 
       dispatch(closeCreateDialog());
@@ -120,22 +113,9 @@ export function CatView() {
   };
   
   useEffect(() => {
-    async function fetchData() {
-      dispatch(setIsLoading(true));
-      try {
-        const data = await gitCategories();
-        
-        dispatch(setCategories(data));
-        dispatch(setIsLoading(false));
-
-      } catch (error) {
-        dispatch(setError(error.message));
-      }
-    }
-    fetchData();
+    dispatch(fetchCategories());
   }, [refresh]);
-
-
+  
   if (lading) return<LoadingScreen/>
 
   return (
@@ -180,13 +160,12 @@ export function CatView() {
           }}
         >
         {Array.isArray(categories) && categories.length > 0 ? (
-          categories.map(({ id, name, icon, description }) => (
+          categories.map(({ id, categoryName, categoryImage }) => (
             <CatCard 
               key={id}
               id={id}
-              name={name}
-              icon={icon}
-              description={description}
+              name={categoryName}
+              icon={categoryImage.url}
             />
           ))
         ) : (

@@ -53,7 +53,7 @@ export default function UploadBox({ placeholder, error, disabled, preview, sx, .
         ...sx,
       }}
     >
-      <input {...getInputProps()} />
+      <input type="image"  accept='image/*'{...getInputProps()} />
       <Box
         sx={{
           display: 'flex',

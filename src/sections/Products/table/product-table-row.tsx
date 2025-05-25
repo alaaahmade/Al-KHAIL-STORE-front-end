@@ -16,6 +16,10 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 // types
 import { ProductInterface } from 'src/types/product';
 import { Typography } from '@mui/material';
+import { useAppDispatch } from '@/redux/hooks';
+import axiosInstance from '@/utils/axios';
+import { fetchProducts } from '@/redux/slices/productsReducer';
+import { enqueueSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +45,17 @@ export default function ProductTableRow({
   productQuantity,
   } = row;
 
+    const dispatch = useAppDispatch()
+  
+    const handleDelete = async() => {
+      try {
+        const response =  await axiosInstance.delete(`/v1/products/${id}`);
+        dispatch(fetchProducts())
+        enqueueSnackbar('Product deleted successfully', { variant: 'success' });
+      } catch (error: any) {
+        enqueueSnackbar('somthing went wrong', { variant: 'error' });
+      }
+    }
 
   const confirm = useBoolean();
 
@@ -99,11 +114,7 @@ export default function ProductTableRow({
       </TableCell>
       <TableCell sx={{ px: 1, whiteSpace: 'nowrap' }}>
 
-        <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-        <Iconify color='#309dec' icon="uil:edit" width={20} height={20} />
-        </IconButton>
-
-        <IconButton>
+        <IconButton onClick={handleDelete}>
           <Iconify color={'#dc2626'} icon="fa-solid:trash" width={20} height={20} />
         </IconButton>
 

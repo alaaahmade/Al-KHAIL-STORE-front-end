@@ -6,34 +6,38 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useBoolean } from '@/hooks/use-boolean';
 import { useDispatch } from 'react-redux';
-import { changeNewCat, gitCategories, openCreateDialog, setCategories, setEditMode, setError } from '@/redux/slices/CategoriesSlice';
+import { changeNewCat, fetchCategories, gitCategories, openCreateDialog, setCategories, setEditMode, setError } from '@/redux/slices/CategoriesSlice';
 import axiosInstance from '@/utils/axios';
 import { deleteFile } from '@/utils/s3.client';
+import { useAppDispatch } from '@/redux/hooks';
+import { toast } from 'react-toastify';
+import { getFileNameFromUrl } from '../products/product-new-edit-form';
 // import { useRouter } from 'next/router';
 
 interface ListingCardProps {
   name?: string;
   icon: string;
-  description?: string,
   id: string
 }
 
-export default function CatCard({ name, icon, description, id }: ListingCardProps) {
+export default function CatCard({ name, icon, id }: ListingCardProps) {
   const router = useRouter();
   const confirm = useBoolean();
-  const dispatch = useDispatch()
-
+  const dispatch = useAppDispatch()
   
   
 const handleDelete = async (id: string) => {
+  if(icon.includes('https://mysstore.fra1.digitaloceanspaces.com')){
+    const fileName = getFileNameFromUrl(icon)
+    await axiosInstance.delete(`/v1/files/${fileName}`);
+  }
   try {
-    await deleteFile(icon);
-    await axiosInstance.delete(`/services/categories/${id}/`);
-    const data = await gitCategories();
-    dispatch(setCategories(data));
+    await axiosInstance.delete(`/v1/categories/${id}/`);
+    dispatch(fetchCategories());
+    toast.success('deleted successfully.')
     } catch (error) {
       console.log(error);
-      dispatch(setError(error.message));
+      toast.error(error.message || 'somthing went wrong!')
     }
   };
     return (
@@ -88,20 +92,6 @@ const handleDelete = async (id: string) => {
             },
           }}
         />  }
-          <TextField
-          disabled
-          id="outlined-disabled"
-          label="Ad link"
-          defaultValue={description}
-          fullWidth
-          sx={{
-            width: '100%',
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderStyle: 'dashed', // Set the border style to dashed
-            },
-          }}
-        />
-
         <Box
           sx={{
             display: 'flex',
@@ -131,8 +121,8 @@ const handleDelete = async (id: string) => {
             field: 'icon'
           }))
           dispatch(changeNewCat({
-            value: description,
-            field: 'description'
+            value: id,
+            field: 'id'
           }))
           dispatch(openCreateDialog()); 
         }}            >

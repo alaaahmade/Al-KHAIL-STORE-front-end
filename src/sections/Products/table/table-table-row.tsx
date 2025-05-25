@@ -6,16 +6,14 @@ import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
-// types
-import { IOrderItem } from 'src/types/order';
-// components
+// types// components
 import Label from 'src/components/label';
 import { usePopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: IOrderItem;
+  row: any;
   selected: boolean;
   onViewRow: VoidFunction;
   onSelectRow: VoidFunction;
@@ -30,8 +28,6 @@ export default function OrderTableRow({
   onDeleteRow,
 }: Props) {
   const { customer, id, status } = row;
-
-  // const confirm = useBoolean();
 
   const collapse = useBoolean();
 

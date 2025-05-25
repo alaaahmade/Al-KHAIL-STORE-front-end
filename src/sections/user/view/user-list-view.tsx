@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from 'src/redux/hooks';
 import { fetchUsers, deleteUser, updateUser, createUser } from 'src/redux/slices/userSlice';
 import { fetchRoles } from 'src/redux/slices/roleSlice';
 import { UserTableRow, UserTableToolbar } from '../user-table';
+import { IUser } from 'src/types/user';
 import UserDialog from '../user-dialog';
 import { Grid } from '@mui/material';
 import BookingWidgetSummary from '@/sections/reviews/reviews-widget-summary';
@@ -41,7 +42,7 @@ const TABLE_HEAD = [
 export default function UserListView() {
   // const settings = useSettingsContext();
   const dispatch = useAppDispatch();
-  const { users = [], loading } = useAppSelector((state) => state.user);
+  const { users = [], error } = useAppSelector((state) => state.user);
   const { enqueueSnackbar } = useSnackbar();
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
@@ -51,7 +52,9 @@ export default function UserListView() {
   const [filterName, setFilterName] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   const [currentUser, setCurrentUser] = useState<IUserItem | null>(null);
-  console.log({users});
+  const [loading, setLoading] = useState(false)
+  const [currentRole, setCurrentRole] = useState('all');
+
   
   useEffect(() => {
     dispatch(fetchUsers());
@@ -61,17 +64,20 @@ export default function UserListView() {
   const handleDeleteUser = useCallback(
     async (userId: number) => {
       try {
+        setLoading(true)
         await dispatch(deleteUser(userId)).unwrap();
         enqueueSnackbar('User deleted successfully', { variant: 'success' });
+        setLoading(false)
       } catch (error) {
         console.error(error);
-        enqueueSnackbar('Failed to delete user', { variant: 'error' });
+        enqueueSnackbar(error || 'Failed to delete user', { variant: 'error' });
+        setLoading(false)
       }
     },
     [dispatch, enqueueSnackbar]
   );
 
-  const handleOpenEdit = (user: IUserItem) => {
+  const handleOpenEdit = (user: any) => {
     setCurrentUser(user);
     setOpenDialog(true);
   };
@@ -100,12 +106,20 @@ export default function UserListView() {
   };
 
   const filteredUsers = Array.isArray(users)
-    ? users.filter(
-        (user: IUserItem) =>
-          `${user.firstName} ${user.lastName}`.toLowerCase().includes(filterName.toLowerCase()) ||
-          user.email.toLowerCase().includes(filterName.toLowerCase())
-      )
+    ? users
+        .map((user: IUser) => ({
+          ...user,
+          isActive: user.status === 'active',
+          lastActiveAt: (lastActiveAt: any) => user.updatedAt || '',
+        }))
+        .filter(
+          (user: IUserItem) =>
+            (`${user.firstName} ${user.lastName}`.toLowerCase().includes(filterName.toLowerCase()) ||
+            user.email.toLowerCase().includes(filterName.toLowerCase())) &&
+            (currentRole === 'all' || user.roles.some((role: any) => role.name === currentRole))
+        )
     : [];
+
 
   return (
     <Container maxWidth={false} sx={{
@@ -150,6 +164,8 @@ export default function UserListView() {
           numSelected={selected.length}
           filterName={filterName}
           onFilterName={(e) => setFilterName(e.target.value)}
+          currentRole={currentRole}
+          setCurrentRole={setCurrentRole}
         />
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -175,7 +191,7 @@ export default function UserListView() {
               <TableBody>
                 {filteredUsers
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row: IUserItem) => (
+                  .map((row: IUser) => (
                     <UserTableRow
                       key={row.id}
                       row={row}
@@ -199,6 +215,7 @@ export default function UserListView() {
                       }}
                       onDeleteRow={() => handleDeleteUser(row.id)}
                       onEditRow={() => handleOpenEdit(row)}
+                      loading={loading}
                     />
                   ))}
 

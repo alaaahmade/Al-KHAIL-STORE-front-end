@@ -1,8 +1,6 @@
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
-import Checkbox from '@mui/material/Checkbox';
-import { IUserItem } from 'src/types/user';
 import Iconify from 'src/components/iconify';
 import {
   Chip,
@@ -21,13 +19,16 @@ import Popover from '@mui/material/Popover';
 import { useState } from 'react';
 import Label from 'src/components/label';
 import { timeAgo } from '@/utils/format-time';
+import { useAppSelector } from '@/redux/hooks';
+import { LoadingButton } from '@mui/lab';
 
 type Props = {
-  row: IUserItem;
+  row: any;
   selected: boolean;
   onSelectRow: (id: string) => void;
   onDeleteRow: (id: number) => void;
   onEditRow: VoidFunction;
+  loading: boolean
 };
 
 export default function UserTableRow({
@@ -36,10 +37,10 @@ export default function UserTableRow({
   onSelectRow,
   onDeleteRow,
   onEditRow,
+  loading
 }: Props) {
   const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenMenu(event.currentTarget);
   };
@@ -47,14 +48,14 @@ export default function UserTableRow({
   const handleCloseMenu = () => {
     setOpenMenu(null);
   };
-
-  const handleConfirmDelete = () => {
-    onDeleteRow(row.id);
-    setOpenConfirm(false);
-    handleCloseMenu();
-  };
-
-  console.log(row, 'row roles');
+  
+  
+  const handleConfirmDelete = async () => {
+     await onDeleteRow(row.id);
+      setOpenConfirm(false);
+      handleCloseMenu();
+  };  
+  
 
   return (
     <>
@@ -74,18 +75,23 @@ export default function UserTableRow({
         />
       </TableCell>
       <TableCell>
-        {/* <Chip label={row.roles[0].name} color={row.roles[0].name === 'ADMIN' ? 'success' : 'error'} /> */}
-        <Label
-          variant="soft"
-          color={
-            (String(row.roles[0].name)?.toLocaleLowerCase() === 'admin' && 'info') ||
-            (String(row.roles[0].name)?.toLocaleLowerCase() === 'manager' && 'success') ||
-            (String(row.roles[0].name)?.toLocaleLowerCase() === 'seller' && 'warning') ||
+        {
+          row?.roles?.length > 0 ?
+          row?.roles?.map((role: any) => (
+            <Label
+            sx={{ml: 0.5}}
+            variant="soft"
+            color={
+              (String(role?.name)?.toLocaleLowerCase() === 'admin' && 'info') ||
+              (String(role?.name)?.toLocaleLowerCase() === 'manager' && 'success') ||
+            (String(role?.name)?.toLocaleLowerCase() === 'seller' && 'warning') ||
             'default'
           }
         > 
-          {row.roles[0].name}
+          {role?.name}
         </Label>
+        ))
+        : null}
       </TableCell>
 
         <TableCell>
@@ -93,31 +99,38 @@ export default function UserTableRow({
               <Label
               variant="soft"
               color={
-                (String(row.roles[0].name) && 'success') ||
-                !(String(row.roles[0].name)  && 'error') ||
+                (String(row?.roles[0]?.name) && 'success') ||
+                !(String(row?.roles[0]?.name)  && 'error') ||
                 'default'
               }
             > 
             
-              {row.isActive ? 'Active' : 'Inactive'}
+              {row?.isActive ? 'Active' : 'Inactive'}
             </Label>
           </Stack>
         </TableCell>
 
         <TableCell>
-          {timeAgo(row.lastActiveAt)}
+          {timeAgo(row?.lastActiveAt)}
         </TableCell>
 
         <TableCell  >
-          <IconButton onClick={handleOpenMenu}>
-          <Iconify icon="eva:edit-fill" width={18} height={18}  /> 
+          <IconButton
+           onClick={() => {
+            onEditRow();
+            handleCloseMenu();
+          }}>
+          <Iconify icon="eva:edit-fill" width={20} height={20}  /> 
           </IconButton>
-          <IconButton onClick={handleOpenMenu}>
-          <Iconify icon="majesticons:key" width={18} height={18}  /> 
-          </IconButton>
-          <IconButton onClick={handleOpenMenu}>
-          <Iconify icon="nimbus:edit" width={18} height={18}  /> 
-          </IconButton>
+          <IconButton
+          onClick={() => {
+            setOpenConfirm(true);
+            handleCloseMenu();
+          }}
+          sx={{ color: 'error.main' }}
+        >
+          <Iconify icon="eva:trash-2-outline" width={20} height={20}  />
+        </IconButton>
         </TableCell>
       </TableRow>
 
@@ -132,25 +145,13 @@ export default function UserTableRow({
         }}
       >
         <MenuItem
-          onClick={() => {
-            onEditRow();
-            handleCloseMenu();
-          }}
+
         >
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit
         </MenuItem>
 
-        <MenuItem
-          onClick={() => {
-            setOpenConfirm(true);
-            handleCloseMenu();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Delete
-        </MenuItem>
+
       </Popover>
 
       {/* Confirmation Dialog */}
@@ -163,9 +164,9 @@ export default function UserTableRow({
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenConfirm(false)}>Cancel</Button>
-          <Button onClick={handleConfirmDelete} variant="contained" color="error">
+          <LoadingButton disabled={loading} loading={loading} onClick={handleConfirmDelete} variant="contained" color="error">
             Delete
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </>

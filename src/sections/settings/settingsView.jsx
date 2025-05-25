@@ -5,6 +5,7 @@ import { Box, Button, Card, Container, FormControl, FormControlLabel, Grid, Inpu
 import React, { useState } from 'react'
 import { useAuthContext } from '@/auth/hooks';
 import axiosInstance from '@/utils/axios';
+import { toast } from 'react-toastify';
 
 const dataSchema = Yup.object().shape({
   firstName: Yup.string().required('First name is required'),
@@ -50,9 +51,13 @@ const SettingsView = () => {
       try {
         await changePasswordSchema.validateSync({currentPassword, newPassword, confirmNewPassword}, { abortEarly: false });
         await resetPassword({currentPassword, newPassword});
-        alert('Password updated successfully');
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmNewPassword('');
+        toast.success('Password updated successfully');
       } catch (error) {
         console.log(error)
+        toast.error(error.message || 'Something went wrong');
       }
     // await login?.(data.email, data.password);
     console.log('Updating password...');
@@ -133,54 +138,6 @@ const SettingsView = () => {
                   <MenuItem value="GBP (£)">GBP (£)</MenuItem>
                 </Select>
               </FormControl>
-            </Stack>
-          </Card>
-        </Grid>
-
-        {/* Notification Settings */}
-        <Grid item xs={12}>
-          <Card sx={{ p: 3 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Notification Settings
-            </Typography>
-            <Stack spacing={1}>
-              <FormControlLabel
-                control={<Switch checked={orderNotifications} onChange={(e) => setOrderNotifications(e.target.checked)} />}
-                labelPlacement="start"
-                label={<Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><Typography variant="subtitle2">Order Notifications</Typography><Typography variant="caption" color="text.secondary">Receive notifications for new orders</Typography></Box>}
-                sx={{ justifyContent: 'space-between', ml: 0, '& .MuiFormControlLabel-label': { width: '100%' } }}
-              />
-              <FormControlLabel
-                control={<Switch checked={reviewNotifications} onChange={(e) => setReviewNotifications(e.target.checked)} />}
-                labelPlacement="start"
-                label={<Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><Typography variant="subtitle2">Review Notifications</Typography><Typography variant="caption" color="text.secondary">Get notified when customers leave reviews</Typography></Box>}
-                sx={{ justifyContent: 'space-between', ml: 0, '& .MuiFormControlLabel-label': { width: '100%' } }}
-              />
-            </Stack>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Card sx={{ p: 3 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Review Management
-            </Typography>
-            <Stack spacing={2}>
-              <FormControlLabel
-                control={<Switch checked={autoApproveReviews} onChange={(e) => setAutoApproveReviews(e.target.checked)} />}
-                labelPlacement="start"
-                label={<Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><Typography variant="subtitle2">Auto-approve Reviews</Typography><Typography variant="caption" color="text.secondary">Automatically approve customer reviews</Typography></Box>}
-                sx={{ justifyContent: 'space-between', ml: 0, '& .MuiFormControlLabel-label': { width: '100%' } }}
-              />
-              <TextField
-                fullWidth
-                multiline
-                rows={3}
-                label="Default Reply Template"
-                value={defaultReplyTemplate}
-                onChange={(e) => setDefaultReplyTemplate(e.target.value)}
-                helperText="Thank you for your feedback! We appreciate your support."
-              />
             </Stack>
           </Card>
         </Grid>

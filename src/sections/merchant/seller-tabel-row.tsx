@@ -5,13 +5,13 @@ import React, { useEffect, useState } from 'react'
 import { statusColors } from './view/merchant-list-view'
 import Label from 'src/components/label'
 import { fDate } from '@/utils/format-time'
+import { useRouter } from 'next/navigation'
 
 const SellerTableRow = ({row}: {row: any}) => {
 
   const [change ,setChange] = useState(0)
 
-  // const change = ((row.revenueThisMonth - row.revenueLastMonth) / row.revenueLastMonth) * 100;
-  // const formattedChange = `${change.toFixed(1)}% this month`;
+  const router = useRouter()
 
   useEffect(() => {
     let formattedChange;
@@ -77,14 +77,12 @@ const SellerTableRow = ({row}: {row: any}) => {
       </Typography>
     </TableCell>
     <TableCell align="center">
-      <IconButton sx={{p: 0.5}} color="default">
+      <IconButton 
+        onClick={() => {
+          router.push('/dashboard/user/list/')
+        }}
+      sx={{p: 0.5}} color="default">
         <Iconify icon="uil:edit" width={20} height={20} />
-      </IconButton>
-      <IconButton sx={{p: 0.5}}  color="default">
-      <Iconify icon="fluent:squares-nested-20-filled" width={20} height={20} />
-      </IconButton>
-      <IconButton sx={{p: 0.5}}  color="default">
-        <Iconify icon="mdi:denied" width={20} height={20} />
       </IconButton>
     </TableCell>
   </TableRow>

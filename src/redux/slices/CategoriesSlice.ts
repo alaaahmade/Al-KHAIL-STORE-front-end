@@ -1,10 +1,11 @@
-import { createSlice, } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, } from '@reduxjs/toolkit';
 import axios from 'src/utils/axios';
 
 export const gitCategories =  async () => {
-  const response = await axios.get('/services/categories/');
-  return response.data;
+  const response = await axios.get('/v1/categories/');
+  return response.data.data.categories;
 };
+
 
 interface CategoriesState {
   categories: any[]; // Replace 'any[]' with a specific type if known
@@ -33,6 +34,18 @@ const initialState: CategoriesState = {
   },
   open: false,
 };
+
+export const fetchCategories = createAsyncThunk(
+  'categories/fetchCategories',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get('/v1/categories/');      
+      return response.data.data.categories;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch categories');
+    }
+  }
+);
 
 const CategoriesSlice = createSlice({
   name: 'Categories',
@@ -72,6 +85,19 @@ const CategoriesSlice = createSlice({
       state.editMode = action.payload;
     }
   },
+  extraReducers: (builder) => {
+    builder.addCase(fetchCategories.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(fetchCategories.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.categories = action.payload;
+    })
+    .addCase(fetchCategories.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    })
+  }
 });
 
 export const { setCategories, setError, setIsLoading, changeNewCat, openCreateDialog, closeCreateDialog,setEditMode, setLadingB} = CategoriesSlice.actions;

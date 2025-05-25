@@ -75,19 +75,6 @@ export default function ProductDetailsReview({
         gap: 2,
       }}
      >
-     <IconButton
-      sx={{
-        color: 'text.secondary',
-        bgcolor: 'background.neutral',
-        borderRadius: 1,
-        gap: 1,
-        fontSize: '14px',
-        '&:hover': { bgcolor: 'background.neutral' },
-      }}
-    >
-    <Iconify icon="iconoir:filter-solid" />
-    Filter
-    </IconButton>
         <IconButton
       sx={{
         color: 'text.secondary',

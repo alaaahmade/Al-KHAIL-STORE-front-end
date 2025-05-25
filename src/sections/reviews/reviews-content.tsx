@@ -10,42 +10,77 @@ import ProductDetailsReview from './reviews-details-review';
 
 
 
-function DashboardContent() {
+interface DashboardContentProps {
+  filteredReviews: any[];
+  reviews: any[]
+}
+
+function DashboardContent({filteredReviews, reviews}: DashboardContentProps) {
   const settings = useSettingsContext();
-  const reviews = useAppSelector(state => state.reviewsSlice.reviews)    
+  
+
+  // Calculate real summary data
+  const totalReviews = reviews.length;
+  const averageRating = totalReviews > 0 ? Number((filteredReviews.reduce((sum, r) => sum + (r.rating || 0), 0) / totalReviews).toFixed(2)) : 0;
+  const pendingReplies = reviews.filter(r => !r.commentReplies || r.commentReplies.length === 0).length;
+  const replied = reviews.length;
+
+  const summaryData = [
+    {
+      title: 'Average Rating',
+      total: averageRating,
+      color: 'rgba(254, 243, 199, 1)',
+      icon: 'iconoir:star-solid',
+      iconColor: '#d97706',
+    },
+    {
+      title: 'Total Reviews',
+      total: totalReviews,
+      color: 'rgba(219, 234, 254, 1)',
+      icon: 'fa-solid:comment',
+      iconColor: '#2563eb',
+    },
+    {
+      title: 'Pending Replies',
+      total: pendingReplies,
+      color: 'rgba(255, 237, 213, 1)',
+      icon: 'mingcute:time-fill',
+      iconColor: '#ea580c',
+    },
+    {
+      title: 'Replied',
+      total: replied,
+      color: 'rgba(209, 250, 229, 1)',
+      icon: 'icon-park-solid:correct',
+      iconColor: '#6bc8a7',
+    },
+  ];
+
   return (
     <Container sx={{ display: 'flex', flexDirection: 'column', gap: 5, p: 0 }} maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
-        {[0, 1, 2, 3].map((_, index) => (
+        {summaryData.map((item, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
             <BookingWidgetSummary
-              title={["Average Rating", "Total Reviews", "Pending Replies", "Replied"][index]}
-              total={[4.8, 1240, 24, 892][index]}
-              color={[
-                'rgba(254, 243, 199, 1)',
-                'rgba(219, 234, 254, 1)',
-                'rgba(255, 237, 213, 1)',
-                'rgba(209, 250, 229, 1)',
-              ][index]}
-              type={['info', 'info', 'info', 'info'][index]}
+              title={item.title}
+              total={item.total}
+              color={item.color}
+              type="info"
               icon={
                 <Icon
-                  color={['#d97706', '#2563eb', '#ea580c', '#6bc8a7'][index]}
-                  icon={['iconoir:star-solid', 'fa-solid:comment', 'mingcute:time-fill', 'icon-park-solid:correct'][index]}
+                  color={item.iconColor}
+                  icon={item.icon}
                   width="20"
                   height="20"
                 />
               }
-              
             />
           </Grid>
         ))}
       </Grid>
-        {reviews.length > 0 && 
-        <ProductDetailsReview
-              reviews={reviews}
-            />}
-
+      {filteredReviews.length > 0 && (
+        <ProductDetailsReview reviews={filteredReviews} />
+      )}
     </Container>
   );
 }

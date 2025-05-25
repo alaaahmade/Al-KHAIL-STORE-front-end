@@ -21,7 +21,7 @@ import { getComparator } from 'src/components/table';
 import { isEqual } from 'lodash';
 import Scrollbar from 'src/components/scrollbar';
 import TableSkeleton from 'src/components/table/table-skeleton';
-import ProductTableRow from './product-table-row';
+import ProductTableRow from '../table/product-table-row';
 // ----------------------------------------------------------------------
 const TABLE_HEAD = [
   { id: 'product', label: 'Product', width: 200 },
