@@ -8,7 +8,6 @@ import { enqueueSnackbar } from 'notistack';
 import { useAuthContext } from '@/auth/hooks';
 import { useAppDispatch } from '@/redux/hooks';
 import { fetchServices } from '@/redux/slices/serviceSlice';
-import { toast } from 'react-toastify';
 
 interface ProductCardProps {
   productName: string;
@@ -39,7 +38,7 @@ export function ProductCard({product}: {product: ProductCardProps}) {
   const handleDelete = async() => {
     try {
       const response =  await axiosInstance.delete(`/v1/products/${id}`);
-      dispatch(fetchServices(user.seller.store.id))
+      dispatch(fetchServices(user?.seller?.store?.id))
       enqueueSnackbar('Product deleted successfully', { variant: 'success' });
     } catch (error: any) {
       enqueueSnackbar('somthing went wrong', { variant: 'error' });

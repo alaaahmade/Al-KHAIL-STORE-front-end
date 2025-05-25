@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /*
   ProductNewEditForm: Create/Edit Product Form
   - Fields match backend Product entity
@@ -37,11 +38,6 @@ import { useAuthContext } from '@/auth/hooks';
 import { uploadFile } from '@/utils/s3.client';
 import axiosInstance from '@/utils/axios';
 
-// TODO: Replace with actual redux actions
-// import { createProduct, updateProduct } from 'src/redux/slices/productSlice';
-
-// const categories = useSelector((state: any) => state.CategoriesSlice.categories);
-// const stores = useSelector((state: any) => state.StoreSlice.stores);
 
 const ProductSchema = Yup.object().shape({
   productName: Yup.string().required('Product name is required'),
@@ -109,7 +105,7 @@ const {user} = useAuthContext()
     productDate: currentProduct?.productDate ? dayjs(currentProduct.productDate).toDate() : new Date(),
     productQuantity: currentProduct?.productQuantity ?? undefined,
     isFeatured: currentProduct?.isFeatured ?? true,
-    productGallery: Array.isArray(currentProduct?.productGallery) ? currentProduct.productGallery.filter((v): v is string => typeof v === 'string') : [],
+    productGallery: Array.isArray(currentProduct?.productGallery) ? currentProduct.productGallery.filter((v: any): v is string => typeof v === 'string') : [],
     category: Array.isArray(currentProduct?.category)
     ? currentProduct.category.map((cat: any) => cat.id)
     : [],  };
@@ -124,17 +120,14 @@ const {user} = useAuthContext()
   const {
     handleSubmit,
     setValue,
-    watch,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = methods;
 
-  const values  = watch()
   
 
   const onSubmit = async (data: ProductFormValues) => {
    if(!currentProduct){
     try {
-      // console.log(data);
       let imageUrl = '';
       if (mainImage) {
         const formData = new FormData();
@@ -160,23 +153,15 @@ const {user} = useAuthContext()
 
       console.log({...data, productImage: imageUrl, productGallery: galleryUrls});
       
-      const response = await axiosInstance.post('/v1/products', {...data, productImage: imageUrl, productGallery: galleryUrls, storeId: user?.seller?.store?.id});
+      await axiosInstance.post('/v1/products', {...data, productImage: imageUrl, productGallery: galleryUrls, storeId: user?.seller?.store?.id});
       enqueueSnackbar('Product created successfully!', { variant: 'success' });
-      router.push('/dashboard/products');
       router.push('/dashboard/products');      
-      // const response = await axiosInstance.post('/v1/products', data);
-      // enqueueSnackbar('Product created successfully!', { variant: 'success' });
-      // router.push('/dashboard/products');
-      // console.log(response);
 
     } catch (error) {
       enqueueSnackbar('Something went wrong!', { variant: 'error' });
     }
    } else {
     try {
-      // console.log(data);
-      // --- IMAGE LOGIC PATCH START ---
-    // Main image logic
     let imageUrl = '';
     if (mainImage) {
       const formData = new FormData();
@@ -184,19 +169,15 @@ const {user} = useAuthContext()
       const data = await axiosInstance.post('/v1/files/upload', formData);
       imageUrl = data.data.url;
     } else {
-      // If no new main image, keep the old one
       imageUrl = currentProduct?.productImage || '';
     }
     console.log('Final main image:', imageUrl);
 
-    // Gallery logic
-    // Get the current gallery from the form (after user removals)
-    let currentGallery: string[] = Array.isArray(data.productGallery) ? data.productGallery.filter((v): v is string => typeof v === 'string') : [];
-    // Upload new images and get their URLs
-    let newGalleryUrls: string[] = [];
+    const currentGallery: string[] = Array.isArray(data.productGallery) ? data.productGallery.filter((v): v is string => typeof v === 'string') : [];
+    const newGalleryUrls: string[] = [];
+
     if (galleryImages.length > 0) {
       for (let i = 0; i < galleryImages.length; i++) {
-        // Only upload if the preview is in the currentGallery (not removed)
         if (currentGallery.includes(galleryImages[i].preview)) {
           const formData = new FormData();
           formData.append('file', galleryImages[i].file);
@@ -205,14 +186,12 @@ const {user} = useAuthContext()
         }
       }
     }
-// IMPORTANT: The gallery UI should render only from productGallery (the form value) for consistency and to avoid duplication.
-    // Replace base64 previews in currentGallery with the uploaded URLs
+
     let updatedGallery = [...currentGallery];
     if (newGalleryUrls.length > 0 && galleryImages.length > 0) {
-      // Map previews to URLs
       let urlIdx = 0;
+
       updatedGallery = currentGallery.map(entry => {
-        // If entry is a base64 preview and we have a new URL for it, replace
         const isBase64 = typeof entry === 'string' && entry.startsWith('data:image');
         if (isBase64 && urlIdx < newGalleryUrls.length) {
           const url = newGalleryUrls[urlIdx];
@@ -223,10 +202,8 @@ const {user} = useAuthContext()
       });
     }
     data.productGallery = updatedGallery;
-    console.log('Final gallery:', updatedGallery);
-    // --- IMAGE LOGIC PATCH END ---
 
-      // --- Handle deletion of removed images ---
+    
       const getFileNameFromUrl = (url: string) => url.split('/').pop() || '';
       const originalMainImage = currentProduct?.productImage;
       const originalGallery = Array.isArray(currentProduct?.productGallery)
@@ -235,11 +212,11 @@ const {user} = useAuthContext()
       const newMainImage = imageUrl;
       const newGallery = updatedGallery;
       const removedImages: string[] = [];
-      // Main image
+
       if (originalMainImage && originalMainImage !== newMainImage && originalMainImage.startsWith('http')) {
         removedImages.push(originalMainImage);
       }
-      // Gallery images
+
       originalGallery.forEach((img: any) => {
         if (!newGallery.includes(img) && img.startsWith('http')) {
           removedImages.push(img);
@@ -256,21 +233,12 @@ const {user} = useAuthContext()
           }
         }
       }
-      // --- End deletion logic ---
 
-      console.log({ ...data, productImage: imageUrl, productGallery: updatedGallery });
       
       const response = await axiosInstance.patch(`/v1/products/${currentProduct?.id}`, { ...data, productImage: imageUrl, productGallery: updatedGallery, storeId: user?.seller?.store?.id });
       enqueueSnackbar('Product created successfully!', { variant: 'success' });
       router.push('/dashboard/products');
       console.log(response);
-      // router.push('/dashboard/products');      
-      
-      // const response = await axiosInstance.post('/v1/products', data);
-      // enqueueSnackbar('Product created successfully!', { variant: 'success' });
-      // router.push('/dashboard/products');
-      // console.log(response);
-
     } catch (error: any) {
       console.error('Product update error:', error);
       enqueueSnackbar(`Something went wrong: ${error?.message || error}`, { variant: 'error' });
@@ -295,21 +263,6 @@ const {user} = useAuthContext()
     dispatch(fetchCategories())
   }, [dispatch])
 
-  // useEffect(() => {
-  //   const handleUpload = async () => {
-  //     if (!mainImage) return;
-  //     const formData = new FormData();
-  //     formData.append('file', mainImage);
-  
-  //     const data = await axiosInstance.post('/v1/files/upload', formData);
-  //     console.log(data.data.url);
-  //   };
-
-  //   handleUpload()
-  
-  // }, [mainImage])
-
-  
 
   const handleDropGalleryImages = useCallback((acceptedFiles: File[]) => {
   Promise.all(
@@ -323,12 +276,12 @@ const {user} = useAuthContext()
     })
   ).then((galleryObjs) => {
     setGalleryImages((prev) => {
-      // Prevent duplicates by preview string
+
       const previews = new Set(prev.map(img => img.preview));
       const newImgs = galleryObjs.filter(img => !previews.has(img.preview));
       return [...prev, ...newImgs];
     });
-    // Only add unique previews to the form value
+
     const current = methods.getValues('productGallery') || [];
     const allPreviews = [...current];
     galleryObjs.forEach(img => {
@@ -341,14 +294,12 @@ const {user} = useAuthContext()
   });
 }, [setValue]);
 
-// NOTE: Ensure the gallery UI renders only from productGallery (the form value), not from galleryImages.
 
 const onRemoveImage = useCallback((fileOrPreview: string | CustomFile) => {
   const currentGallery = methods.getValues('productGallery') || [];
   const updatedGallery = currentGallery.filter((image) => image !== fileOrPreview);
   setValue('productGallery', updatedGallery);
 
-  // Remove from galleryImages by preview string
   setGalleryImages((prev) => prev.filter(img => img.preview !== fileOrPreview));
 }, [setValue, methods]);
 
