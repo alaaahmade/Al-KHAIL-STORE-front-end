@@ -37,7 +37,6 @@ import Iconify from '@/components/iconify';
       };
 
       const { user, socket } = useAuthContext();
-      console.log({user});
 
       const settings = useSettingsContext();
 
@@ -46,9 +45,6 @@ import Iconify from '@/components/iconify';
       const selectedConversationId = searchParams.get('id') || '';
 
       const [recipients, setRecipients] = useState<any[]>([]);
-
-      // const [ contacts ] = useState([]);
-
 
       const { conversation } = useGetConversation(`${selectedConversationId}`);    
       const participants: any[] = conversation
@@ -81,9 +77,7 @@ import Iconify from '@/components/iconify';
       useEffect(() => {
         if (!socket) return;
       
-        const handleMessageResponse = (newMessage: any) => {
-          console.log('New message received:', newMessage);
-          
+        const handleMessageResponse = (newMessage: any) => {          
           if (String(newMessage.chatRoom.id) === String(chat.id)) {
             setMessages((prevMessages: any) => {
               const updatedMessages = [...prevMessages, newMessage];

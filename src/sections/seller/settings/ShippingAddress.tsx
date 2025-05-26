@@ -12,26 +12,65 @@ import {
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
+import axiosInstance from '@/utils/axios';
+import ConfirmDialog from '@/components/custom-dialog/confirm-dialog';
 
 
 const ShippingAddress = () => {
   const [open, setOpen] = useState(false);
-   const [currentSettings, setCurrentSettings] = useState<any>(null);
-    const {user} = useAuthContext()
-    
-    useEffect(() => {
-      if (user?.settings) {
-        setCurrentSettings(user.settings.shipping_Address);
-      }
-    }, [user]);
+  const [editAddress, setEditAddress] = useState<any | null>(null);
+  const [currentSettings, setCurrentSettings] = useState<any>(null);
+  const { user } = useAuthContext();
+
+  useEffect(() => {
+    if (user?.settings) {
+      setCurrentSettings(user.settings.shipping_Address);
+    }
+  }, [user]);
 
   const handleOpen = () => {
+    setEditAddress(null); // Add mode
     setOpen(true);
   };
 
+  const handleEdit = (addr: any) => {
+    setEditAddress(addr);
+    setOpen(true);
+  };
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<any | null>(null);
+
+  const handleDeleteClick = (addr: any) => {
+    setPendingDelete(addr);
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!pendingDelete) return;
+    try {
+      const filteredAddresses = (user?.settings?.shipping_Address || []).filter((a: any) => a.address !== pendingDelete.address);
+      await axiosInstance.patch(`/v1/sellers/${user?.settings?.id}`, {
+        ...user?.settings,
+        shipping_Address: filteredAddresses,
+      });
+      setCurrentSettings(filteredAddresses);
+      setConfirmOpen(false);
+      setPendingDelete(null);
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      setConfirmOpen(false);
+      setPendingDelete(null);
+    }
+  };
+
+
   const handleClose = () => {
     setOpen(false);
+    setEditAddress(null);
   };
+
     
   return (
     <Box p={3}>
@@ -72,6 +111,7 @@ const ShippingAddress = () => {
                   startIcon={<Iconify icon="cuida:edit-outline" width="24" height="24" />}
                   size="small"
                   sx={{ textTransform: 'none', color: 'primary.main' }}
+                  onClick={() => handleEdit(addr)}
                 >
                   Edit
                 </Button>
@@ -80,7 +120,7 @@ const ShippingAddress = () => {
                   size="small"
                   color="inherit"
                   sx={{ textTransform: 'none', color: '#6b7280' }}
-
+                  onClick={() => handleDeleteClick(addr)}
                 >
                   Delete
                 </Button>
@@ -92,8 +132,22 @@ const ShippingAddress = () => {
       <AddAddressDialog
         open={open}
         onClose={handleClose}
+        currentAddress={null}
       />
-    </Box>
+    {/* Add/Edit Address Dialog */}
+    <AddAddressDialog open={open} onClose={handleClose} currentAddress={editAddress} />
+    <ConfirmDialog
+      open={confirmOpen}
+      onClose={() => { setConfirmOpen(false); setPendingDelete(null); }}
+      title="Delete Address"
+      content={<>Are you sure you want to delete this address?</>}
+      action={
+        <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+          Delete
+        </Button>
+      }
+    />
+  </Box>
   );
 };
 

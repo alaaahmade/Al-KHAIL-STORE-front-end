@@ -26,10 +26,7 @@ export default function ProductEditView() {
   const { enqueueSnackbar } = useSnackbar();
   const ProductsState = useAppSelector((state) => state.products);
   const currentProduct = ProductsState?.currentProduct ;
-  const loading = ProductsState?.loading || false;
-
-  console.log(ProductsState);
-  
+  const loading = ProductsState?.loading || false;  
   
   useEffect(() => {
     if (productId) {

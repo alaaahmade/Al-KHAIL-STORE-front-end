@@ -1,6 +1,8 @@
 import Label from 'src/components/label';
 import { fCurrency } from '@/utils/format-number';
 import { Box, Button, Typography } from '@mui/material';
+import { useBoolean } from 'src/hooks/use-boolean';
+import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useRouter } from 'next/navigation';
 import { paths } from '@/routes/paths';
 import axiosInstance from '@/utils/axios';
@@ -35,6 +37,7 @@ export function ProductCard({product}: {product: ProductCardProps}) {
   const {user} = useAuthContext()
   const dispatch = useAppDispatch()
 
+  const confirm = useBoolean();
   const handleDelete = async() => {
     try {
       const response =  await axiosInstance.delete(`/v1/products/${id}`);
@@ -131,10 +134,25 @@ export function ProductCard({product}: {product: ProductCardProps}) {
           <Button
             sx={{bgcolor: 'rgba(243, 244, 246, 1)', width: '48%', borderRadius: 1}}
             size="small"
-            onClick={handleDelete}
+            onClick={confirm.onTrue}
           >
             delete
           </Button>
+
+          <ConfirmDialog
+            open={confirm.value}
+            onClose={confirm.onFalse}
+            title="Delete Product"
+            content="Are you sure you want to delete this product?"
+            action={
+              <Button variant="contained" color="error" onClick={() => {
+                handleDelete();
+                confirm.onFalse();
+              }}>
+                Delete
+              </Button>
+            }
+          />
 
         </Box>
 

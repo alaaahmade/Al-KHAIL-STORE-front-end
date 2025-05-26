@@ -70,7 +70,7 @@ export default function Header({ onOpenNav }: Props) {
         }
       {lgUp && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
 
-      {!lgUp && (
+      {!lgUp && !isProfile && (
         <IconButton onClick={onOpenNav}>
           <SvgColor src="/assets/icons/navbar/ic_menu_item.svg" />
         </IconButton>

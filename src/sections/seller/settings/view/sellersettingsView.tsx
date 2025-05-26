@@ -28,13 +28,15 @@ import { useAuthContext } from '@/auth/hooks';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchUserSettings, updateUserStore } from '@/redux/slices/userSlice';
 import { toast } from 'react-toastify';
+import axiosInstance from '@/utils/axios';
+import { getFileNameFromUrl } from '@/sections/products/product-new-edit-form';
 
 const tabs = [
+  { label: 'Store Information', icon: <Iconify icon="fa6-solid:store" width="576" height="512" />},
   { label: 'Notifications', icon: <Iconify icon="mingcute:notification-fill" width="24" height="24" /> },
-  { label: 'Account', icon: <Iconify icon="material-symbols:person" width="24" height="24" /> },
   { label: 'Payment Methods', icon: <Iconify icon="fluent:payment-16-filled" width="24" height="24" /> },
   { label: 'Shipping', icon: <Iconify icon="fa-solid:shipping-fast" width="24" height="24" /> },
-  { label: 'Store Information', icon: <Iconify icon="fa6-solid:store" width="576" height="512" />},
+  { label: 'Account', icon: <Iconify icon="material-symbols:person" width="24" height="24" /> },
   { label: 'Security', icon: <Iconify icon="line-md:security-twotone" width="24" height="24" /> },
 ];
 
@@ -44,6 +46,7 @@ const updateSchema = Yup.object().shape({
   tagline: Yup.string().nullable(),
   storeType: Yup.string().required('Store type is required'),
   description: Yup.string().required('Description is required'),
+  phoneNumber: Yup.string().required('Phone number is required'),
   businessHours: Yup.object().shape({
     monday: Yup.string().required('Business hours for Monday are required'),
     tuesday: Yup.string().required('Business hours for Tuesday are required'),
@@ -70,6 +73,8 @@ export const SellerSettingsView = () => {
   const { user } = useAuthContext();
   const {userSettings} = useAppSelector(state => state.user)
   const dispatch = useAppDispatch()
+  const [newLogo, setNewLogo] = useState<File | null>(null)
+  const [loading, setLoading] = useState(false)
 
   const [storeInfo, setStoreInfo] = useState({
     logo: '',
@@ -77,6 +82,7 @@ export const SellerSettingsView = () => {
     tagline: '',
     storeType: '',
     description: '',
+    phoneNumber: '',
     businessHours: {
       monday: '',
       tuesday: '',
@@ -93,6 +99,15 @@ export const SellerSettingsView = () => {
     },
   });
 
+
+  const handleLogoChange = (file: File) => {
+    setNewLogo(file)
+    const imageUrl = URL.createObjectURL(file);
+    setStoreInfo(prev => ({
+      ...prev,
+      logo: imageUrl
+    }));
+  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -130,18 +145,38 @@ export const SellerSettingsView = () => {
   };
 
   const handleSaveChanges =async () => {
-    // Implement save logic here
     try {
+      setLoading(true)
       const result = await updateSchema.validateSync(storeInfo, {
         abortEarly: false,
-      });
-      console.log('Saving changes:', result);
+      });      
+      if(newLogo){
+
+        if (userSettings?.seller.store.logo.includes('mysstore.fra1.digitaloceanspaces.com')) {
+          const fileName = getFileNameFromUrl(userSettings?.seller.store.logo);          
+          try {
+            await axiosInstance.delete(`/v1/files/${fileName}`);
+          } catch (err) {
+            console.error(`Failed to delete file ${fileName}:`, err);
+          }
+        }
+
+        const formData = new FormData();
+        formData.append('file', newLogo);
+        const data = await axiosInstance.post('/v1/files/upload', formData);
+        const imageUrl = data.data.url;
+        setStoreInfo(prev => ({
+          ...prev,
+          logo: imageUrl
+        }));
+        result.logo = imageUrl
+      }
       await dispatch(updateUserStore({...result, id: userSettings?.seller.store.id}))
       await dispatch(fetchUserSettings(user?.id))
+      setLoading(false)
       toast.success('Changes saved successfully');
     }catch (error) {
-      console.log(error);
-      
+      setLoading(false)
       if (error instanceof Yup.ValidationError) {
         console.log();
         error.errors.forEach((err: any) => {
@@ -181,7 +216,7 @@ export const SellerSettingsView = () => {
   useEffect(() => {
     if(!tapSearch){
       const params = new URLSearchParams(searchParams.toString());
-      params.set('tapSearch', 'Notifications');
+      params.set('tapSearch', 'Store Information');
       router.push(`?${params.toString()}`);
     }
   }, [router, searchParams, tapSearch])
@@ -230,12 +265,24 @@ export const SellerSettingsView = () => {
             handleSocialLinkChange={handleSocialLinkChange}
             handleStoreTypeChange={handleStoreTypeChange}
             handleSaveChanges={handleSaveChanges}
+            handleLogoChange={handleLogoChange}
+            loading={loading}
           />
             : tapSearch === 'Account' ? <AccountSettings /> 
             : tapSearch === 'Security' ? <SecuritySettings />
             : tapSearch === 'Payment Methods' ? <PaymentMethods />
             : tapSearch === 'Shipping' ? <ShippingAddress />
-            : <NotificationsSettings />
+            : tapSearch === 'Notifications' ? <NotificationsSettings />
+            : <StoreInformation 
+            storeInfo={storeInfo}
+            handleInputChange={handleInputChange}
+            handleBusinessHoursChange={handleBusinessHoursChange}
+            handleSocialLinkChange={handleSocialLinkChange}
+            handleStoreTypeChange={handleStoreTypeChange}
+            handleSaveChanges={handleSaveChanges}
+            handleLogoChange={handleLogoChange}
+            loading={loading}
+          />
         }
 
         </Grid>

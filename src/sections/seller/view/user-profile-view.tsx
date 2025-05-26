@@ -1,5 +1,7 @@
 'use client';
 
+import StoreLastReviews from './StoreLastReviews';
+
 import { useState, useCallback, useEffect } from 'react';
 // @mui
 import Tab from '@mui/material/Tab';
@@ -40,9 +42,10 @@ export default function UserProfileView() {
   const dispatch = useAppDispatch()
 
   console.log(store);
+  console.log();
+  
   
 
-  const [searchFriends, setSearchFriends] = useState('');
 
   const [currentTab, setCurrentTab] = useState('Products');
 
@@ -50,13 +53,9 @@ export default function UserProfileView() {
     setCurrentTab(newValue);
   }, []);
 
-  const handleSearchFriends = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchFriends(event.target.value);
-  }, []);
-
   useEffect(() => {
     if(user && user.id){
-      dispatch(fetchSellerStore(user?.seller.id))
+      dispatch(fetchSellerStore(user?.seller?.id))
     }
   }, [user, dispatch])
 
@@ -117,6 +116,10 @@ export default function UserProfileView() {
       </Card>
 
       {currentTab === 'Products' && store?.products &&  <ProfileGallery products={store?.products} />}
+
+{currentTab === 'Reviews' && store?.products && (
+  <StoreLastReviews products={store.products} max={5} />
+)}
     </Container>
   );
 }

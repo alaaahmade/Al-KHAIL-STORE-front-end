@@ -31,7 +31,7 @@ const addressSchema = Yup.object().shape({
   city: Yup.string().required('City is required'),
   country: Yup.string().required('Country is required'),
   isDefault: Yup.boolean(),
-  phone: Yup.string().required('Phone is required'),
+  phone: Yup.string().min(10).required('Phone is required'),
 });
 
 export const AddAddressDialog = ({ open, onClose, currentAddress }: { open: boolean; onClose: () => void, currentAddress: any }) => {
@@ -82,37 +82,52 @@ export const AddAddressDialog = ({ open, onClose, currentAddress }: { open: bool
 
   const handleSubmit = async () => {
     await validateAddress();
-    if(currentAddress){
+    if (Object.keys(errors).length > 0) return;
+    const shippingAddresses = user?.settings?.shipping_Address || [];
+
+    if (address.isDefault) {
+      // Unset isDefault for all other addresses
+      for (let addr of shippingAddresses) {
+        addr.isDefault = false;
+      }
+    }
+
+    if (currentAddress) {
       try {
-        if (Object.keys(errors).length > 0) return;
-        const filterAds = user?.settings?.shipping_Address.filter((addr: any) => addr.address !== currentAddress.address);        
-          const response = await axiosInstance.patch(`/v1/sellers/${user?.settings?.id}`, {
+        const filterAds = shippingAddresses.filter((addr: any) => addr.address !== currentAddress.address);
+        const updatedAddresses = address.isDefault
+          ? [...filterAds.map(addr => ({ ...addr, isDefault: false })), address]
+          : [...filterAds, address];
+
+        const response = await axiosInstance.patch(`/v1/sellers/${user?.settings?.id}`,
+          {
             ...user?.settings,
-            shipping_Address: [...filterAds, address],
-          });
-            onClose();
-            window.location.reload();
+            shipping_Address: updatedAddresses,
+          }
+        );
+        onClose();
+        window.location.reload();
       } catch (error) {
         console.error(error);
-        toast.error(error.message)
-      }      
-    }else {
+        toast.error(error.message);
+      }
+    } else {
       try {
-        if (Object.keys(errors).length > 0) return;
-          const response = await axiosInstance.patch(`/v1/sellers/${user?.settings?.id}`, {
+        const updatedAddresses = address.isDefault
+          ? [...shippingAddresses.map(addr => ({ ...addr, isDefault: false })), address]
+          : [...shippingAddresses, address];
+        const response = await axiosInstance.patch(`/v1/sellers/${user?.settings?.id}`,
+          {
             ...user?.settings,
-            shipping_Address: [...user?.settings?.shipping_Address, address],
-          });
-          // if(response.ok
-            onClose();
-            window.location.reload();
-          // }        
+            shipping_Address: updatedAddresses,
+          }
+        );
+        onClose();
+        window.location.reload();
       } catch (error) {
         console.error(error);
       }
-        
     }
-    // onClose(address);
   };
 
   useEffect(() => {
@@ -177,11 +192,13 @@ export const AddAddressDialog = ({ open, onClose, currentAddress }: { open: bool
         </TextField>
 
         <TextField
-        error={!!errors.phone}
-        helperText={errors.phone}
-        onChange={(e) => handleAddressChange('phone', e.target.value)}
-        value={address.phone}
-        fullWidth label="Phone Number" name='phone' placeholder="Enter phone number" />
+          error={!!errors.phone}
+          helperText={errors.phone}
+          onChange={(e) => handleAddressChange('phone', e.target.value)}
+          value={address.phone}
+          fullWidth label="Phone Number" name='phone' placeholder="Enter phone number"
+          type='number'
+          />
 
         <FormControlLabel
           control={<Checkbox />}

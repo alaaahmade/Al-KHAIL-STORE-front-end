@@ -9,6 +9,7 @@ interface StoreInformationProps {
     tagline: string;
     storeType: string;
     description: string;
+    phoneNumber: string;
     businessHours: {
       monday: string;
       tuesday: string;
@@ -28,7 +29,9 @@ interface StoreInformationProps {
   handleBusinessHoursChange: (day: string, value: string) => void;
   handleSocialLinkChange: any;
   handleStoreTypeChange: (event: SelectChangeEvent<string>) => void;
-  handleSaveChanges: any
+  handleSaveChanges: any;
+  handleLogoChange: (file: File) => void;
+  loading: boolean
 }
 
 const StoreInformation = ({
@@ -37,8 +40,11 @@ const StoreInformation = ({
   handleBusinessHoursChange,
   handleSocialLinkChange,
   handleStoreTypeChange,
-  handleSaveChanges
+  handleSaveChanges,
+  handleLogoChange,
+  loading
 }: StoreInformationProps) => {
+  
   return (
     <Stack spacing={3} >
       <Card sx={{ borderRadius: 2, position: 'relative' }} >
@@ -48,6 +54,7 @@ const StoreInformation = ({
         sx={{p: 1.5, bgcolor: 'primary.main', position: 'absolute', top: 10, right: 10}}
         variant="contained"
         onClick={handleSaveChanges}
+        loading={loading}
       >
         Save Changes
       </LoadingButton>
@@ -56,12 +63,28 @@ const StoreInformation = ({
           <Stack spacing={3}>
             <Stack direction="row" alignItems="center" spacing={2}>
               <Avatar src={storeInfo.logo} sx={{ width: 80, height: 80 }} />
-              <Button variant="outlined">Change Logo</Button>
+              <input
+                type="file"
+                accept="image/*"
+                id="logo-upload-input"
+                style={{ display: 'none' }}
+                onChange={e => {
+                  if (e.target.files && e.target.files[0]) {
+                    handleLogoChange(e.target.files[0]);
+                  }
+                }}
+              />
+              <Button
+                variant="outlined"
+                onClick={() => document.getElementById('logo-upload-input')?.click()}
+              >
+                Change Logo
+              </Button>
 
             </Stack>
 
             <Grid container spacing={2}>
-              <Grid xs={12} md={6}>
+              <Stack width={'100%'} direction={"row"} alignItems={"center"} spacing={1} justifyContent={"space-between"}>
                 <TextField
                   fullWidth
                   name="name"
@@ -69,8 +92,7 @@ const StoreInformation = ({
                   value={storeInfo.name}
                   onChange={handleInputChange}
                 />
-              </Grid>
-              <Grid xs={12} md={6}>
+
                 <TextField
                   fullWidth
                   name="tagline"
@@ -78,22 +100,19 @@ const StoreInformation = ({
                   value={storeInfo.tagline}
                   onChange={handleInputChange}
                 />
-              </Grid>
+                </Stack>
             </Grid>
 
             <Grid container spacing={2}>
-              <Grid xs={12} md={6}>
+
+                <Stack width={'100%'} direction={"row"} alignItems={"center"} spacing={1} justifyContent={"space-between"}>
                 <TextField
                   fullWidth
-                  name="description"
-                  label="Store Description"
-                  multiline
-                  rows={4}
-                  value={storeInfo.description}
+                  name="phoneNumber"
+                  label="Phone Number"
+                  value={storeInfo.phoneNumber}
                   onChange={handleInputChange}
                 />
-              </Grid>
-              <Grid xs={12} md={6}>
                 <FormControl fullWidth>
                   <InputLabel id="store-type-label">Store Type</InputLabel>
                   <Select
@@ -108,8 +127,20 @@ const StoreInformation = ({
                     <MenuItem value="Other">Other</MenuItem>
                   </Select>
                 </FormControl>
-              </Grid>
+
+                </Stack>
             </Grid>
+            <Stack width={'100%'} direction={"row"} alignItems={"center"} spacing={1} justifyContent={"space-between"}>
+                <TextField
+                  fullWidth
+                  name="description"
+                  label="Store Description"
+                  multiline
+                  rows={4}
+                  value={storeInfo.description}
+                  onChange={handleInputChange}
+                />
+            </Stack>
           </Stack>
         </CardContent>
       </Card>

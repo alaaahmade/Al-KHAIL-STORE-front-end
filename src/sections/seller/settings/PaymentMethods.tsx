@@ -16,9 +16,12 @@ import Iconify from '@/components/iconify';
 import Label from '@/components/label';
 import AddCardForm from './AddCardForm';
 import axiosInstance from '@/utils/axios';
+import { useBoolean } from 'src/hooks/use-boolean';
+import { ConfirmDialog } from 'src/components/custom-dialog';
 import { toast } from 'react-toastify';
 
 interface StripeCard {
+  card: any;
   id: string;
   brand: string;
   last4: string;
@@ -48,20 +51,16 @@ const PaymentMethods = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  console.log(cards);
+const confirm = useBoolean();
+const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   
   const fetchCards = async () => {
     setLoading(true);
     setError(null);
     try {
       const res = await axiosInstance.get('/v1/payments/payment-methods');
-      // If your backend marks default card, use that. Otherwise, mark first as default for demo.
       let fetchedCards = res.data;
       
-      if (Array.isArray(fetchedCards) && fetchedCards.length > 0) {
-        // Optionally, determine default card (if backend doesn't mark it)
-        // fetchedCards[0].isDefault = true;
-      }
       setCards(fetchedCards);
     } catch (err: any) {
       setError('Failed to fetch cards.');
@@ -83,7 +82,6 @@ const PaymentMethods = () => {
   };
 
   const handleDeleteCard = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this card?')) return;
     setDeletingId(id);
     try {
       await axiosInstance.delete(`/v1/payments/payment-methods/${id}`);
@@ -97,7 +95,7 @@ const PaymentMethods = () => {
   };
 
   return (
-    <> 
+    <>
       <Card sx={{ p: 4 }}>
         {/* Header */}
         <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
@@ -153,8 +151,11 @@ const PaymentMethods = () => {
                       Default
                     </Label>
                   )}
-                  <IconButton disabled={deletingId === card?.id} onClick={() => handleDeleteCard(card?.id)}>
-                    <Iconify icon="pepicons-pencil:dots-y" width={25} height={25} />
+                  <IconButton disabled={deletingId === card?.id} onClick={() => {
+                    setPendingDeleteId(card?.id);
+                    confirm.onTrue();
+                  }}>
+                    <Iconify icon="mynaui:trash" color="error.main" width={25} height={25} />
                   </IconButton>
                 </Stack>
               </Card>
@@ -188,22 +189,7 @@ const PaymentMethods = () => {
         </Stack>
       </Card>
 
-      {/* Add Card Dialog */}
-      {/* <Dialog open={open} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-        <DialogTitle>
-          Add New Card
-          <IconButton
-            aria-label="close"
-            onClick={handleCloseDialog}
-            sx={{ position: 'absolute', right: 8, top: 8 }}
-          >
-            <Iconify icon="ic:round-close" />
-          </IconButton> */}
-        {/* </DialogTitle> */}
-        {/* <DialogContent dividers> */}
           <AddCardForm open={open} onClose={handleCloseDialog} onCardAdded={handleCardAdded} />
-        {/* </DialogContent> */}
-      {/* </Dialog> */}
     </>
   );
 };

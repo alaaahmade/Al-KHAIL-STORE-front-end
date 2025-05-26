@@ -78,10 +78,7 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
       }
       let imageUrl;
       if (form.logoFile) {
-        const formData = new FormData();
-        formData.append('file', form.logoFile);
-        const data = await axiosInstance.post('/v1/files/upload', formData);
-        imageUrl = data.data.url;
+        loading
       }
       await handleSave({ ...form, photo: imageUrl });
       setForm({

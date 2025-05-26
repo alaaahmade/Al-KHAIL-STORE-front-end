@@ -86,17 +86,16 @@ const AddCardForm = ({ onCardAdded, open, onClose }: AddCardFormProps) => {
           card: cardElement,
         },
       });
-      console.log('Stripe confirmCardSetup result:', result);
       if (result.error) {
         setError(result.error.message || 'An error occurred while adding the card.');
       } else {
         setSuccess(true);
         setError(null);
         if (typeof onCardAdded === 'function') {
-          onCardAdded(); // Refresh card list
+          onCardAdded();
         }
+        toast.success('Card added successfully');
       }
-      toast.success('Card added successfully');
     } catch (err: any) {
       setError('Unexpected error: ' + err.message);
       console.error(err);

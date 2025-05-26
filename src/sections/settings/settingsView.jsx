@@ -38,12 +38,7 @@ const SettingsView = () => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
-  const [orderNotifications, setOrderNotifications] = useState(true);
-  const [reviewNotifications, setReviewNotifications] = useState(true);
-  const [autoApproveReviews, setAutoApproveReviews] = useState(false);
-  const [defaultReplyTemplate, setDefaultReplyTemplate] = useState(
-    'Thank you for your feedback! We appreciate your support.'
-  );
+
 
 
   const handleUpdatePassword =async () => {
@@ -64,16 +59,11 @@ const SettingsView = () => {
   };
 
   const handleSaveChanges =  async () => {
-    // Implement save changes logic here
     const data = {
       firstName,
       lastName,
       email,
       currency,
-      orderNotifications,
-      reviewNotifications,
-      autoApproveReviews,
-      defaultReplyTemplate
     }
      try {
        await dataSchema.validateSync(data, { abortEarly: false });
@@ -81,7 +71,6 @@ const SettingsView = () => {
        if(response.status === 200){
         window.location.reload();
        }
-      //  console.log('Saving changes...');
      } catch (error) {
        console.log(error);
      }

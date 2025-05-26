@@ -27,7 +27,8 @@ import {
   ListItemText,
   OutlinedInput,
   Box,
-  FormControlLabel
+  FormControlLabel,
+  FormHelperText
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import FormProvider, { RHFTextField, RHFUpload } from 'src/components/hook-form';
@@ -39,22 +40,33 @@ import { uploadFile } from '@/utils/s3.client';
 import axiosInstance from '@/utils/axios';
 
 
-const ProductSchema = Yup.object().shape({
+const ProductSchema: Yup.ObjectSchema<ProductFormValues> = Yup.object().shape({
   productName: Yup.string().required('Product name is required'),
   productImage: Yup.string().required('Product image is required'),
   productStatus: Yup.string().required('Status is required'),
   standardPrice: Yup.number()
-    .typeError('Standard price is required')
-    .required('Standard price is required'),
-  offerPrice: Yup.number().nullable(),
+    .typeError('Standard price must be a number')
+    .required('Standard price is required')
+    .positive('Standard price must be positive'),
+  offerPrice: Yup.number()
+    .nullable()
+    .typeError('Offer price must be a number or empty')
+    .required('Offer price is required'),
   productDescription: Yup.string().required('Description is required'),
   productDate: Yup.date().required('Date is required'),
   productQuantity: Yup.number()
-    .typeError('Quantity is required')
-    .required('Quantity is required'),
-  isFeatured: Yup.boolean().required(),
-  productGallery: Yup.array().of(Yup.string()).required(),
-  category: Yup.array().of(Yup.string()).min(1, 'Select at least one category').required(),
+    .typeError('Quantity must be a number')
+    .required('Quantity is required')
+    .integer('Quantity must be an integer')
+    .min(0, 'Quantity cannot be negative'),
+  isFeatured: Yup.boolean().required('Featured status is required'),
+  productGallery: Yup.array()
+    .of(Yup.string().required('Gallery image URL is required'))
+    .required('At least one gallery image is required'),
+  category: Yup.array()
+    .of(Yup.string().required('Category ID is required'))
+    .min(1, 'Select at least one category')
+    .required('Category is required'),
 });
 
 export type ProductFormValues = {
@@ -83,13 +95,11 @@ export default function ProductNewEditForm({ currentProduct }: Props) {
   const {categories} = useAppSelector(state => state.serviceSlice);
   const [mainImage, setMainImage] = useState<any>(null);
   type GalleryImage = { file: File; preview: string };
-const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useAppDispatch();
-const {user} = useAuthContext()
+  const {user} = useAuthContext()
   
-
-  console.log(currentProduct);
   
 
   const defaultValues: ProductFormValues = {
@@ -136,23 +146,19 @@ const {user} = useAuthContext()
         const data = await axiosInstance.post('/v1/files/upload', formData);
         imageUrl = data.data.url;
       }
-      console.log(imageUrl);
       const galleryUrls: string[] = [];
       if (galleryImages.length > 0) {
-        console.log(galleryImages.length);
         
         for (let i = 0; i < galleryImages.length; i++) {
           const formData = new FormData();
-          formData.append('file', galleryImages[i]);
+          formData.append('file', galleryImages[i].file);
           const data = await axiosInstance.post('/v1/files/upload', formData);
           galleryUrls.push(data.data.url);
         }
       }
       
       data.productGallery = galleryUrls
-      console.log(galleryUrls);
 
-      console.log({...data, productImage: imageUrl, productGallery: galleryUrls});
       
       await axiosInstance.post('/v1/products', {...data, productImage: imageUrl, productGallery: galleryUrls, storeId: user?.seller?.store?.id});
       enqueueSnackbar('Product created successfully!', { variant: 'success' });
@@ -172,7 +178,6 @@ const {user} = useAuthContext()
     } else {
       imageUrl = currentProduct?.productImage || '';
     }
-    console.log('Final main image:', imageUrl);
 
     const currentGallery: string[] = Array.isArray(data.productGallery) ? data.productGallery.filter((v): v is string => typeof v === 'string') : [];
     const newGalleryUrls: string[] = [];
@@ -227,7 +232,6 @@ const {user} = useAuthContext()
         if (fileName) {
           try {
             await axiosInstance.delete(`/v1/files/${fileName}`);
-            console.log(`Deleted file: ${fileName}`);
           } catch (err) {
             console.error(`Failed to delete file ${fileName}:`, err);
           }
@@ -236,9 +240,8 @@ const {user} = useAuthContext()
 
       
       const response = await axiosInstance.patch(`/v1/products/${currentProduct?.id}`, { ...data, productImage: imageUrl, productGallery: updatedGallery, storeId: user?.seller?.store?.id });
-      enqueueSnackbar('Product created successfully!', { variant: 'success' });
+      enqueueSnackbar('Product updated successfully!', { variant: 'success' });
       router.push('/dashboard/products');
-      console.log(response);
     } catch (error: any) {
       console.error('Product update error:', error);
       enqueueSnackbar(`Something went wrong: ${error?.message || error}`, { variant: 'error' });
@@ -354,34 +357,37 @@ const onRemoveImage = useCallback((fileOrPreview: string | CustomFile) => {
                   />
                 )}
               />
-              <FormControl>
+              <FormControl error={!!errors.category}>
                 <InputLabel>Categories</InputLabel>
                 <Controller
                   name="category"
                   control={methods.control}
                   render={({ field }) => (
-                    <Select
-                      error={errors.category ? true : false}
-                      helperText={errors.category?.message}
-                      multiple
-                      {...field}
-                      input={<OutlinedInput label="Categories" />}
-                      renderValue={(selected: string[]) =>
-                        categories.filter((cat: any) => selected.includes(cat.id)).map((cat: any) => cat.categoryName).join(', ')
-                      }
-                      onChange={event => {
-                        const value = event.target.value;
-                        field.onChange(typeof value === 'string' ? value.split(',') : value);
-                      }}
-                      value={field.value ?? []}
-                    >
-                      {categories.map((cat: any) => (
-                        <MenuItem key={cat.id} value={cat.id}>
-                          <Checkbox checked={field.value.indexOf(cat.id) > -1} />
-                          <ListItemText primary={cat.categoryName} />
-                        </MenuItem>
-                      ))}
-                    </Select>
+                    <>
+                      <>
+                        <Select
+                          multiple
+                          {...field}
+                          input={<OutlinedInput label="Categories" />}
+                          renderValue={(selected: string[]) =>
+                            categories.filter((cat: any) => selected.includes(cat.id)).map((cat: any) => cat.categoryName).join(', ')
+                          }
+                          onChange={event => {
+                            const value = event.target.value;
+                            field.onChange(typeof value === 'string' ? value.split(',') : value);
+                          }}
+                          value={field.value ?? []}
+                        >
+                          {categories.map((cat: any) => (
+                            <MenuItem key={cat.id} value={cat.id}>
+                              <Checkbox checked={field.value.indexOf(cat.id) > -1} />
+                              <ListItemText primary={cat.categoryName} />
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <FormHelperText>{errors.category?.message}</FormHelperText>
+                      </>
+                    </>
                   )}
                 />
               </FormControl>

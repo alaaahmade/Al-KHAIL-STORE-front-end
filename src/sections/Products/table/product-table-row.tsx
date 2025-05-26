@@ -15,11 +15,12 @@ import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 // types
 import { ProductInterface } from 'src/types/product';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { useAppDispatch } from '@/redux/hooks';
 import axiosInstance from '@/utils/axios';
 import { fetchProducts } from '@/redux/slices/productsReducer';
 import { enqueueSnackbar } from 'notistack';
+import { ConfirmDialog } from '@/components/custom-dialog';
 
 // ----------------------------------------------------------------------
 
@@ -114,9 +115,24 @@ export default function ProductTableRow({
       </TableCell>
       <TableCell sx={{ px: 1, whiteSpace: 'nowrap' }}>
 
-        <IconButton onClick={handleDelete}>
+        <IconButton onClick={confirm.onTrue}>
           <Iconify color={'#dc2626'} icon="fa-solid:trash" width={20} height={20} />
         </IconButton>
+
+        <ConfirmDialog
+          open={confirm.value}
+          onClose={confirm.onFalse}
+          title="Delete Product"
+          content="Are you sure you want to delete this product?"
+          action={
+            <Button variant="contained" color="error" onClick={() => {
+              handleDelete();
+              confirm.onFalse();
+            }}>
+              Delete
+            </Button>
+          }
+        />
 
         </TableCell>
       </TableRow>

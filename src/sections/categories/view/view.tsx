@@ -18,11 +18,13 @@ import axiosInstance from '@/utils/axios';
 import { deleteFile, uploadFile } from '@/utils/s3.client';
 import CatCard from '../card';
 import { useAppDispatch } from '@/redux/hooks';
+import { useAuthContext } from '@/auth/hooks';
+import { redirect } from 'next/navigation';
 // ----------------------------------------------------------------------
 
 export function CatView() {
   const settings = useSettingsContext();
-
+  const {user} = useAuthContext()
   const dispatch = useAppDispatch();
 
   const categories = useSelector((state: any) => state.CategoriesSlice.categories);
@@ -116,7 +118,11 @@ export function CatView() {
     dispatch(fetchCategories());
   }, [refresh]);
   
+
+  if(user?.role.toLowerCase() !== 'admin') return redirect('/dashboard/products')
+
   if (lading) return<LoadingScreen/>
+  
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'} >

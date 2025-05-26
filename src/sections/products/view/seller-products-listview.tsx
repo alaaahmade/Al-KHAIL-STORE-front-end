@@ -96,7 +96,7 @@ export default function SellerProductsListView() {
   
     // Filter by category
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter((item) =>
+      filtered = filtered.filter((item: any) =>
         item.category?.some((cat: any) => cat.id === selectedCategory)
       );
     }
@@ -138,21 +138,6 @@ export default function SellerProductsListView() {
           <Typography variant="caption"> Manage your product catalog </Typography>
         </Box>
         <Stack direction="row" spacing={2}>
-          <LoadingButton
-          sx={{
-            color: 'text.secondary',
-            bgcolor: 'background.neutral',
-            borderRadius: 1,
-            gap: 1,
-            p: 1.5,
-            fontSize: '14px',
-            '&:hover': { bgcolor: 'background.neutral' },
-          }}
-          size='small'
-        >
-        <Iconify width={12} icon="iconoir:filter-solid" />
-        Filter
-        </LoadingButton>
           <LoadingButton
             color="inherit"
             size="small"

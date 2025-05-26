@@ -1,7 +1,10 @@
-'use client';
+import SellerProductsListView from '@/sections/products/view/seller-products-listview';
 
-import SellerProductsListView from '@/sections/products/view/view';
 
-export default function ServicesListPage() {
+export const metadata = {
+  title: 'Dashboard: Products',
+};
+
+export default function ProductsListPage() {
   return <SellerProductsListView/>;
 } 

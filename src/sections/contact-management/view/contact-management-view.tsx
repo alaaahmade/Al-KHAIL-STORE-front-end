@@ -36,39 +36,6 @@ import { paths } from '@/routes/paths';
 
 // ----------------------------------------------------------------------
 
-const TICKET_FILTERS = [
-  { id: 'all', label: 'All Tickets', count: 24, icon: 'lucide:tickets' },
-  { id: 'unassigned', label: 'Unassigned', count: 8, icon: 'zondicons:exclamation-solid' },
-  { id: 'urgent', label: 'Urgent', count: 3, icon: 'clarity:flame-solid' },
-  { id: 'resolved', label: 'Resolved', count: 156, icon: 'icon-park-solid:check-one' },
-];
-
-const mockTickets = [
-  {
-    id: '#2234',
-    title: 'Order Delivery Issue',
-    description: 'My order hasn\'t arrived yet and it\'s been 5 days...',
-    status: 'pending',
-    time: '2 hours ago',
-    avatarUrl: '/assets/images/avatar/avatar_1.jpg',
-  },
-  {
-    id: '#2233',
-    title: 'Product Return Request',
-    description: 'I received the wrong shade of foundation...',
-    status: 'urgent',
-    time: '4 hours ago',
-    avatarUrl: '/assets/images/avatar/avatar_2.jpg',
-  },
-  {
-    id: '#2232',
-    title: 'Product Inquiry',
-    description: 'Is this product suitable for sensitive skin?',
-    status: 'resolved',
-    time: 'Yesterday',
-    avatarUrl: '/assets/images/avatar/avatar_3.jpg',
-  },
-];
 
 // ----------------------------------------------------------------------
 
@@ -80,13 +47,27 @@ export default function ContactManagementView() {
   const [currentCHats, setCurrentCHats] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
-  const navigate = useRouter()  
-  const dispatch = useAppDispatch()
+  const [page, setPage] = useState(1);
+  const rowsPerPage = 3;
+  const navigate = useRouter();
+  const dispatch = useAppDispatch();
 
   const handleFilterChange = (filterId: string) => {
     setCurrentFilter(filterId);
-    // Add filtering logic here
   };
+
+  console.log(chats)
+  const urgentChats = chats.filter((chat) => chat.status === 'urgent')
+  const resolvedChats = chats.filter((chat) => chat.status === 'resolved')
+  const unassignedChats = chats.filter((chat) => chat.status === 'unassigned')
+
+
+const TICKET_FILTERS = [
+  { id: 'all', label: 'All Tickets', count: chats.length, icon: 'lucide:tickets' },
+  { id: 'unassigned', label: 'Unassigned', count: unassignedChats.length, icon: 'zondicons:exclamation-solid' },
+  { id: 'urgent', label: 'Urgent', count: urgentChats.length, icon: 'clarity:flame-solid' },
+  { id: 'resolved', label: 'Resolved', count: resolvedChats.length, icon: 'icon-park-solid:check-one' },
+];
 
   const getStatusLabelColor = (status: string) => {
     if (status === 'pending') return 'warning';
@@ -142,6 +123,7 @@ export default function ContactManagementView() {
 
   useEffect(() => {
     applyFilters();
+    setPage(1); // Reset to first page when filters/search/sort change
   }, [chats, searchTerm, sortBy, currentFilter]);
 
   useEffect(() => {
@@ -169,13 +151,6 @@ export default function ContactManagementView() {
             Manage customer inquiries and support tickets
           </Typography>
         </Box>
-        <Button
-          variant="contained"
-          startIcon={<Iconify icon="pixel:plus-solid" width={14}/>}
-          sx={{ backgroundColor: 'primary.main', '&:hover': { backgroundColor: '#FF308D' } }}
-        >
-          New Ticket
-        </Button>
       </Stack>
 
       <Grid container spacing={3}>
@@ -236,8 +211,10 @@ export default function ContactManagementView() {
               </Select>
             </Card>
 
-            {currentCHats.map((ticket) => (
-              <Card key={ticket.participants[0].id} sx={{ p: 2 }}>
+            {currentCHats
+              .slice((page - 1) * rowsPerPage, page * rowsPerPage)
+              .map((ticket) => (
+                <Card key={ticket.participants[0].id} sx={{ p: 2 }}>
                 <Stack direction="column" spacing={2} alignItems="flex-start" justifyContent={'center'} sx={{position: 'relative'}}>
                   <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent={'flex-start'}
                   >
@@ -286,11 +263,17 @@ export default function ContactManagementView() {
             {/* Pagination */}
             <Stack alignItems="center" direction={'row'} justifyContent="space-between" mt={3}>
               <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-                Showing 1-3 of 24 tickets
+                {(() => {
+                  const total = currentCHats.length;
+                  const start = total === 0 ? 0 : (page - 1) * rowsPerPage + 1;
+                  const end = Math.min(page * rowsPerPage, total);
+                  return `Showing ${start}-${end} of ${total} tickets`;
+                })()}
               </Typography>
               <Pagination
-                count={Math.ceil(24 / 3)}
-                page={1}
+                count={Math.ceil(currentCHats.length / rowsPerPage) || 1}
+                page={page}
+                onChange={(_, value) => setPage(value)}
                 color="primary"
                 sx={{
                   '& .MuiPaginationItem-root': {
