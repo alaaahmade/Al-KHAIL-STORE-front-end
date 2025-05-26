@@ -19,7 +19,6 @@ import AccountSettings from '../AccountSettings';
 import SecuritySettings from '../SecuritySettings';
 import PaymentMethods from '../PaymentMethods';
 import ShippingAddress from '../ShippingAddress';
-import StoreInformation from '../StoreInformation';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 
@@ -28,7 +27,6 @@ const tabs = [
   { label: 'Notifications', icon: <Iconify icon="mingcute:notification-fill" width="24" height="24" /> },
   { label: 'Payment Methods', icon: <Iconify icon="fluent:payment-16-filled" width="24" height="24" /> },
   { label: 'Shipping', icon: <Iconify icon="fa-solid:shipping-fast" width="24" height="24" /> },
-  { label: 'Store Information', icon: <Iconify icon="fa6-solid:store" width="576" height="512" />},
   { label: 'Security', icon: <Iconify icon="line-md:security-twotone" width="24" height="24" /> },
 ];
 
@@ -91,9 +89,7 @@ export const ShopSettingsView = () => {
         </Grid>
 
         <Grid item xs={12} md={9}>
-          {
-            tapSearch === 'Store Information' ? <StoreInformation   /> 
-            : tapSearch === 'Notifications' ? <NotificationsSettings /> 
+          {tapSearch === 'Notifications' ? <NotificationsSettings /> 
             : tapSearch === 'Security' ? <SecuritySettings />
             : tapSearch === 'Payment Methods' ? <PaymentMethods />
             : tapSearch === 'Shipping' ? <ShippingAddress />

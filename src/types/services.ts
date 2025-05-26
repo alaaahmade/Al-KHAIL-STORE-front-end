@@ -19,6 +19,7 @@ export type Availability = {
 
 
 export interface ListingInterface {
+  taps: { Description: string; Ingredients: string; 'How to Use': string; Reviews: never[]; };
   standardPrice: any;
   productDate: any;
   store: any;
@@ -36,7 +37,7 @@ export interface ListingInterface {
   totalRating?: number;
   totalReviews: number;
   availability: Availability;
-  category: string;
+  category: any;
   ratings: Array<IServicesReview>;
   reviews: Array<IServicesReview>;
   isFuture: boolean;

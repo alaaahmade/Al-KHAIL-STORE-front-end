@@ -21,7 +21,7 @@ import reviewsSlice from './slices/reviewsSlice';
 import serviceSlice from './slices/serviceSlice';
 import contactManagement from './slices/ContactSlice';
 import cartSlice from './slices/cartSlice';
-
+import AnalyticsSlice from './slices/analyticsSlice';
 // ----------------------------------------------------------------------
 
 // export type RootState = ReturnType<typeof rootReducer>;
@@ -48,7 +48,8 @@ const store = configureStore({
     reviewsSlice,
     serviceSlice,
     contactManagement,
-    cartSlice
+    cartSlice,
+    AnalyticsSlice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

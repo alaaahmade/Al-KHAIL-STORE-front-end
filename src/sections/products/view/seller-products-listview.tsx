@@ -12,7 +12,7 @@ import {  InputAdornment, CircularProgress, IconButton, Stack, FormControl, Inpu
 import Iconify from 'src/components/iconify';
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { paths } from 'src/routes/paths';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from 'src/redux/hooks';
 import { useSnackbar } from 'notistack';
 import { useAuthContext } from '@/auth/hooks';
@@ -34,6 +34,8 @@ export default function SellerProductsListView() {
   const categories = useMemo(() => serviceState?.categories || [], [serviceState?.categories]);
   const loading = serviceState?.loading || false;  
   const {user} = useAuthContext()  
+  const searchParams = useSearchParams()
+  
   
   const [search, setSearch] = useState({
     query: '',

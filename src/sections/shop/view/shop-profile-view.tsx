@@ -40,7 +40,6 @@
       value: 'Contact',
       label: 'Contact'
     },
-    // {value: 'Review', label: 'Review'}
   ];
 
   const getStoreAverageRating = (store: any) => {
@@ -114,7 +113,7 @@
             totalReview={Number(getStoreAverageRating(store)).toFixed(1)}
             totalProducts={String(store?.products?.length || 0)}
             numberOfReviews={store?.products?.length || 0}
-            totalFollowers={String(12000)}
+            totalFollowers={String(store?.followers?.length || 0)}
           />
         </Card>
 

@@ -1,4 +1,5 @@
-
+'use client'
+import React, { useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
@@ -38,81 +39,88 @@ export default function ShopHeader() {
 
   const offsetTop = offset && !isNavHorizontal;
 
-  
+  // Search state and handler
+  const [searchValue, setSearchValue] = useState('');
+  const router = require('next/navigation').useRouter();
+  const handleSearch = () => {
+    if (searchValue.trim()) {
+      router.push(`/shop/products/?search=${encodeURIComponent(searchValue)}&page=1`);
+    }
+  };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   const renderContent = (
-  <Stack direction="row" alignItems="center" width={1}>
-    {/* Left: Logo + Store Name */}
-    <Stack direction="row" alignItems="center" spacing={1} sx={{ minWidth: 270 }}>
-      <Logo sx={{ mr: 1 }} />
-      <Typography color="primary.main" variant="h6" fontWeight={700} sx={{ letterSpacing: 1 }}>
-        AL KHAIL STORE
-      </Typography>
-    </Stack>
-    {/* Center: Nav Links + Search */}
-    <Stack direction="row" alignItems="center" spacing={1} flexGrow={1} justifyContent="space-between">
-      <Stack direction="row" spacing={2}>
-        <Typography component="a" href="/shop" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Home</Typography>
-        <Typography component="a" href="/shop/shops" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Shop</Typography>
-        <Typography component="a" href="/shop/products" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Products</Typography>
-        <Typography component="a" href="/shop/categories" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Categories</Typography>
-        <Typography component="a" href="/shop/messages" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Messages</Typography>
+    <Stack direction="row" alignItems="center" width={1}>
+      {/* Left: Logo + Store Name */}
+      <Stack direction="row" alignItems="center" spacing={1} sx={{ minWidth: 270 }}>
+        <Logo sx={{ mr: 1 }} />
+        <Typography color="primary.main" variant="h6" fontWeight={700} sx={{ letterSpacing: 1 }}>
+          AL KHAIL STORE
+        </Typography>
       </Stack>
-          <TextField
-            type="text"
-            placeholder="Search products..."
-            size='small'
-            sx={{ fontSize: 16, width: 200, borderRadius: 50, 
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 50, // change this value as needed
-              },
-             }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" width={24} height={24} />
-                </InputAdornment>
-              ),
-            }}
-          />
-    </Stack>
-    <Stack direction="row" alignItems="center" spacing={0} sx={{ minWidth: 180, justifyContent: 'f  lex-end' }}>
-      <IconButton color="default">
-        <Iconify icon="mdi:heart-outline" width="20" height="20" />
-      </IconButton>
-      <IconButton
-        component="a" href="/shop/cart"
-      color="default"
-            sx={{
-              position: 'relative',
-            }}
-      >
-        <Label
-          color="warning"
-          sx={{
-            top: 8,
-            right: 8,
-            position: 'absolute',
-            transform: 'translate(50%, -50%)',
-            borderRadius: 50
+      {/* Center: Nav Links + Search */}
+      <Stack direction="row" alignItems="center" spacing={1} flexGrow={1} justifyContent="space-between">
+        <Stack direction="row" spacing={2}>
+          <Typography component="a" href="/shop" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Home</Typography>
+          <Typography component="a" href="/shop/shops" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Shop</Typography>
+          <Typography component="a" href="/shop/products" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Products</Typography>
+          <Typography component="a" href="/shop/categories" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Categories</Typography>
+          <Typography component="a" href="/shop/messages" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Messages</Typography>
+        </Stack>
+        <TextField
+          type="text"
+          placeholder="Search products..."
+          size='small'
+          sx={{ fontSize: 16, width: 200, borderRadius: 50, 
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 50,
+            },
           }}
+          value={searchValue}
+          onChange={e => setSearchValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon="eva:search-fill" width={24} height={24} style={{ cursor: 'pointer' }} onClick={handleSearch} />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Stack>
+      <Stack direction="row" alignItems="center" spacing={0} sx={{ minWidth: 180, justifyContent: 'flex-end' }}>
+        <IconButton color="default">
+          <Iconify icon="mdi:heart-outline" width="20" height="20" />
+        </IconButton>
+        <IconButton
+          component="a"
+          href="/shop/cart"
+          color="default"
+          sx={{ position: 'relative' }}
         >
-          <Iconify icon="carbon:dot-mark" width="32" height="32" />
-        </Label>
-        {
-          isNavMini && {
-            top: 0,
-            right: 0,
-            position: 'absolute',
-            transform: 'translate(50%, -50%)',
-          }}
-        <Iconify icon="mdi:cart" width="20" height="20" />
-      </IconButton>
-      <NotificationsPopover />
-      <AccountPopover />
+          <Label
+            color="warning"
+            sx={{
+              top: 8,
+              right: 8,
+              position: 'absolute',
+              transform: 'translate(50%, -50%)',
+              borderRadius: 50,
+            }}
+          >
+            <Iconify icon="carbon:dot-mark" width="32" height="32" />
+          </Label>
+          <Iconify icon="mdi:cart" width="20" height="20" />
+        </IconButton>
+        <NotificationsPopover />
+        <AccountPopover />
+      </Stack>
     </Stack>
-  </Stack>
-);
+  );
 
   return (
     <AppBar

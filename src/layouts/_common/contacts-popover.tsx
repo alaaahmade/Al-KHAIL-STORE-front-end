@@ -8,8 +8,6 @@ import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 // utils
 import { fToNow } from 'src/utils/format-time';
-// _mock
-import { _contacts } from 'src/_mock';
 // components
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';

@@ -23,6 +23,7 @@ import ChatNavItem from './chat-nav-item';
 import ChatNavAccount from './chat-nav-account';
 import { ChatNavItemSkeleton } from './chat-skeleton';
 import ChatNavSearchResults from './chat-nav-search-results';
+import Link from 'next/link';
 
 // ----------------------------------------------------------------------
 
@@ -230,7 +231,7 @@ export default function ChatNav({
         </IconButton>
 
         {!collapseDesktop && (
-          <IconButton onClick={handleClickCompose}>
+          <IconButton component={Link} href={'/shop/shops'}>
             <Iconify width={24} icon="solar:user-plus-bold" />
           </IconButton>
         )}

@@ -117,7 +117,6 @@ export function CatView() {
   useEffect(() => {
     dispatch(fetchCategories());
   }, [refresh]);
-  
 
   if(user?.role.toLowerCase() !== 'admin') return redirect('/dashboard/products')
 

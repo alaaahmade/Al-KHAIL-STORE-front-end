@@ -13,8 +13,12 @@ const ShopProductsView = () => {
 
     const {products, loadingB} = useAppSelector(state => state.SellersSlice)
 
-    const searchParams = useSearchParams()
-    const categoryP = searchParams.get('category')
+    const searchParams = useSearchParams();
+    const categoryP = searchParams.get('category');
+    const searchQ = searchParams.get('search');
+    const priceQ = searchParams.get('price');
+    const sortQ = searchParams.get('sort');
+    const pageQ = searchParams.get('page');
 
     const dispatch = useAppDispatch()
 
@@ -25,18 +29,20 @@ const ShopProductsView = () => {
 
     
     const router = useRouter()
-    const [page, setPage] = useState(1);
-    const [category, setCategory] = useState('All');
-    const [price, setPrice] = useState('all');
-    const [sort, setSort] = useState('Featured');
+    const [page, setPage] = useState(Number(pageQ) || 1);
+    const [category, setCategory] = useState(categoryP || 'All');
+    const [price, setPrice] = useState(priceQ || 'all');
+    const [sort, setSort] = useState(sortQ || 'Featured');
     const { categories } = useAppSelector((state) => state.serviceSlice);
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState(searchQ || '');
 
     useEffect(() => {
-      if(categoryP) {
-        setCategory(categoryP)
-      }
-    }, [categoryP])
+      if (searchQ !== null) setSearch(searchQ);
+      if (categoryP) setCategory(categoryP);
+      if (priceQ) setPrice(priceQ);
+      if (sortQ) setSort(sortQ);
+      if (pageQ) setPage(Number(pageQ));
+    }, [searchQ, categoryP, priceQ, sortQ, pageQ]);
     
     const itemsPerPage = 8;
     
@@ -91,6 +97,9 @@ const ShopProductsView = () => {
   
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', value.toString());
+    router.replace(`?${params.toString()}`);
   };
   
   useEffect(() => {
@@ -104,10 +113,59 @@ const ShopProductsView = () => {
 }, [category, price, sort, search]);
 
 const handleChangeCat = (value: string) => {
- const params = new URLSearchParams(searchParams.toString());
-  params.set('category', value);
-  router.push(`?${params.toString()}`);
-}
+  setCategory(value);
+  const params = new URLSearchParams(searchParams.toString());
+  if (value && value !== 'All') {
+    params.set('category', value);
+  } else {
+    params.delete('category');
+  }
+  params.set('page', '1');
+  router.replace(`?${params.toString()}`);
+};
+
+const handleChangePrice = (value: string) => {
+  setPrice(value);
+  const params = new URLSearchParams(searchParams.toString());
+  if (value && value !== 'all') {
+    params.set('price', value);
+  } else {
+    params.delete('price');
+  }
+  params.set('page', '1');
+  router.replace(`?${params.toString()}`);
+};
+
+const handleChangeSort = (value: string) => {
+  setSort(value);
+  const params = new URLSearchParams(searchParams.toString());
+  if (value && value !== 'Featured') {
+    params.set('sort', value);
+  } else {
+    params.delete('sort');
+  }
+  params.set('page', '1');
+  router.replace(`?${params.toString()}`);
+};
+
+// Debounced search handler
+const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const newSearch = e.target.value;
+  setSearch(newSearch);
+  if (searchTimeout) clearTimeout(searchTimeout);
+  const timeout = setTimeout(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (newSearch) {
+      params.set('search', newSearch);
+    } else {
+      params.delete('search');
+    }
+    params.set('page', '1');
+    router.replace(`?${params.toString()}`);
+  }, 400);
+  setSearchTimeout(timeout);
+};
 
 if(loadingB) return <LoadingScreen/>
 
@@ -120,17 +178,18 @@ if(loadingB) return <LoadingScreen/>
 
     <Stack sx={{width: '100%', mb: 5 }} gap= {5} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
 
-          <TextField
-          fullWidth
-            type="text"
-            placeholder="Search products..."
-            size='small'
-            sx={{ fontSize: 16, borderRadius: 50, 
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 50, // change this value as needed
-              },
-             }}
-             onChange={(e) => setSearch(e.target.value)}
+           <TextField
+           fullWidth
+             type="text"
+             placeholder="Search products..."
+             size='small'
+             sx={{ fontSize: 16, borderRadius: 50, 
+               '& .MuiOutlinedInput-root': {
+                 borderRadius: 50, // change this value as needed
+               },
+              }}
+             value={search}
+             onChange={handleSearchChange}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">
@@ -143,28 +202,28 @@ if(loadingB) return <LoadingScreen/>
           <Stack direction={"row"} alignItems={'center'} justifyContent={'flex-end'} gap={3}>
       <FormControl sx={{ minWidth: 160 }}>
           <InputLabel>Category</InputLabel>
-          <Select size='small' value={category} label="Category"
-          onChange={(e) => handleChangeCat(e.target.value)}>
-            <MenuItem value="All">All</MenuItem>
-            {Array.isArray(categories) &&
-              categories.map((cat: any) => (
-                <MenuItem key={cat.id} value={cat.categoryName}>
-                  {cat.categoryName}
-                </MenuItem>
-              ))}
-          </Select>
+           <Select size='small' value={category} label="Category"
+           onChange={(e) => handleChangeCat(e.target.value)}>
+             <MenuItem value="All">All</MenuItem>
+             {Array.isArray(categories) &&
+               categories.map((cat: any) => (
+                 <MenuItem key={cat.id} value={cat.categoryName}>
+                   {cat.categoryName}
+                 </MenuItem>
+               ))}
+           </Select>
         </FormControl>
-        <FormControl size='small' sx={{ minWidth: 160 }}>
-          <InputLabel>Price Range</InputLabel>
-          <Select value={price} label="Price Range" onChange={(e) => setPrice(e.target.value)}>
-            <MenuItem value="all">All</MenuItem>
-            <MenuItem value="0 - 1000">0 - 1000</MenuItem>
-            <MenuItem value="1000 - 1000000">1000 - 1000000</MenuItem>
-          </Select>
-        </FormControl>
+         <FormControl size='small' sx={{ minWidth: 160 }}>
+           <InputLabel>Price Range</InputLabel>
+           <Select value={price} label="Price Range" onChange={(e) => handleChangePrice(e.target.value)}>
+             <MenuItem value="all">All</MenuItem>
+             <MenuItem value="0 - 1000">0 - 1000</MenuItem>
+             <MenuItem value="1000 - 1000000">1000 - 1000000</MenuItem>
+           </Select>
+         </FormControl>
     <FormControl size='small' sx={{ minWidth: 160 }}>
     <InputLabel>Sort</InputLabel>
-    <Select value={sort} label="Sort" onChange={(e) => setSort(e.target.value)}>
+    <Select value={sort} label="Sort" onChange={(e) => handleChangeSort(e.target.value)}>
       <MenuItem value="Featured">Featured</MenuItem>
       <MenuItem value="Newest">Newest</MenuItem>
       <MenuItem value="Oldest">Oldest</MenuItem>

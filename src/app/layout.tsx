@@ -14,7 +14,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // theme
 import ThemeProvider from 'src/theme';
-import { primaryFont } from 'src/theme/typography';
 // components
 import ProgressBar from 'src/components/progress-bar';
 import MotionLazy from 'src/components/animate/motion-lazy';
@@ -67,7 +66,7 @@ import { CheckoutProvider } from '@/auth/context/checkout-context';
 
 export default function RootLayout({ children }: Props) {
   return (
-    <html lang="en" className={primaryFont.className}>
+    <html lang="en">
       <head>
 
       </head>

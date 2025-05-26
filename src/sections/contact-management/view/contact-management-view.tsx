@@ -31,7 +31,7 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useAuthContext } from '@/auth/hooks';
 import { fetchChats } from '@/redux/slices/ContactSlice';
 import { timeAgo } from '@/utils/format-time';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { paths } from '@/routes/paths';
 
 // ----------------------------------------------------------------------
@@ -56,7 +56,6 @@ export default function ContactManagementView() {
     setCurrentFilter(filterId);
   };
 
-  console.log(chats)
   const urgentChats = chats.filter((chat) => chat.status === 'urgent')
   const resolvedChats = chats.filter((chat) => chat.status === 'resolved')
   const unassignedChats = chats.filter((chat) => chat.status === 'unassigned')
@@ -123,7 +122,7 @@ const TICKET_FILTERS = [
 
   useEffect(() => {
     applyFilters();
-    setPage(1); // Reset to first page when filters/search/sort change
+    setPage(1);
   }, [chats, searchTerm, sortBy, currentFilter]);
 
   useEffect(() => {
@@ -141,6 +140,10 @@ const TICKET_FILTERS = [
       setCurrentCHats([])
     }
   }, [chats])
+
+  if (user?.role !== 'seller') {
+    return redirect('/dashboard/products');
+  }
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>

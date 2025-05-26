@@ -1,17 +1,12 @@
 // @mui
-import { alpha, useTheme } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
-// utils
-import { fShortenNumber } from 'src/utils/format-number';
-// _mock
-import { _socials } from 'src/_mock';
 // assets
 import { AvatarShape } from 'src/assets/illustrations';
 import { fDate } from '@/utils/format-time';

@@ -92,7 +92,7 @@ export default function ProfileCover({ name, avatarUrl, totalFollowers, totalPro
               variant='caption'
               fontSize={12}>
                 <Iconify sx={{ml: 1,}} icon="fa6-solid:box" width="20" height="20" />
-              {` ${fNumber(totalFollowers)} products`}
+              {` ${fNumber(totalFollowers)} Followers`}
               </Typography>
           </Stack>}
           primaryTypographyProps={{

@@ -11,11 +11,11 @@ import ListItemText from '@mui/material/ListItemText';
 import Badge, { badgeClasses } from '@mui/material/Badge';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 // hooks
-import { useMockedUser } from 'src/hooks/use-mocked-user';
 // components
 import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { useAuthContext } from '@/auth/hooks';
+import { Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +31,7 @@ export default function ChatNavAccount() {
   }, []);
 
   return (
-    <>
+    <Stack direction="row" alignItems="flex-end" spacing={2}>
       <Badge variant={status} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
         <Avatar
           src={user?.photo}
@@ -40,6 +40,7 @@ export default function ChatNavAccount() {
           sx={{ cursor: 'pointer', width: 48, height: 48 }}
         />
       </Badge>
+      <Typography>{user?.firstName + ' ' + user?.lastName}</Typography>
 
       <CustomPopover open={popover.open} onClose={popover.onClose} arrow="top-left" sx={{ p: 0 }}>
         <Stack
@@ -111,6 +112,6 @@ export default function ChatNavAccount() {
           </MenuItem>
         </Stack>
       </CustomPopover>
-    </>
+      </Stack>
   );
 }

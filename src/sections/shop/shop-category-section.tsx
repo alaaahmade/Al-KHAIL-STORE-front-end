@@ -1,21 +1,25 @@
 'use client'
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Box, Typography, Stack, Paper } from '@mui/material';
 import Iconify from '@/components/iconify';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { fetchCategories } from '@/redux/slices/CategoriesSlice';
 
-const categories = [
-  { label: 'Skincare', icon: <Iconify icon="mdi:flower-lotus" width="24" height="24" /> },
-  { label: 'Makeup', icon: <Iconify icon="akar-icons:question" width="24" height="24" /> },
-  { label: 'Haircare', icon: <Iconify icon="solar:perfume-bold" width="24" height="24" /> },
-  { label: 'Fragrances', icon: <Iconify icon="fa6-solid:bottle-droplet" width="320" height="512" /> },
-  { label: 'Body Care', icon: <Iconify icon="fa6-solid:hand-sparkles" width="640" height="512" /> },
-  { label: 'Gift Sets', icon: <Iconify icon="fa-solid:gifts" width="640" height="512" /> },
+const icons = [
+  <Iconify icon="mdi:flower-lotus" width="24" height="24" />,
+  <Iconify icon="akar-icons:question" width="24" height="24" />,
+  <Iconify icon="solar:perfume-bold" width="24" height="24" />,
+  <Iconify icon="fa6-solid:bottle-droplet" width="320" height="512" />,
+  <Iconify icon="fa6-solid:hand-sparkles" width="640" height="512" />,
+  <Iconify icon="fa-solid:gifts" width="640" height="512" />,
 ];
 
 const ShopCategorySection = () =>{ 
 
+  const {categories} = useAppSelector(state => state.CategoriesSlice)
+  const dispatch = useAppDispatch()
   const searchParams = useSearchParams()
   const router = useRouter()
 
@@ -27,6 +31,13 @@ const ShopCategorySection = () =>{
       },
       [searchParams, router]
     );
+
+    useEffect(()=> {
+      dispatch(fetchCategories())
+    }, [dispatch])
+
+    console.log(categories);
+    
   return(
   <Box sx={{
     background: '#fff',
@@ -45,8 +56,8 @@ const ShopCategorySection = () =>{
         mx: 'auto',
       }}
     justifyContent="center" alignItems="center" spacing={3} width="100%">
-  {categories.map((cat) => (
-    <Box key={cat.label} flex={1} minWidth={0.22 }>
+  {categories?.length > 0 ? categories?.map((cat, i) => (
+    <Box key={cat.categoryName} flex={1} minWidth={0.22 }>
       <Paper
         elevation={2}
         sx={{
@@ -59,17 +70,31 @@ const ShopCategorySection = () =>{
           height: '100%',
           cursor: 'pointer',
         }}
-        // component={Link}
-        // href={getUrl(cat.label)}
         onClick={() => {
-          gitUrl(cat.label)
+          gitUrl(cat.categoryName)
         }}
       >
-        <Box mb={1} fontSize={32} color="primary.main">{cat.icon}</Box>
-        <Typography>{cat.label}</Typography>
+        <Box mb={1} fontSize={32} color="primary.main">
+        <img src={cat.categoryImage.url} alt={cat.categoryName} width={60} height={40}
+          style={{
+            borderRadius: 4
+          }}
+        />
+
+        </Box>
+        <Typography
+          sx={{
+            fontWeight: 600,
+            fontSize: 12,
+          }}
+        >{cat.categoryName}</Typography>
       </Paper>
     </Box>
-  ))}
+  )) : (
+    <Typography variant="h6" sx={{ color: 'text.secondary' }}>
+      No categories found
+    </Typography>
+  )}
 </Stack>
   </Box>
 )};

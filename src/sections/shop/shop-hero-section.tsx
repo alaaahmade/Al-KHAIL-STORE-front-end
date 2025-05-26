@@ -77,6 +77,8 @@ const ShopHeroSection = () => (
               background: '#fff',
             },
           }}
+          component={Link}
+          href='/auth/jwt/becom-seller'
         >
           Sell Products
         </Button>

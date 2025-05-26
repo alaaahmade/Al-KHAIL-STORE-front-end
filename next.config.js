@@ -8,7 +8,16 @@ const nextConfig = {
   },
 
   images: {
-    domains: ['stgs3yourpass.fra1.digitaloceanspaces.com', 's3-alpha-sig.figma.com', 'thumbs.dreamstime.com', 'd2v5dzhdg4zhx3.cloudfront.net', 'mysstore.fra1.digitaloceanspaces.com', 'lectera.com'],
+    domains: ['stgs3yourpass.fra1.digitaloceanspaces.com',
+      's3-alpha-sig.figma.com',
+      'thumbs.dreamstime.com',
+      'd2v5dzhdg4zhx3.cloudfront.net',
+      'mysstore.fra1.digitaloceanspaces.com',
+      'lectera.com',
+      'images.unsplash.com', 
+      'plus.unsplash.com', 
+      'example.com',  
+    ],
   },
 
   reactStrictMode: true,

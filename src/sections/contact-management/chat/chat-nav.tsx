@@ -86,7 +86,7 @@ export default function ChatNav({
     if (!mdUp) {
       onCloseMobile();
     }
-    router.push(paths.dashboard.chat);
+    router.push(paths.dashboard.contactManagement.root);
   }, [mdUp, onCloseMobile, router]);
 
 
@@ -172,10 +172,7 @@ export default function ChatNav({
         <ChatNavItemSkeleton key={index} />
       ))}
     </>
-  );
-
-  console.log(searchContacts.results);
-  
+  );  
 
   const renderList = (
     <>

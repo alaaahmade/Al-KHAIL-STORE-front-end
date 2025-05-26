@@ -1,14 +1,10 @@
 import * as Yup from 'yup';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Stack, Typography, IconButton, Box, Slide, TextField, MenuItem, Grid } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton, Box, Slide, TextField, MenuItem, Grid } from '@mui/material';
 import React, { useState } from 'react';
 import { TransitionProps } from 'notistack';
-import { useSelector , useDispatch } from 'react-redux';
-import { LoadingButton } from '@mui/lab';
+import { useSelector  } from 'react-redux';
 import { UploadBox } from '../upload';
 import Iconify from '../iconify';
-import { Icon } from '@iconify/react';
-import { uploadFile } from '@/utils/s3.client';
-import axiosInstance from '@/utils/axios';
 
 interface CreateAdDialogProps {
   open: boolean;
@@ -78,7 +74,7 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
       }
       let imageUrl;
       if (form.logoFile) {
-        loading
+        loadingB
       }
       await handleSave({ ...form, photo: imageUrl });
       setForm({

@@ -72,6 +72,8 @@ export default function ChatView() {
       
       if (String(newMessage.chatRoom.id) === String(currentChat?.id)) {
         setMessages((prevMessages: any) => {
+          const exists = prevMessages.some((msg: any) => msg.id === newMessage.id);
+          if (exists) return prevMessages;
           const updatedMessages = [...prevMessages, newMessage];
           return sortMessages(updatedMessages);
         });

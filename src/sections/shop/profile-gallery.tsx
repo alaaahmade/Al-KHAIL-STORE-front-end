@@ -137,9 +137,9 @@ useEffect(() => {
           md: 'repeat(4, 1fr)',
         }}
       >
-        {paginatedProducts.map((product) => (
+        { paginatedProducts && paginatedProducts?.length > 0 ? paginatedProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
-        ))}
+        )) : <Typography variant="h6" sx={{ color: 'text.secondary' }}>No products found</Typography>}
       </Box>
 
       <Box mt={4} display="flex" justifyContent="center">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Grid, Typography, Button, List, ListItem, ListItemIcon } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import Link from 'next/link';
 
 const benefits = [
   'Easy store setup and management',
@@ -76,6 +77,8 @@ const ShopBecomeSellerSection = () => (
             textTransform: 'none',
             '&:hover': { background: '#c80055' },
           }}
+          component={Link}
+          href='/auth/jwt/becom-seller'
         >
           Start Selling
         </Button>

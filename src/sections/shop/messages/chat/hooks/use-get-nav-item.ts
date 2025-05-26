@@ -29,7 +29,7 @@ export default function useGetNavItem({ currentUserId, conversation }: Props) {
   if (lastMessage) {
     const sender = String(lastMessage?.sender?.id) === String(currentUserId) ? 'You: ' : '';
 
-    const message = lastMessage.contentType === 'image' ? 'Sent a photo' : lastMessage.content;
+    const message = lastMessage?.contentType === 'image' ? 'Sent a photo' : lastMessage?.content;
 
     displayText = `${sender}${message}`;
   }  
@@ -39,7 +39,7 @@ export default function useGetNavItem({ currentUserId, conversation }: Props) {
     displayName,  
     displayText,
     participants: participantsInConversation,
-    lastActivity: lastMessage.createdAt,
+    lastActivity: lastMessage?.createdAt,
     hasOnlineInGroup,
   };
 }

@@ -1,1 +1,0 @@
-export { default as ProductsListView } from './view';

@@ -25,17 +25,17 @@ const ShopFooterSection = () => (
       <Grid item xs={12} md={3}>
         <Typography fontWeight={700} mb={2}>Quick Links</Typography>
         <Stack spacing={1}>
-          <Link href="#" color="rgba(156, 163, 175, 1)">About Us</Link>
-          <Link href="#" color="rgba(156, 163, 175, 1)">Shop</Link>
-          <Link href="#" color="rgba(156, 163, 175, 1)">FAQ</Link>
+          <Typography variant="body2" sx={{ color: 'rgba(156, 163, 175, 1)', cursor: 'default' }}>About Us</Typography>
+          <Typography variant="body2" sx={{ color: 'rgba(156, 163, 175, 1)', cursor: 'default' }}>Shop</Typography>
+          <Typography variant="body2" sx={{ color: 'rgba(156, 163, 175, 1)', cursor: 'default' }}>FAQ</Typography>
         </Stack>
       </Grid>
       <Grid item xs={12} md={3}>
         <Typography fontWeight={700} mb={2}>Customer Service</Typography>
         <Stack spacing={1}>
-          <Link href="#" color="rgba(156, 163, 175, 1)">Shipping</Link>
-          <Link href="#" color="rgba(156, 163, 175, 1)">Returns</Link>
-          <Link href="#" color="rgba(156, 163, 175, 1)">Payment Options</Link>
+          <Typography variant="body2" sx={{ color: 'rgba(156, 163, 175, 1)', cursor: 'default' }}>Shipping</Typography>
+          <Typography variant="body2" sx={{ color: 'rgba(156, 163, 175, 1)', cursor: 'default' }}>Returns</Typography>
+          <Typography variant="body2" sx={{ color: 'rgba(156, 163, 175, 1)', cursor: 'default' }}>Payment Options</Typography>
         </Stack>
       </Grid>
       <Grid item xs={12} md={3}>

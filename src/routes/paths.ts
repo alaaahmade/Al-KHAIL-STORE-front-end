@@ -71,7 +71,7 @@ export const paths = {
     advertisements: '/dashboard/advertisements',
     categories: '/dashboard/categories',
     interests: '/dashboard/interests',
-    Products: '/dashboard/Products',
+    Products: '/dashboard/products-list',
     products : {
       root: '/dashboard/products',
       create: '/dashboard/products/new',

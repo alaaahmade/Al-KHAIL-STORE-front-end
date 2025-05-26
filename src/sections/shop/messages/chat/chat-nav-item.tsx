@@ -130,7 +130,7 @@ export default function ChatNavItem({ selected, collapse, conversation, onCloseM
                 color: 'text.disabled',
               }}
             >
-              {formatDistanceToNowStrict(new Date(lastActivity), {
+              {lastActivity && formatDistanceToNowStrict(new Date(lastActivity), {
                 addSuffix: false,
               })}
             </Typography>
