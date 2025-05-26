@@ -20,13 +20,13 @@ import { PATH_AFTER_LOGIN } from 'src/config-global';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // auth
-import { useAuthContext } from 'src/auth/hooks';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { StyledAuthWrapper, SubmitButton } from 'src/components/auth-components';
 import { Box, Button, Checkbox, Divider, FormControlLabel, Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { useAuthContext } from '@/auth/hooks';
 
 // ----------------------------------------------------------------------
 

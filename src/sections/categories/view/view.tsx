@@ -15,7 +15,6 @@ import { LoadingScreen } from 'src/components/loading-screen';
 import { useDispatch } from 'react-redux';
 import { changeNewCat, closeCreateDialog, fetchCategories, gitCategories, openCreateDialog, setCategories, setError, setIsLoading, setLadingB } from 'src/redux/slices/CategoriesSlice';
 import axiosInstance from '@/utils/axios';
-import { deleteFile, uploadFile } from '@/utils/s3.client';
 import CatCard from '../card';
 import { useAppDispatch } from '@/redux/hooks';
 import { useAuthContext } from '@/auth/hooks';
@@ -76,9 +75,6 @@ export function CatView() {
           const data = await axiosInstance.post('/v1/files/upload', formData);
           url = data.data.url;
           await dispatch(changeNewCat({ value: url, field: 'icon' }));
-          if (editMode) {
-            await deleteFile(iconFile);
-          }
     
         }
       }
