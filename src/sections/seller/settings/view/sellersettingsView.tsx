@@ -152,7 +152,7 @@ export const SellerSettingsView = () => {
       });      
       if(newLogo){
 
-        if (userSettings?.seller.store.logo.includes('mysstore.fra1.digitaloceanspaces.com')) {
+        if (userSettings?.seller?.store?.logo?.includes('mysstore.fra1.digitaloceanspaces.com')) {
           const fileName = getFileNameFromUrl(userSettings?.seller.store.logo);          
           try {
             await axiosInstance.delete(`/v1/files/${fileName}`);

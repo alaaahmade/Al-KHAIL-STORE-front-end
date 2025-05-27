@@ -24,10 +24,11 @@ interface ProductCardProps {
 
 export function ProductCard({product}: {product: ProductCardProps}) {
   const router = useRouter();
-  const { id, productName, productImage, standardPrice, productQuantity, category, comments } = product
+  const { id, productName, productImage, standardPrice, category, comments, productQuantity } = product
   const totalRating = comments.reduce((sum, review) => sum + review.rating, 0);
   const numberOfReviews = comments.length;
   const averageRating = totalRating > 0 ?  (totalRating / numberOfReviews).toFixed(1) : 0;  
+
 
   return (
     <Box
@@ -43,8 +44,6 @@ export function ProductCard({product}: {product: ProductCardProps}) {
         cursor: 'pointer',
         position: 'relative'
       }}
-      onClick={() => router.push(`/dashboard/services/${id}`) }
-      
     >
       <Label
         variant="filled"
@@ -57,7 +56,6 @@ export function ProductCard({product}: {product: ProductCardProps}) {
         }}
       >
         <Iconify icon="flowbite:heart-outline" width={40} height={40} />
-        {/* {+productQuantity > 20 ? "In Stock" : "Low Stock"} */}
       </Label>
       <Box 
         sx={{
@@ -97,14 +95,19 @@ export function ProductCard({product}: {product: ProductCardProps}) {
               variant='body2'>
               {fCurrency(standardPrice)}
           </Typography>
-          <Button
-            sx={{bgcolor: 'primary.main', color: '#fff', width: '48%', borderRadius: 1}}
-            size="small"
-            onClick={() => router.push(`/dashboard/services/${id}`) }
-          >
-            Show
-          </Button>
+            <Label
+              variant="filled"
+              color={
+                '#fff'
+              }
+              sx={{p: '0 1em', borderRadius: 50, 
+                width: 40,
+                height: 40,
+              }}
+            >
+          {+productQuantity > 20 ? "In Stock" : "Low Stock"}
 
+          </Label>
         </Box>
         </Box>
     </Box>

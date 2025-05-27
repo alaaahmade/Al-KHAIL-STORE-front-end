@@ -41,12 +41,6 @@ export default function UserProfileView() {
   const {sellerStore, loadingB} = useAppSelector(store => store.SellersSlice)
   const dispatch = useAppDispatch()
 
-  console.log(store);
-  console.log();
-  
-  
-
-
   const [currentTab, setCurrentTab] = useState('Products');
 
   const handleChangeTab = useCallback((event: React.SyntheticEvent, newValue: string) => {

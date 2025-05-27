@@ -132,11 +132,11 @@ export default function ShopCartView() {
     }
   }
 
-  useEffect(() => {
+  useEffect(() => { 
     async function getRecommended() {
       try {
-        const response = await axiosInstance.get('/v1/products/1')
-        setRecommended(response.data.data.product);
+        const response = await axiosInstance.get('/v1/products')
+        setRecommended(response.data.data.products[0]);
       } catch (error) {
         console.log(error);
         toast.error(error.message)

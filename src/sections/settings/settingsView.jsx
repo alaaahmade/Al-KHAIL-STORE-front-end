@@ -35,6 +35,7 @@ const SettingsView = () => {
   const [lastName, setLastName] = useState(user.lastName);
   const [email, setEmail] = useState(user.email);
   const [currency, setCurrency] = useState('USD ($)');
+  const [defaultReplyTemplate, setDefaultReplyTemplate] = useState(user?.defaultReplyTemplate || 'Thank you for your review!');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
@@ -64,6 +65,7 @@ const SettingsView = () => {
       lastName,
       email,
       currency,
+      defaultReplyTemplate,
     }
      try {
        await dataSchema.validateSync(data, { abortEarly: false });
@@ -127,6 +129,16 @@ const SettingsView = () => {
                   <MenuItem value="GBP (£)">GBP (£)</MenuItem>
                 </Select>
               </FormControl>
+              <TextField
+                fullWidth
+                multiline
+                minRows={2}
+                label="Default Reply Template"
+                value={user?.defaultReplyTemplate || 'Thank you for your review!'}
+                onChange={(e) => setDefaultReplyTemplate(e.target.value)}
+                sx={{ mt: 2 }}
+                helperText="This template will be used as the default reply to reviews."
+              />
             </Stack>
           </Card>
         </Grid>

@@ -81,39 +81,79 @@ const linkStyle= {
 display: 'inline-block',
 m: 0,
 }
-  const renderHead = (
-    <Box
+
+const tabList = [
+  {
+    label: 'Login',
+    path: paths.auth.jwt.login,
+    active: pathName.includes(paths.auth.jwt.login),
+  },
+  {
+    label: 'Sign Up',
+    path: paths.auth.jwt.register,
+    active: pathName.includes(paths.auth.jwt.register),
+  },
+  {
+    label: 'Become a Seller',
+    path: paths.auth.jwt.becomeSeller,
+    active: pathName.includes(paths.auth.jwt.becomeSeller),
+  },
+];
+
+
+// ----------------------------------------------------------------------
+
+const renderHead = (
+  <Box
     sx={{
-    mb: 4,
-    display: 'flex !important',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    }}>
-      <Typography
+      mb: 4,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      gap: 3,
+    }}
+  >
+    {tabList.map((tab) => (
+      <Box
+        key={tab.label}
         sx={{
-          color: pathName.includes('login') ? 'primary.main' : 'text.primary',
-          borderBottom: pathName.includes('login') ? `2px solid ${theme.palette.primary.main}` : 'none',
-          ...linkStyle
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          px: 2,
         }}
-        onClick={() => {
-          router.push(paths.auth.jwt.login);
-        }}
-      >Login</Typography>
+      >
+        <Typography
+          component={RouterLink}
+          href={tab.path}
+          sx={{
+            cursor: 'pointer',
+            color: tab.active ? 'primary.main' : 'text.primary',
+            fontWeight: tab.active ? 700 : 400,
+            fontSize: '13px',
+            mb: 0.5,
+            textDecoration: 'none',
+            transition: 'color 0.2s',
+          }}
+        >
+          {tab.label}
+        </Typography>
+        <Box
+          sx={{
+            height: 3,
+            width: '100%',
+            maxWidth: 64,
+            borderRadius: 2,
+            bgcolor: tab.active ? 'primary.main' : 'transparent',
+            transition: 'background 0.2s',
+          }}
+        />
+      </Box>
+    ))}
+  </Box>
+);
 
-      <Typography
-      sx={{
-        color: pathName.includes('register') ? 'primary.main' : 'text.primary',
-        borderBottom: pathName.includes('register') ? `2px solid ${theme.palette.primary.main}` : 'none',
-        ...linkStyle
-      }}
-      onClick={() => {
-        router.push(paths.auth.jwt.register);
-      }}
-      >Sign Up</Typography>
-
-    </Box>
-  );
 
   const renderForm = (
     <Stack spacing={2.5}>

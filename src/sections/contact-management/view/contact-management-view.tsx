@@ -142,7 +142,7 @@ const TICKET_FILTERS = [
   }, [chats])
 
   if (user?.role !== 'seller') {
-    return redirect('/dashboard/products');
+    console.log(user?.role);
   }
 
   return (

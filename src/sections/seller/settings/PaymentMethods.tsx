@@ -153,6 +153,7 @@ const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
                   )}
                   <IconButton disabled={deletingId === card?.id} onClick={() => {
                     setPendingDeleteId(card?.id);
+                    console.log(card?.id);
                     confirm.onTrue();
                   }}>
                     <Iconify icon="mynaui:trash" color="error.main" width={25} height={25} />
@@ -188,6 +189,21 @@ const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
           </Box>
         </Stack>
       </Card>
+
+      <ConfirmDialog
+          open={confirm.value}
+          onClose={confirm.onFalse}
+          title="Delete Card"
+          content="Are you sure you want to delete this Card?"
+          action={
+            <Button variant="contained" color="error" onClick={() => {
+              handleDeleteCard(`${pendingDeleteId}`);
+              confirm.onFalse();
+            }}>
+              Delete
+            </Button>
+          }
+        />
 
           <AddCardForm open={open} onClose={handleCloseDialog} onCardAdded={handleCardAdded} />
     </>
