@@ -1,6 +1,7 @@
+/* eslint-disable no-unsafe-optional-chaining */
 'use client'
 import React, { useEffect } from 'react';
-import { Box, Button, Typography, Avatar, Rating, Chip, Stack, Paper } from '@mui/material';
+import { Box, Button, Typography, Avatar, Rating, Chip, Stack } from '@mui/material';
 import Label from '@/components/label';
 import { Icon } from '@iconify/react';
 import { ProductImageGallery } from '../productImageGallery';
@@ -27,7 +28,7 @@ function ProductInfo({ product }: { product: any }) {
 
   const addToCart = async(productId: string) => {
     try {
-      const response = await axiosInstance.post(`/v1/carts/${user?.cart?.id}/items`, {
+       await axiosInstance.post(`/v1/carts/${user?.cart?.id}/items`, {
         productId,
         quantity: 1,
         price: product.standardPrice,
@@ -92,7 +93,7 @@ function ProductInfo({ product }: { product: any }) {
             <Typography variant="caption" color="text.secondary">
               (Seller)
             </Typography>
-            <Button color='primary' href={product?.store?.id ? `/shop/profile/${product.store.id}` : '#'} size="small" sx={{ ml: 1 }}>
+            <Button color='primary' href={product?.store?.id ? `/shop/shops/${product.store.id}` : '#'} size="small" sx={{ ml: 1 }}>
               Visit Store
             </Button>
           </Stack>

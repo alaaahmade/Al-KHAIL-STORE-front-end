@@ -19,6 +19,8 @@ export type Availability = {
 
 
 export interface ListingInterface {
+  productImage: string;
+  productGallery: any;
   taps: { Description: string; Ingredients: string; 'How to Use': string; Reviews: never[]; };
   standardPrice: any;
   productDate: any;

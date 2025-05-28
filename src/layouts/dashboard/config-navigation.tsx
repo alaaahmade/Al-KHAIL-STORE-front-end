@@ -66,6 +66,7 @@ export function useNavData() {
         items: [
           { title: 'Analytics', path: paths.dashboard.analytics.root, icon: ICONS.analytics },
           { title: 'Products', path: paths.dashboard.products.root, icon: ICONS.products },
+          {title: 'Reviews', path:  paths.dashboard.reviews.root, icon: ICONS.Reviews},
           { title: 'Contact Management', path: paths.dashboard.contactManagement.root, icon: ICONS.contacts },
           { title: 'Settings', path: paths.dashboard.settings.seller, icon: ICONS.settings },
         ],

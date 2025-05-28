@@ -2,12 +2,10 @@ import Iconify from 'src/components/iconify';
 import { fDate, timeAgo } from '@/utils/format-time';
 import { Avatar, Box, ListItemText, Rating, Stack, Typography } from '@mui/material'
 import React from 'react'
+import ReviewImages from '../shop/view/review-images';
 
 export const ReviewItem = ({ review }: { review: any }) => {
-  const { rating, content, createdAt, user } = review;
-  console.log(review);
-  
-
+  const { rating, content, createdAt, user } = review;  
   return (
     <Stack spacing={2} direction={'column'} sx={{ flex: 1,  }} >
           <Stack sx={{
@@ -46,7 +44,7 @@ export const ReviewItem = ({ review }: { review: any }) => {
           >
             {`${user.firstName} ${user.lastName}`}
           </Typography>
-            {rating && 
+            {rating ? 
               <Box
               sx={{
                 display: 'flex',
@@ -72,6 +70,35 @@ export const ReviewItem = ({ review }: { review: any }) => {
             {review.product.productName}
           </Typography>
               </Box>
+
+              :
+              rating === 0 ? 
+              <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                gap:2
+              }}
+              >
+                <Rating
+                  emptyIcon={<Iconify color={'#FAAF00'} icon="tdesign:star"/>}
+                  size="small"
+                  value={rating}
+                  precision={0.1}
+                  readOnly
+                  icon={<Iconify icon="tdesign:star-filled" />}
+                  />
+              <Typography
+                
+                variant="caption"
+                component="span"
+                display="block"
+                >
+            {review.product.productName}
+          </Typography>
+              </Box>
+              : null
             }
       </>}
       secondary={
@@ -84,14 +111,28 @@ export const ReviewItem = ({ review }: { review: any }) => {
           >
             {content}
           </Typography>
-          {rating && <Typography
+          {review.files && Array.isArray(review.files) && review.files.some((f: any) => f.type === 'image') && (
+            <Box sx={{ mt: 1 }}>
+              {/* @ts-ignore */}
+              <ReviewImages files={review.files} />
+            </Box>
+          )}
+          {rating ? <Typography
             noWrap
             variant="caption"
             component="span"
             color="text.secondary"
           >
             Posted on {fDate(createdAt)}
-          </Typography>}
+          </Typography>: null}
+          {rating === 0 ? <Typography
+            noWrap
+            variant="caption"
+            component="span"
+            color="text.secondary"
+          >
+            Posted on {fDate(createdAt)}
+          </Typography> : null}
         </>
       }
       primaryTypographyProps={{

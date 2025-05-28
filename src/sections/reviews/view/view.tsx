@@ -7,8 +7,10 @@ import { useSettingsContext } from 'src/components/settings';
 import DashboardContent from '../reviews-content';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useEffect, useState } from 'react';
-import {  fetchReviews } from '@/redux/slices/reviewsSlice';
+import {  fetchCommentsByStore, fetchReviews } from '@/redux/slices/reviewsSlice';
 import { Box, FormControl, InputLabel, MenuItem, Select, Stack, Typography } from '@mui/material';
+import { SplashScreen } from '@/components/loading-screen';
+import { useAuthContext } from '@/auth/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -16,8 +18,10 @@ export default function ReviewsView() {
   const settings = useSettingsContext();
   const [ratings, setRatings] = useState('all')
   const appDispatch = useAppDispatch()
+  const {user} = useAuthContext()
 
   const reviews = useAppSelector(state => state.reviewsSlice.reviews);
+  const loading = useAppSelector(state => state.reviewsSlice.loading);
   
     // Filter reviews by ratings
     let filteredReviews = reviews;
@@ -28,8 +32,15 @@ export default function ReviewsView() {
     }
   
   useEffect(() => {
-    appDispatch(fetchReviews())
-  }, [])
+    if(user?.role === 'ADMIN') {
+      appDispatch(fetchReviews())
+    } else if(user?.role === 'SELLER') {
+      appDispatch(fetchCommentsByStore(user?.seller?.store?.id))
+    }
+    
+  }, [user])
+
+  if(loading) return <SplashScreen/>
   
 
   return (

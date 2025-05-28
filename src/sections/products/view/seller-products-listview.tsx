@@ -232,7 +232,7 @@ export default function SellerProductsListView() {
             ))
           ) : (
             <Typography variant="body1" sx={{ py: 5, textAlign: 'center', width: '100%' }}>
-              No services found
+              No Products found
             </Typography>
           )}
         </Box>

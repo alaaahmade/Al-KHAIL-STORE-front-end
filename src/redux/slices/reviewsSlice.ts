@@ -4,7 +4,6 @@ import axios from 'src/utils/axios';
 interface ReviewsState {
   reviews: any[];
   latestReviews: any[];
-  productReviews: any[]
   reviewsTypes: any[];
   loading: boolean;
   error: string | null;
@@ -13,7 +12,6 @@ interface ReviewsState {
 const initialState: ReviewsState = {
   reviews: [],
   latestReviews: [],
-  productReviews: [],
   reviewsTypes: [],
   loading: false,
   error: null,
@@ -38,7 +36,7 @@ export const fetchLatestReviews = createAsyncThunk(
   'reviews/fetchLatestReviews',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get('/v1/reviews/latest');
+      const response = await axios.get('/v1/comments/latest');
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch reviews');
@@ -62,7 +60,7 @@ export const createReviews = createAsyncThunk(
   'reviews/createReviews',
   async (data: any, { rejectWithValue }) => {
     try {
-      const response = await axios.post('/v1/reviews', data);
+      const response = await axios.post('/v1/comments', data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to create reviews');
@@ -70,11 +68,11 @@ export const createReviews = createAsyncThunk(
   }
 );
 
-export const fetchCommentsByProduct = createAsyncThunk(
-  'reviews/fetchCommentsByProduct',
-  async(productId: string, {rejectWithValue}) => {
+export const fetchCommentsByStore = createAsyncThunk(
+  'reviews/fetchCommentsByStore',
+  async(StoreId: string, {rejectWithValue}) => {
     try {
-      const {data} = await axios.get(`/v1/reviews/product/${productId}`)
+      const {data} = await axios.get(`/v1/comments/store/${StoreId}`)
       return data.data
     } catch (error) {
       rejectWithValue(error?.response?.data?.message || 'Failed to fetch reviews')
@@ -86,7 +84,7 @@ export const updateReviews = createAsyncThunk(
   'reviews/updateReviews',
   async ({ id, data }: { id: string; data: any }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`/v1/reviews/${id}`, data);
+      const response = await axios.put(`/v1/comments/${id}`, data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to update reviews');
@@ -98,7 +96,7 @@ export const deleteReviews = createAsyncThunk(
   'reviews/deleteReviews',
   async (id: string, { rejectWithValue }) => {
     try {
-      await axios.delete(`/v1/reviews/${id}`);
+      await axios.delete(`/v1/comments/${id}`);
       return id;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to delete reviews');
@@ -149,14 +147,14 @@ const reviewsSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      .addCase(fetchCommentsByProduct.pending, (state) => {
+      .addCase(fetchCommentsByStore.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchCommentsByProduct.fulfilled, (state, action) => {
-        state.loading = false;        
-        state.productReviews = action.payload;
+      .addCase(fetchCommentsByStore.fulfilled, (state, action) => {
+        state.loading = false;
+        state.reviews = action.payload;
       })
-      .addCase(fetchCommentsByProduct.rejected, (state, action) => {
+      .addCase(fetchCommentsByStore.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })

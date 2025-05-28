@@ -36,8 +36,8 @@ import ProductFormSectionTitle from './ProductFormSectionTitle';
 import { CustomFile } from '@/components/upload';
 import { fetchCategories } from '@/redux/slices/serviceSlice';
 import { useAuthContext } from '@/auth/hooks';
-import { uploadFile } from '@/utils/s3.client';
 import axiosInstance from '@/utils/axios';
+import { getFileNameFromUrl } from '@/utils/file';
 
 
 const ProductSchema: Yup.ObjectSchema<ProductFormValues> = Yup.object().shape({
@@ -86,8 +86,6 @@ export type ProductFormValues = {
 type Props = {
   currentProduct?: any;
 };
-export  const getFileNameFromUrl = (url: string) => url.split('/').pop() || '';
-
 const PRODUCT_STATUS_OPTIONS = ['active', 'inactive', 'draft'];
 
 export default function ProductNewEditForm({ currentProduct }: Props) {
