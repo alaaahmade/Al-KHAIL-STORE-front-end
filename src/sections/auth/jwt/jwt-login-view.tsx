@@ -228,7 +228,7 @@ const renderHead = (
       <Typography sx={{
         maxWidth: '50%',
         textAlign: 'center',
-      }} variant="body2">A store specializing in selling hair and skin care supplies</Typography>
+      }} variant="body2">A one-stop shop offering a wide variety of products for all your needs</Typography>
     </Stack>
   );
 
