@@ -181,7 +181,6 @@ export const SellerSettingsView = () => {
     } catch (error) {
       setLoading(false);
       if (error instanceof Yup.ValidationError) {
-        console.log();
         error.errors.forEach((err: any) => {
           toast.error(err);
         });

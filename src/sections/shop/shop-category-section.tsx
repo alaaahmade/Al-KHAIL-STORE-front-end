@@ -25,8 +25,6 @@ const ShopCategorySection = () => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  console.log(categories);
-
   return (
     <Box
       sx={{

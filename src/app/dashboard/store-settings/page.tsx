@@ -1,5 +1,6 @@
 // sections
 
+import { RoleBasedGuard } from '@/auth/guard';
 import { StoreSettingsView } from '@/sections/store-settings/view/store-settings-view';
 
 // ----------------------------------------------------------------------
@@ -9,5 +10,9 @@ export const metadata = {
 };
 
 export default function StoreSettingsPage() {
-  return <StoreSettingsView />;
+  return (
+    <RoleBasedGuard roles={['SELLER']}>
+      <StoreSettingsView />
+    </RoleBasedGuard>
+  );
 }

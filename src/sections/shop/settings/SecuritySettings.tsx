@@ -44,7 +44,6 @@ const SecuritySettings = () => {
         });
         setErrors(validationErrors);
       }
-      console.log(error);
       toast.error(error.message || 'Something went wrong');
     }
     console.log('Updating password...');

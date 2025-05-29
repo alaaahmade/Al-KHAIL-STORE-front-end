@@ -26,6 +26,7 @@ import { CreateAdDialog } from 'src/components/custom-dialog/createAdDialog';
 import { useAppDispatch } from '@/redux/hooks';
 import { createSeller } from '@/redux/slices/SellersSlice';
 import MerchantDetailsDialog from '../merchant-details-dialog';
+import { toast } from 'react-toastify';
 
 export const statusColors: Record<string, string> = {
   Active: 'success',
@@ -98,7 +99,7 @@ export default function MerchantListView({ sellers }: { sellers: any[] }) {
       await dispatch(createSeller(data));
       setOpenCreate(false);
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 

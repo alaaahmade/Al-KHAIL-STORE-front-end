@@ -1,5 +1,6 @@
 'use client';
 
+import { RoleBasedGuard } from '@/auth/guard';
 import { CatView } from 'src/sections/categories/view/view';
 
 // sections
@@ -7,5 +8,9 @@ import { CatView } from 'src/sections/categories/view/view';
 // ----------------------------------------------------------------------
 
 export default function Page() {
-  return <CatView />;
+  return (
+    <RoleBasedGuard roles={['ADMIN']}>
+      <CatView />
+    </RoleBasedGuard>
+  );
 }

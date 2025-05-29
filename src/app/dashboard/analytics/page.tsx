@@ -1,3 +1,4 @@
+import { RoleBasedGuard } from '@/auth/guard';
 import AnalyticsDashboard from '@/sections/analytics/AnalyticsDashboard';
 
 export const metadata = {
@@ -5,5 +6,9 @@ export const metadata = {
 };
 
 export default function AnalyticsPage() {
-  return <AnalyticsDashboard />;
+  return (
+    <RoleBasedGuard roles={['ADMIN', 'SELLER']}>
+      <AnalyticsDashboard />
+    </RoleBasedGuard>
+  );
 }

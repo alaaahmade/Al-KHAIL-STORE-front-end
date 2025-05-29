@@ -23,6 +23,7 @@ import { useCallback, useEffect, useState } from 'react';
 import NotFoundPage from '@/app/not-found';
 import Iconify from '@/components/iconify';
 import { deleteFileFromS3 } from '@/utils/file';
+import { toast } from 'react-toastify';
 
 // ----------------------------------------------------------------------
 
@@ -67,8 +68,6 @@ export default function ChatView() {
     if (!socket) return;
 
     const handleMessageResponse = (newMessage: any) => {
-      console.log('New message received:', newMessage);
-
       if (String(newMessage.chatRoom.id) === String(currentChat?.id)) {
         setMessages((prevMessages: any) => {
           const exists = prevMessages.some((msg: any) => msg.id === newMessage.id);
@@ -95,7 +94,7 @@ export default function ChatView() {
       setMessages((prev: any) => prev.filter((m: any) => m.id !== messageId));
       socket?.emit('delete', { id: messageId });
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 

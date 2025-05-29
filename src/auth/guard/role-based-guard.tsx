@@ -1,14 +1,6 @@
-import { m } from 'framer-motion';
+'use client'
 // @mui
 import { Theme, SxProps } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-// hooks
-import { useMockedUser } from 'src/hooks/use-mocked-user';
-// assets
-import { ForbiddenIllustration } from 'src/assets/illustrations';
-// components
-import { MotionContainer, varBounce } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
@@ -18,40 +10,27 @@ type RoleBasedGuardProp = {
   children: React.ReactNode;
   sx?: SxProps<Theme>;
 };
+import { useEffect } from 'react';
+import { useRouter } from 'src/routes/hooks';
+import { useAuthContext } from '../hooks';
 
 export default function RoleBasedGuard({ hasContent, roles, children, sx }: RoleBasedGuardProp) {
   // Logic here to get current user role
-  const { user } = useMockedUser();
+  const { user } = useAuthContext();
+  const router = useRouter();
 
-  // const currentRole = 'user';
-  const currentRole = user?.role; // admin;
+  const currentRole = user?.role;
+
+  useEffect(() => {
+    if (typeof roles !== 'undefined' && !roles.includes(currentRole)) {
+      router.replace('/');
+    }
+  }, [roles, currentRole, router]);
 
   if (typeof roles !== 'undefined' && !roles.includes(currentRole)) {
-    return hasContent ? (
-      <Container component={MotionContainer} sx={{ textAlign: 'center', ...sx }}>
-        <m.div variants={varBounce().in}>
-          <Typography variant="h3" sx={{ mb: 2 }}>
-            Permission Denied
-          </Typography>
-        </m.div>
-
-        <m.div variants={varBounce().in}>
-          <Typography sx={{ color: 'text.secondary' }}>
-            You do not have permission to access this page
-          </Typography>
-        </m.div>
-
-        <m.div variants={varBounce().in}>
-          <ForbiddenIllustration
-            sx={{
-              height: 260,
-              my: { xs: 5, sm: 10 },
-            }}
-          />
-        </m.div>
-      </Container>
-    ) : null;
+    // Optionally render nothing while redirecting
+    return null;
   }
 
-  return <> {children} </>;
+  return <>{children}</>;
 }

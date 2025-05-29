@@ -63,7 +63,6 @@ const AccountSettings = () => {
           validationErrors[err.path] = err.message;
         });
         toast.error(JSON.stringify(validationErrors));
-        console.log(validationErrors);
       } else {
         toast.error(error.message || 'Something went wrong');
       }

@@ -1,4 +1,5 @@
 // sections
+import { RoleBasedGuard } from '@/auth/guard';
 import ReviewsView from '@/sections/reviews/view/view';
 
 // ----------------------------------------------------------------------
@@ -8,5 +9,9 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <ReviewsView />;
+  return (
+    <RoleBasedGuard roles={['ADMIN', 'SELLER']}>
+      <ReviewsView />
+    </RoleBasedGuard>
+  );
 }

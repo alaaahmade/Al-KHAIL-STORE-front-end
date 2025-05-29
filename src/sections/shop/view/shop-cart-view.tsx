@@ -84,8 +84,6 @@ export default function ShopCartView() {
       dispatch(fetchCart(user?.cart.id));
       toast.success('Product added to cart');
     } catch (error) {
-      console.log(error);
-
       toast.error(error.message);
     }
   };
@@ -105,8 +103,6 @@ export default function ShopCartView() {
       dispatch(fetchCart(user?.cart.id));
       toast.success('Product removed from cart');
     } catch (error) {
-      console.log(error);
-
       toast.error(error.message);
     }
   };
@@ -124,8 +120,6 @@ export default function ShopCartView() {
       dispatch(fetchCart(user?.cart.id));
       toast.success('Product quantity updated');
     } catch (error) {
-      console.log(error);
-
       toast.error(error.message);
     }
   };
@@ -136,7 +130,6 @@ export default function ShopCartView() {
         const response = await axiosInstance.get('/v1/products');
         setRecommended(response.data.data.products[0]);
       } catch (error) {
-        console.log(error);
         toast.error(error.message);
       }
     }

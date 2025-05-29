@@ -70,7 +70,6 @@ export default function JwtRegisterView() {
     handleSubmit,
     formState: { isSubmitting, errors },
   } = methods;
-  console.log(errors);
 
   const onSubmit = handleSubmit(async (data) => {
     try {

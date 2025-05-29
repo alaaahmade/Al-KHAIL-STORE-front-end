@@ -1,4 +1,5 @@
 // sections
+import { RoleBasedGuard } from '@/auth/guard';
 import ContactManagementView from '@/sections/contact-management/view/contact-management-view';
 
 // ----------------------------------------------------------------------
@@ -8,5 +9,9 @@ export const metadata = {
 };
 
 export default function ContactManagementPage() {
-  return <ContactManagementView />;
+  return (
+    <RoleBasedGuard roles={['ADMIN']}>
+      <ContactManagementView />
+    </RoleBasedGuard>
+  );
 }

@@ -52,8 +52,6 @@ export function CatView() {
   };
 
   const handleSave = async () => {
-    console.log(newCategory);
-
     try {
       const newErrors: any = {};
 
@@ -66,8 +64,6 @@ export function CatView() {
 
       if (Object.keys(newErrors).length > 0) {
         dispatch(setError(newErrors));
-        console.log(newErrors);
-
         return;
       }
 
@@ -111,7 +107,6 @@ export function CatView() {
       dispatch(closeCreateDialog());
     } catch (error) {
       dispatch(setLadingB(false));
-      console.log(error);
       dispatch(setError(error.message));
     }
   };

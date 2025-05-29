@@ -25,6 +25,7 @@ import { fetchChats } from '@/redux/slices/ContactSlice';
 import { useAuthContext } from '@/auth/hooks';
 import Iconify from '@/components/iconify';
 import { deleteFileFromS3 } from '@/utils/file';
+import { toast } from 'react-toastify';
 
 // ----------------------------------------------------------------------
 
@@ -103,7 +104,7 @@ export default function ChatView({ chatId, chat }: { chatId: string; chat: any }
       setMessages((prev: any) => prev.filter((m: any) => m.id !== messageId));
       socket?.emit('delete', { id: messageId });
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 

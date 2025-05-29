@@ -42,11 +42,8 @@ export function ProductCard({ product }: { product: ProductCardProps }) {
         price: standardPrice,
       });
 
-      console.log(response);
       toast.success('Product added to cart');
     } catch (error) {
-      console.log(error);
-
       toast.error(error.message);
     }
   };

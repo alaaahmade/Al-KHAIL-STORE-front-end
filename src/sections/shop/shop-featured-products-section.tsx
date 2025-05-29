@@ -15,8 +15,6 @@ const ShopFeaturedProductsSection = () => {
     dispatch(fetchFeaturedProducts());
   }, [dispatch]);
 
-  console.log(featuredProducts);
-
   if (loadingB) return <LoadingScreen />;
 
   return (

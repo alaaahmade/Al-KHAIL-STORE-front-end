@@ -72,11 +72,8 @@ const SettingsView = () => {
       setConfirmNewPassword('');
       toast.success('Password updated successfully');
     } catch (error) {
-      console.log(error);
       toast.error(error.message || 'Something went wrong');
     }
-    // await login?.(data.email, data.password);
-    console.log('Updating password...');
   };
 
   const handleSaveChanges = async () => {
@@ -94,7 +91,7 @@ const SettingsView = () => {
         window.location.reload();
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.message || 'Something went wrong');
     }
   };
 

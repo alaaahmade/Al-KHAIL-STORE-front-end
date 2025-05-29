@@ -197,8 +197,6 @@ export default function ChatMessageInput({
 
   const onSubmit = useCallback(async (value: { text: string; url: string; type: string }) => {
     try {
-      console.log(value);
-
       if (value && value.url) {
         await socket.emit('message', {
           romeId: selectedConversationId,

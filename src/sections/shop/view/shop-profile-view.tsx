@@ -90,8 +90,6 @@ export default function ShopProfileView() {
   if (loadingB) return <SplashScreen />;
   if (!store && !error) return <SplashScreen />;
 
-  // console.log(store.seller.userId);
-
   return (
     <Container
       maxWidth={settings.themeStretch ? false : 'lg'}

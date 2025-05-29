@@ -5,7 +5,6 @@ import { HOST_API } from 'src/config-global';
 // ----------------------------------------------------------------------
 
 const axiosInstance = axios.create({ baseURL: HOST_API });
-console.log(HOST_API);
 
 axiosInstance.interceptors.response.use(
   (res) => res,

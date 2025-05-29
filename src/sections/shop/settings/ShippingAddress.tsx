@@ -41,7 +41,6 @@ const ShippingAddress = () => {
         toast.success('Address deleted successfully');
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.message);
     }
   };

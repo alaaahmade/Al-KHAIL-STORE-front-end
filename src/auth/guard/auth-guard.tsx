@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useCallback, useState } from 'react';
 // routes
 import { paths } from 'src/routes/paths';

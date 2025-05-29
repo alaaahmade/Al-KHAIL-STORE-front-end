@@ -36,8 +36,6 @@ function ProductInfo({ product }: { product: any }) {
       });
       toast.success('Product added to cart');
     } catch (error) {
-      console.log(error);
-
       toast.error(error.message);
     }
   };
@@ -168,7 +166,6 @@ export default function ShopProductView() {
         Product Not Found
       </Typography>
     );
-  console.log(currentProduct);
 
   return (
     <Box sx={{ background: '#f7f8fa', minHeight: '100vh', py: 0 }}>

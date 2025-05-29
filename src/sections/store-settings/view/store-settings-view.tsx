@@ -145,15 +145,11 @@ export function StoreSettingsView() {
       const result = await updateSchema.validateSync(storeInfo, {
         abortEarly: false,
       });
-      console.log('Saving changes:', result);
       await dispatch(updateUserStore({ ...result, id: userSettings?.seller.store.id }));
       await dispatch(fetchUserSettings(user?.id));
       toast.success('Changes saved successfully');
     } catch (error) {
-      console.log(error);
-
       if (error instanceof Yup.ValidationError) {
-        console.log();
         error.errors.forEach((err: any) => {
           toast.error(err);
         });

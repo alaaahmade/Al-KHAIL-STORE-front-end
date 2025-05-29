@@ -53,6 +53,7 @@ export function useNavData() {
           { title: 'Dashboard', path: paths.dashboard.root, icon: ICONS.dashboard },
           { title: 'Analytics', path: paths.dashboard.analytics.root, icon: ICONS.analytics },
           { title: 'Products', path: paths.dashboard.Products, icon: ICONS.products },
+          { title: 'Categories', path: paths.dashboard.categories, icon: ICONS.category },
           { title: 'Orders', path: paths.dashboard.orders.root, icon: ICONS.orders },
           { title: 'Reviews', path: paths.dashboard.reviews.root, icon: ICONS.Reviews },
           { title: 'User MANAGEMENT', path: paths.dashboard.user.list, icon: ICONS.persons },

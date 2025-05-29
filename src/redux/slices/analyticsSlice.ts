@@ -18,8 +18,6 @@ export const fetchAnalyticsForAdmin = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get('/v1/sellers/dashboard/admin');
-      console.log(response.data.data);
-
       return response.data.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -34,8 +32,6 @@ export const fetchAnalyticsForSeller = createAsyncThunk(
   async (store: string, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/v1/sellers/dashboard/${store}`);
-      console.log(response.data.data);
-
       return response.data.data;
     } catch (error: any) {
       return rejectWithValue(

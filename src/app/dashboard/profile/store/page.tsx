@@ -1,5 +1,10 @@
+import { RoleBasedGuard } from '@/auth/guard';
 import UserProfileView from '@/sections/seller/view/user-profile-view';
 
 export default function StorePage() {
-  return <UserProfileView />;
+  return (
+    <RoleBasedGuard roles={['SELLER']}>
+      <UserProfileView />
+    </RoleBasedGuard>
+  );
 }

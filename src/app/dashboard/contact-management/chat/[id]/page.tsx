@@ -6,6 +6,7 @@ import { ChatView } from '@/sections/contact-management/chat/view';
 import { SplashScreen } from 'src/components/loading-screen';
 import axiosInstance from '@/utils/axios';
 import NotFoundPage from '@/app/not-found';
+import { RoleBasedGuard } from '@/auth/guard';
 
 export default function ChatPage() {
   const { id } = useParams();
@@ -38,5 +39,8 @@ export default function ChatPage() {
   if (error) return <NotFoundPage />;
 
   // return <SplashScreen/>
-  return loading ? <SplashScreen /> : currentChat && <ChatView chatId={id} chat={currentChat} />;
+  return <RoleBasedGuard roles={['ADMIN']}>
+    {loading ? <SplashScreen /> : currentChat && <ChatView chatId={id} chat={currentChat} />}
+  </RoleBasedGuard>
+
 }

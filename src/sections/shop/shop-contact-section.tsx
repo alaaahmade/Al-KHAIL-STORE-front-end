@@ -34,7 +34,6 @@ export default function ShopContactSection({ userID }: any) {
         router.push(`/shop/messages?search=${response?.data?.id}`);
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.message);
     }
   };
@@ -59,7 +58,6 @@ export default function ShopContactSection({ userID }: any) {
       if (newErrors.name || newErrors.email || newErrors.message) return;
       await handleGetOrCreateShatRoom();
     } catch (error) {
-      console.log(error);
       toast.error(error.message);
     }
   };

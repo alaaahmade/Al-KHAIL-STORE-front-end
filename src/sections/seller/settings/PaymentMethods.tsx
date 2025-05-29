@@ -161,7 +161,6 @@ const PaymentMethods = () => {
                     disabled={deletingId === card?.id}
                     onClick={() => {
                       setPendingDeleteId(card?.id);
-                      console.log(card?.id);
                       confirm.onTrue();
                     }}
                   >

@@ -144,10 +144,6 @@ export default function ContactManagementView() {
     }
   }, [chats]);
 
-  if (user?.role !== 'seller') {
-    console.log(user?.role);
-  }
-
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={5}>

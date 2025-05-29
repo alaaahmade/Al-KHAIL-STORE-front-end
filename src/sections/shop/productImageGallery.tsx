@@ -10,8 +10,6 @@ export function ProductImageGallery({
   mainImage: string;
 }) {
   const [selected, setSelected] = useState(mainImage);
-  console.log(images);
-
   return (
     <Box sx={{ p: 0, minWidth: '35%' }}>
       <Paper

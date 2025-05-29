@@ -1,4 +1,5 @@
 'use client';
+import { RoleBasedGuard } from '@/auth/guard';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchSellers } from '@/redux/slices/SellersSlice';
 import MerchantListView from '@/sections/merchant/view/merchant-list-view';
@@ -13,5 +14,9 @@ export default function MerchantListPage() {
     dispatch(fetchSellers());
   }, [dispatch]);
 
-  return sellers && <MerchantListView sellers={sellers} />;
+  return (
+    <RoleBasedGuard roles={['ADMIN']}>
+      <MerchantListView sellers={sellers} />
+    </RoleBasedGuard>
+  );
 }

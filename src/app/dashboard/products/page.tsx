@@ -1,3 +1,4 @@
+import { RoleBasedGuard } from '@/auth/guard';
 import SellerProductsListView from '@/sections/products/view/seller-products-listview';
 
 export const metadata = {
@@ -5,5 +6,9 @@ export const metadata = {
 };
 
 export default function ProductsListPage() {
-  return <SellerProductsListView />;
+  return (
+    <RoleBasedGuard roles={['ADMIN', 'SELLER']}>
+      <SellerProductsListView />
+    </RoleBasedGuard>
+  );
 }

@@ -9,17 +9,13 @@ import { useDispatch } from 'react-redux';
 import {
   changeNewCat,
   fetchCategories,
-  gitCategories,
   openCreateDialog,
-  setCategories,
   setEditMode,
-  setError,
 } from '@/redux/slices/CategoriesSlice';
 import axiosInstance from '@/utils/axios';
-import { deleteFile } from '@/utils/s3.client';
 import { useAppDispatch } from '@/redux/hooks';
 import { toast } from 'react-toastify';
-import { getFileNameFromUrl } from '../products/product-new-edit-form';
+import { getFileNameFromUrl } from '@/utils/file';
 // import { useRouter } from 'next/router';
 
 interface ListingCardProps {
@@ -43,7 +39,6 @@ export default function CatCard({ name, icon, id }: ListingCardProps) {
       dispatch(fetchCategories());
       toast.success('deleted successfully.');
     } catch (error) {
-      console.log(error);
       toast.error(error.message || 'somthing went wrong!');
     }
   };

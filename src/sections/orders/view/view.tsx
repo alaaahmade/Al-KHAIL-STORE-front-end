@@ -89,9 +89,6 @@ export default function OrdersView() {
   const confirm = useBoolean();
   const dispatch = useAppDispatch();
   const orders = useSelector((state: any) => state.ordersSlice.orders);
-  // ;
-  console.log(orders[0]);
-
   const [filters, setFilters] = useState(defaultFilters);
 
   const dataFiltered = applyFilter({

@@ -86,7 +86,6 @@ const AddCardForm = ({ onCardAdded, open, onClose }: AddCardFormProps) => {
           card: cardElement,
         },
       });
-      console.log('Stripe confirmCardSetup result:', result);
       if (result.error) {
         setError(result.error.message || 'An error occurred while adding the card.');
       } else {

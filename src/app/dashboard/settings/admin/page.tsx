@@ -1,3 +1,4 @@
+import { RoleBasedGuard } from '@/auth/guard';
 import SettingsView from '@/sections/settings/settingsView';
 
 export const metadata = {
@@ -5,5 +6,9 @@ export const metadata = {
 };
 
 export default function SettingsPage() {
-  return <SettingsView />;
+  return (
+    <RoleBasedGuard roles={['ADMIN']}>
+      <SettingsView />
+    </RoleBasedGuard>
+  );
 }

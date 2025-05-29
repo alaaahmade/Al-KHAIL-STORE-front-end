@@ -50,7 +50,6 @@ export function CreateInterestDialog({ onClose, open, handleSave }: CreateIntere
   };
 
   const handleFileDrop = async (acceptedFiles: File[]) => {
-    console.log({ file: acceptedFiles[0] });
     const file = acceptedFiles[0];
     if (file) {
       setPreviewUrl(URL.createObjectURL(file));
@@ -75,9 +74,6 @@ export function CreateInterestDialog({ onClose, open, handleSave }: CreateIntere
       })
     );
   };
-
-  console.log(error);
-
   return (
     <Dialog
       open={open}
