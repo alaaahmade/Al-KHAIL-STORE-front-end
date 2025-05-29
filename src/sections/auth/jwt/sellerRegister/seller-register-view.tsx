@@ -74,7 +74,7 @@ export default function SellerRegisterView() {
     try {
       setLoading(true);
       const response = await createASeller(data);
-      console.log(response);
+      setMessage(response?.data?.data?.message);
       setFirstName('');
       setLastName('');
       setEmail('');
@@ -82,6 +82,7 @@ export default function SellerRegisterView() {
       setStoreName('');
       setDescription('');
       setPhoneNumber('');
+      setStep(1);
       // router.push(returnTo || PATH_AFTER_LOGIN);
       setLoading(false);
     } catch (error: any) {
@@ -152,9 +153,11 @@ export default function SellerRegisterView() {
               flexDirection="column"
               justifyContent="center"
             >
-              <Alert sx={{ mb: 2 }} severity="info">
-                We’ve received your seller request. You’ll get an email once it’s reviewed.
-              </Alert>
+              {message && (
+                <Alert sx={{ mb: 2 }} severity="info">
+                  {message}
+                </Alert>
+              )}
               {step === 1 && (
                 <>
                   <Typography variant="h5" fontWeight={500} mb={2} fontFamily="inherit">
@@ -373,7 +376,7 @@ export default function SellerRegisterView() {
                     >
                       Back
                     </Button>
-                    <Button
+                    <LoadingButton
                       variant="contained"
                       fullWidth
                       sx={{
@@ -404,15 +407,15 @@ export default function SellerRegisterView() {
                         }
                         setStep2Errors(errors);
                         if (valid) {
-                          // TODO: send request here
                           handleCreateSeller();
                         } else {
                           console.log('step2Errors', step2Errors);
                         }
                       }}
+                      loading={loading}
                     >
                       Create Seller Account
-                    </Button>
+                    </LoadingButton>
                   </Box>
                 </>
               )}

@@ -207,13 +207,7 @@ export function AuthProvider({ children }: Props) {
         category,
         phoneNumber,
       });
-      const { accessToken, user } = response.data;
-      sessionStorage.setItem(STORAGE_KEY, accessToken);
-      setSession(accessToken);
-      dispatch({
-        type: Types.REGISTER,
-        payload: { user },
-      });
+      return response;
     },
     []
   );

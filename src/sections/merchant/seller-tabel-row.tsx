@@ -1,24 +1,13 @@
 'use client';
 import Iconify from 'src/components/iconify';
-import {
-  Avatar,
-  Box,
-  Chip,
-  IconButton,
-  ListItemText,
-  TableCell,
-  TableRow,
-  Typography,
-} from '@mui/material';
+import { Avatar, IconButton, ListItemText, TableCell, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { statusColors } from './view/merchant-list-view';
 import Label from 'src/components/label';
 import { fDate } from '@/utils/format-time';
 import { useRouter } from 'next/navigation';
 
-const SellerTableRow = ({ row }: { row: any }) => {
+const SellerTableRow = ({ row, openDialog }: { row: any; openDialog: any }) => {
   const [change, setChange] = useState(0);
-
   const router = useRouter();
 
   useEffect(() => {
@@ -41,7 +30,6 @@ const SellerTableRow = ({ row }: { row: any }) => {
     <TableRow>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar alt={row.user.firstName} src={row.user.photo} sx={{ mr: 2 }} />
-
         <ListItemText
           primary={row.user.firstName + ' ' + row.user.lastName}
           primaryTypographyProps={{ typography: 'body2' }}
@@ -64,10 +52,15 @@ const SellerTableRow = ({ row }: { row: any }) => {
       <TableCell>
         <Label
           variant="soft"
-          color={(row?.isActive && 'success') || 'warning' || 'default'}
+          color={
+            (row?.user?.status === 'ACTIVE' && 'success') ||
+            (row?.user?.status === 'PENDING' && 'warning') ||
+            (row?.user?.status === 'BANNED' && 'error') ||
+            'default'
+          }
           sx={{ p: '0 1em', borderRadius: 50 }}
         >
-          {row.isActive ? 'Active' : 'Banded'}
+          {row.user?.status}
         </Label>
       </TableCell>
       <TableCell>
@@ -83,13 +76,12 @@ const SellerTableRow = ({ row }: { row: any }) => {
       </TableCell>
       <TableCell align="center">
         <IconButton
-          onClick={() => {
-            router.push('/dashboard/user/list/');
-          }}
-          sx={{ p: 0.5 }}
-          color="default"
+          size="small"
+          sx={{ ml: 1 }}
+          onClick={() => openDialog(row)}
+          title="View Details"
         >
-          <Iconify icon="uil:edit" width={20} height={20} />
+          <Iconify icon="mdi:eye-outline" width={20} height={20} />
         </IconButton>
       </TableCell>
     </TableRow>

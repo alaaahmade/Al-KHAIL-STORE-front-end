@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Card,
   Container,
@@ -25,6 +25,7 @@ import SellerTableRow from '../seller-tabel-row';
 import { CreateAdDialog } from 'src/components/custom-dialog/createAdDialog';
 import { useAppDispatch } from '@/redux/hooks';
 import { createSeller } from '@/redux/slices/SellersSlice';
+import MerchantDetailsDialog from '../merchant-details-dialog';
 
 export const statusColors: Record<string, string> = {
   Active: 'success',
@@ -37,6 +38,19 @@ export default function MerchantListView({ sellers }: { sellers: any[] }) {
   const [status, setStatus] = useState('All');
   const [page, setPage] = useState(1);
   const [openCreate, setOpenCreate] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedMerchant, setSelectedMerchant] = useState(null);
+
+  const openViewDIalog = (row: any) => {
+    setSelectedMerchant(row);
+    setOpenDialog(true);
+  };
+
+  const closeViewDIalog = () => {
+    setSelectedMerchant(null);
+    setOpenDialog(false);
+  };
+
   const rowsPerPage = 10;
   const dispatch = useAppDispatch();
   const summaryStats = [
@@ -79,7 +93,7 @@ export default function MerchantListView({ sellers }: { sellers: any[] }) {
         m?.store?.name?.toLowerCase().includes(search.toLowerCase()))
   );
 
-  const handleCreate = async (data) => {
+  const handleCreate = async (data: any) => {
     try {
       await dispatch(createSeller(data));
       setOpenCreate(false);
@@ -184,7 +198,7 @@ export default function MerchantListView({ sellers }: { sellers: any[] }) {
             </TableHead>
             <TableBody>
               {filtered.slice((page - 1) * rowsPerPage, page * rowsPerPage).map((m) => (
-                <SellerTableRow key={m.id} row={m} />
+                <SellerTableRow openDialog={openViewDIalog} key={m.id} row={m} />
               ))}
               {filtered.length === 0 && (
                 <TableRow>
@@ -212,6 +226,13 @@ export default function MerchantListView({ sellers }: { sellers: any[] }) {
         onClose={() => setOpenCreate(false)}
         handleSave={handleCreate}
       />
+      {selectedMerchant && (
+        <MerchantDetailsDialog
+          row={selectedMerchant}
+          openDialog={openDialog}
+          closeDialog={closeViewDIalog}
+        />
+      )}
     </Container>
   );
 }

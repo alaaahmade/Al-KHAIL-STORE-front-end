@@ -11,7 +11,7 @@ export default function MerchantListPage() {
 
   useEffect(() => {
     dispatch(fetchSellers());
-  }, []);
+  }, [dispatch]);
 
   return sellers && <MerchantListView sellers={sellers} />;
 }
