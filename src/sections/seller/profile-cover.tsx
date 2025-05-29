@@ -13,22 +13,28 @@ import { fNumber } from '@/utils/format-number';
 
 // ----------------------------------------------------------------------
 
-export default function ProfileCover({ name, avatarUrl, totalFollowers, totalProducts, numberOfReviews,totalReview }: {
+export default function ProfileCover({
+  name,
+  avatarUrl,
+  totalFollowers,
+  totalProducts,
+  numberOfReviews,
+  totalReview,
+}: {
   name: string;
   avatarUrl: string;
   totalReview: string;
   totalProducts: string;
   totalFollowers: string;
   numberOfReviews: number;
-}
-) {
+}) {
   const theme = useTheme();
 
   return (
     <Box
       sx={{
         background: 'linear-gradient(90deg, #F472B6 0%, #8B5CF6 100%)',
-        height: .8,
+        height: 0.8,
         color: 'common.white',
       }}
     >
@@ -60,41 +66,39 @@ export default function ProfileCover({ name, avatarUrl, totalFollowers, totalPro
             textAlign: { xs: 'center', md: 'unset' },
           }}
           primary={name}
-          secondary={<Stack
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={'center'}
-            gap={2}
-          >
-              <Typography 
-              fontSize={12}>
-              {`⭐ ${totalReview} (${numberOfReviews} reviews)`}
+          secondary={
+            <Stack direction={'row'} alignItems={'center'} justifyContent={'center'} gap={2}>
+              <Typography fontSize={12}>
+                {`⭐ ${totalReview} (${numberOfReviews} reviews)`}
               </Typography>
-              <Typography 
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 1
-              }}
-              variant='caption'
-              fontSize={12}>
-                <Iconify sx={{ml: 1,}} icon="fa6-solid:box" width="20" height="20" />
-              {` ${totalProducts} products`}
+              <Typography
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 1,
+                }}
+                variant="caption"
+                fontSize={12}
+              >
+                <Iconify sx={{ ml: 1 }} icon="fa6-solid:box" width="20" height="20" />
+                {` ${totalProducts} products`}
               </Typography>
-              <Typography 
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 1
-              }}
-              variant='caption'
-              fontSize={12}>
-                <Iconify sx={{ml: 1,}} icon="fa6-solid:box" width="20" height="20" />
-              {` ${fNumber(totalFollowers)} products`}
+              <Typography
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 1,
+                }}
+                variant="caption"
+                fontSize={12}
+              >
+                <Iconify sx={{ ml: 1 }} icon="fa6-solid:box" width="20" height="20" />
+                {` ${fNumber(totalFollowers)} products`}
               </Typography>
-          </Stack>}
+            </Stack>
+          }
           primaryTypographyProps={{
             typography: 'h4',
           }}

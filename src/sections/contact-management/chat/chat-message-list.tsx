@@ -18,17 +18,19 @@ type Props = {
   handleDeleteMessage: (id: string) => void;
 };
 
-export default function ChatMessageList({ messages = [], participants, handleDeleteMessage }: Props) {
+export default function ChatMessageList({
+  messages = [],
+  participants,
+  handleDeleteMessage,
+}: Props) {
   const { messagesEndRef } = useMessagesScroll(messages);
-    const [open, setOpen] = useState(false);
-    const [selectedImg, setSelectedImg] = useState<string | null>(null);
-  
-      const handleOpen = (url: string) => {
-        setSelectedImg(url);
-        setOpen(true);
-      };
-  
-  
+  const [open, setOpen] = useState(false);
+  const [selectedImg, setSelectedImg] = useState<string | null>(null);
+
+  const handleOpen = (url: string) => {
+    setSelectedImg(url);
+    setOpen(true);
+  };
 
   return (
     <>
@@ -40,17 +42,25 @@ export default function ChatMessageList({ messages = [], participants, handleDel
               message={message}
               participants={participants}
               onOpenLightbox={(value) => {
-                handleOpen(value)
-              }}              onDelete={handleDeleteMessage} // 👈 Pass function here
-
+                handleOpen(value);
+              }}
+              onDelete={handleDeleteMessage} // 👈 Pass function here
             />
           ))}
         </Box>
-          <Modal open={open} onClose={() => setOpen(false)} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Box>
-              <img src={selectedImg || ''} alt="Full size" style={{ maxHeight: '80vh', maxWidth: '90vw', borderRadius: 12 }} />
-            </Box>
-          </Modal>
+        <Modal
+          open={open}
+          onClose={() => setOpen(false)}
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <Box>
+            <img
+              src={selectedImg || ''}
+              alt="Full size"
+              style={{ maxHeight: '80vh', maxWidth: '90vw', borderRadius: 12 }}
+            />
+          </Box>
+        </Modal>
       </Scrollbar>
     </>
   );

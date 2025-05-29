@@ -88,28 +88,30 @@ export default function ChatNav({
     }
   }, [mdUp, onCloseMobile, router]);
 
-
   const handleSearchContacts = useCallback(
     (inputValue: string) => {
       setSearchContacts((prevState) => ({
         ...prevState,
         query: inputValue,
       }));
-  
+
       if (inputValue) {
         const allParticipants = contacts.flatMap((c) => c.participants);
-  
+
         // Deduplicate by ID
         const uniqueParticipants = Array.from(
           new Map(allParticipants.map((p) => [p.id, p])).values()
         );
-  
+
         const results = uniqueParticipants.filter((contact) =>
-          (contact.role.toLowerCase() === 'seller' ? contact.seller.store.name : contact.firstName + ' ' + contact.lastName)
+          (contact.role.toLowerCase() === 'seller'
+            ? contact.seller.store.name
+            : contact.firstName + ' ' + contact.lastName
+          )
             .toLowerCase()
             .includes(inputValue.toLowerCase())
         );
-  
+
         setSearchContacts((prevState) => ({
           ...prevState,
           results,
@@ -123,8 +125,6 @@ export default function ChatNav({
     },
     [contacts]
   );
-  
-  
 
   const handleClickAwaySearch = useCallback(() => {
     setSearchContacts({
@@ -171,7 +171,7 @@ export default function ChatNav({
         <ChatNavItemSkeleton key={index} />
       ))}
     </>
-  );  
+  );
 
   const renderList = (
     <>

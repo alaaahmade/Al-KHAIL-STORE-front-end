@@ -34,8 +34,7 @@ export default function AccountPopover() {
   const router = useRouter();
   const [OPTIONS, setOPTIONS] = useState(OPTIONSs);
   // const { user } = useMockedUser();
-  const {user} = useContext(AuthContext)
-  
+  const { user } = useContext(AuthContext);
 
   const { logout } = useAuthContext();
 
@@ -58,36 +57,36 @@ export default function AccountPopover() {
   };
 
   useEffect(() => {
-    if(user){
-      if(user.role.toLowerCase() === 'user'){
+    if (user) {
+      if (user.role.toLowerCase() === 'user') {
         setOPTIONS([
           ...OPTIONSs,
           {
             label: 'Settings',
             linkTo: '/shop/settings',
           },
-        ])
+        ]);
       }
-      if(user.role.toLowerCase() === 'seller'){
+      if (user.role.toLowerCase() === 'seller') {
         setOPTIONS([
           ...OPTIONSs,
           {
             label: 'Settings',
             linkTo: '/dashboard/settings/seller',
           },
-        ])
+        ]);
       }
-      if(user.role.toLowerCase() === 'admin'){
+      if (user.role.toLowerCase() === 'admin') {
         setOPTIONS([
           ...OPTIONSs,
           {
             label: 'Settings',
             linkTo: '/dashboard/settings/admin',
           },
-        ])
+        ]);
       }
     }
-  }, [user])
+  }, [user]);
 
   return (
     <>
@@ -117,12 +116,14 @@ export default function AccountPopover() {
           }}
         />
       </IconButton>
-        <Typography
-          sx={{
-            minWidth: 'fit-content',
-            fontSize: '14px'
-          }}
-        >{user?.firstName + ' ' + user?.lastName}</Typography>
+      <Typography
+        sx={{
+          minWidth: 'fit-content',
+          fontSize: '14px',
+        }}
+      >
+        {user?.firstName + ' ' + user?.lastName}
+      </Typography>
 
       <CustomPopover open={popover.open} onClose={popover.onClose} sx={{ width: 200, p: 0 }}>
         <Box sx={{ p: 2, pb: 1.5 }}>
@@ -139,12 +140,13 @@ export default function AccountPopover() {
 
         <Stack sx={{ p: 1 }}>
           {user?.role.toLowerCase() === 'seller' && (
-            <MenuItem 
+            <MenuItem
               onClick={() => {
-                router.push('/dashboard/profile/store')
-              }}>
-                Store Profile
-              </MenuItem>
+                router.push('/dashboard/profile/store');
+              }}
+            >
+              Store Profile
+            </MenuItem>
           )}
           {OPTIONS.map((option) => (
             <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
@@ -152,7 +154,6 @@ export default function AccountPopover() {
             </MenuItem>
           ))}
         </Stack>
-
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 

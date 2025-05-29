@@ -36,7 +36,7 @@ export default function JwtRegisterView() {
 
   const router = useRouter();
   const pathName = usePathname();
-  const theme = useTheme()
+  const theme = useTheme();
   const [errorMsg, setErrorMsg] = useState('');
 
   const searchParams = useSearchParams();
@@ -71,11 +71,17 @@ export default function JwtRegisterView() {
     formState: { isSubmitting, errors },
   } = methods;
   console.log(errors);
-  
-  const onSubmit = handleSubmit(async (data) => {    
+
+  const onSubmit = handleSubmit(async (data) => {
     try {
       setLoading(true);
-      const response = await register?.(data.email, data.password, data.firstName, data.lastName, data.phone);      
+      const response = await register?.(
+        data.email,
+        data.password,
+        data.firstName,
+        data.lastName,
+        data.phone
+      );
       router.push(returnTo || PATH_AFTER_LOGIN);
       setLoading(false);
     } catch (error: any) {
@@ -87,90 +93,85 @@ export default function JwtRegisterView() {
     }
   });
 
-
-
-const linkStyle= {
-  cursor: 'pointer',
-  width: '50%',
-  textAlign: 'center',
-  p: 1,
-display: 'inline-block',
-m: 0,
-}
-
+  const linkStyle = {
+    cursor: 'pointer',
+    width: '50%',
+    textAlign: 'center',
+    p: 1,
+    display: 'inline-block',
+    m: 0,
+  };
 
   const tabList = [
-  {
-    label: 'Login',
-    path: paths.auth.jwt.login,
-    active: pathName.includes(paths.auth.jwt.login),
-  },
-  {
-    label: 'Sign Up',
-    path: paths.auth.jwt.register,
-    active: pathName.includes(paths.auth.jwt.register),
-  },
-  {
-    label: 'Become a Seller',
-    path: paths.auth.jwt.becomeSeller,
-    active: pathName.includes(paths.auth.jwt.becomeSeller),
-  },
-];
+    {
+      label: 'Login',
+      path: paths.auth.jwt.login,
+      active: pathName.includes(paths.auth.jwt.login),
+    },
+    {
+      label: 'Sign Up',
+      path: paths.auth.jwt.register,
+      active: pathName.includes(paths.auth.jwt.register),
+    },
+    {
+      label: 'Become a Seller',
+      path: paths.auth.jwt.becomeSeller,
+      active: pathName.includes(paths.auth.jwt.becomeSeller),
+    },
+  ];
 
+  // ----------------------------------------------------------------------
 
-// ----------------------------------------------------------------------
-
-const renderHead = (
-  <Box
-    sx={{
-      mb: 4,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderBottom: `1px solid ${theme.palette.divider}`,
-      gap: 3,
-    }}
-  >
-    {tabList.map((tab) => (
-      <Box
-        key={tab.label}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          px: 2,
-        }}
-      >
-        <Typography
-          component={RouterLink}
-          href={tab.path}
+  const renderHead = (
+    <Box
+      sx={{
+        mb: 4,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        gap: 3,
+      }}
+    >
+      {tabList.map((tab) => (
+        <Box
+          key={tab.label}
           sx={{
-            cursor: 'pointer',
-            color: tab.active ? 'primary.main' : 'text.primary',
-            fontWeight: tab.active ? 700 : 400,
-            fontSize: '13px',
-            mb: 0.5,
-            textDecoration: 'none',
-            transition: 'color 0.2s',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            px: 2,
           }}
         >
-          {tab.label}
-        </Typography>
-        <Box
-          sx={{
-            height: 3,
-            width: '100%',
-            maxWidth: 64,
-            borderRadius: 2,
-            bgcolor: tab.active ? 'primary.main' : 'transparent',
-            transition: 'background 0.2s',
-          }}
-        />
-      </Box>
-    ))}
-  </Box>
-);
-
+          <Typography
+            component={RouterLink}
+            href={tab.path}
+            sx={{
+              cursor: 'pointer',
+              color: tab.active ? 'primary.main' : 'text.primary',
+              fontWeight: tab.active ? 700 : 400,
+              fontSize: '13px',
+              mb: 0.5,
+              textDecoration: 'none',
+              transition: 'color 0.2s',
+            }}
+          >
+            {tab.label}
+          </Typography>
+          <Box
+            sx={{
+              height: 3,
+              width: '100%',
+              maxWidth: 64,
+              borderRadius: 2,
+              bgcolor: tab.active ? 'primary.main' : 'transparent',
+              transition: 'background 0.2s',
+            }}
+          />
+        </Box>
+      ))}
+    </Box>
+  );
 
   const renderForm = (
     <FormProvider methods={methods}>
@@ -209,80 +210,81 @@ const renderHead = (
           loading={loading}
         >
           Create account
-
-
           <InputAdornment position="end">
-            <IconButton  edge="end">
-              <Icon icon="eva:arrow-ios-forward-fill" width="24" height="24" color='#fff' />
+            <IconButton edge="end">
+              <Icon icon="eva:arrow-ios-forward-fill" width="24" height="24" color="#fff" />
             </IconButton>
           </InputAdornment>
         </SubmitButton>
-
       </Stack>
     </FormProvider>
   );
 
-    const renderWelcome = (
-      <Stack
+  const renderWelcome = (
+    <Stack
       alignItems={'center'}
       justifyContent={'center'}
       spacing={2}
       sx={{
-      borderTopLeftRadius: 'inherit',
-      borderBottomLeftRadius: 'inherit',
-      width: '50%',
-      height: '100%',
-      backgroundImage: `
+        borderTopLeftRadius: 'inherit',
+        borderBottomLeftRadius: 'inherit',
+        width: '50%',
+        height: '100%',
+        backgroundImage: `
       linear-gradient(to top right, rgba(236, 72, 153, 0.8),  rgba(139, 92, 246, 0.8)),
       url('/assets/background/authForm.png')
-    `,    backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      color: '#FFFFFF',
-      }}>
-        <Typography variant="h5">Welcome to AL KHAIL</Typography>
-        <Typography sx={{
+    `,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        color: '#FFFFFF',
+      }}
+    >
+      <Typography variant="h5">Welcome to AL KHAIL</Typography>
+      <Typography
+        sx={{
           maxWidth: '50%',
           textAlign: 'center',
-        }} variant="body2">A one-stop shop offering a wide variety of products for all your needs</Typography>
-      </Stack>
-    );
+        }}
+        variant="body2"
+      >
+        A one-stop shop offering a wide variety of products for all your needs
+      </Typography>
+    </Stack>
+  );
 
   return (
     <Stack
-      sx={{ height: '100dvh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      p: 4,
-      position: 'relative',
-
-    }}
-    
-    >
-    <StyledAuthWrapper
       sx={{
-        width: '60% !important',
-        height: '80% !important',
-        maxHeight: '600px',
-
-        boxShadow: '0px 10px 15px 0px rgba(0, 0, 0, 0.1), 0px 4px 6px 0px rgba(0, 0, 0, 0.1) ',
-
+        height: '100dvh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        p: 4,
+        position: 'relative',
       }}
     >
-    {renderWelcome}
-      <Box
+      <StyledAuthWrapper
         sx={{
-          width:'50%',
-          p: '2em !important',
+          width: '60% !important',
+          height: '80% !important',
+          maxHeight: '600px',
+
+          boxShadow: '0px 10px 15px 0px rgba(0, 0, 0, 0.1), 0px 4px 6px 0px rgba(0, 0, 0, 0.1) ',
         }}
       >
-    <FormProvider
-    methods={methods} onSubmit={onSubmit}>
-      {renderHead}
-      {renderForm}
-    </FormProvider>
-    </Box>
-    </StyledAuthWrapper>
+        {renderWelcome}
+        <Box
+          sx={{
+            width: '50%',
+            p: '2em !important',
+          }}
+        >
+          <FormProvider methods={methods} onSubmit={onSubmit}>
+            {renderHead}
+            {renderForm}
+          </FormProvider>
+        </Box>
+      </StyledAuthWrapper>
     </Stack>
   );
 }

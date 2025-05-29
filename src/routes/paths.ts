@@ -73,7 +73,7 @@ export const paths = {
     categories: '/dashboard/categories',
     interests: '/dashboard/interests',
     Products: '/dashboard/products-list',
-    products : {
+    products: {
       root: '/dashboard/products',
       create: '/dashboard/products/new',
       edit: (id: string) => `/dashboard/products/edit/${id}`,
@@ -88,7 +88,7 @@ export const paths = {
     analytics: {
       root: '/dashboard/analytics',
     },
-    contactManagement: { 
+    contactManagement: {
       root: '/dashboard/contact-management',
       chat: (id: string) => `/dashboard/contact-management/chat/${id}`,
     },
@@ -99,7 +99,7 @@ export const paths = {
     settings: {
       admin: '/dashboard/settings/admin',
       seller: '/dashboard/settings/seller',
-    }, 
+    },
     store: {
       view: 'dashboard/store',
     },
@@ -111,9 +111,8 @@ export const paths = {
       reviews: '/dashboard/shop/reviews',
       analytics: '/dashboard/shop/analytics',
       settings: '/dashboard/shop/settings',
-    }
+    },
   },
-  
 };
 
 export const NEW_PAGE = '/dashboard/new-page';

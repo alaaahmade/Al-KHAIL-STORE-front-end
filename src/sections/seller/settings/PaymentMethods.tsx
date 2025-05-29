@@ -51,16 +51,16 @@ const PaymentMethods = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-const confirm = useBoolean();
-const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
-  
+  const confirm = useBoolean();
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+
   const fetchCards = async () => {
     setLoading(true);
     setError(null);
     try {
       const res = await axiosInstance.get('/v1/payments/payment-methods');
-      let fetchedCards = res.data;
-      
+      const fetchedCards = res.data;
+
       setCards(fetchedCards);
     } catch (err: any) {
       setError('Failed to fetch cards.');
@@ -119,9 +119,7 @@ const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
           <Typography color="error">{error}</Typography>
         ) : (
           <Stack spacing={2}>
-            {cards.length === 0 && (
-              <Typography color="text.secondary">No cards saved.</Typography>
-            )}
+            {cards.length === 0 && <Typography color="text.secondary">No cards saved.</Typography>}
             {cards.map((card) => (
               <Card
                 key={card?.id}
@@ -138,24 +136,35 @@ const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
                   {cardBrandIcon(card?.card?.brand)}
                   <Box>
                     <Typography variant="body1" fontWeight={500}>
-                      {card?.card?.brand?.charAt(0).toUpperCase() + card?.card?.brand?.slice(1)} ending in {card?.card?.last4}
+                      {card?.card?.brand?.charAt(0).toUpperCase() + card?.card?.brand?.slice(1)}{' '}
+                      ending in {card?.card?.last4}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Exp: {card?.card?.exp_month?.toString().padStart(2, '0')}/{card?.card?.exp_year}
+                      Exp: {card?.card?.exp_month?.toString().padStart(2, '0')}/
+                      {card?.card?.exp_year}
                     </Typography>
                   </Box>
                 </Stack>
-                <Stack direction="row" spacing={1} mt={1} alignItems={'center'} sx={{ position: 'absolute', top: 10, right: 10 }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  mt={1}
+                  alignItems={'center'}
+                  sx={{ position: 'absolute', top: 10, right: 10 }}
+                >
                   {card?.card?.isDefault && (
                     <Label sx={{ p: 2, borderRadius: 50 }} color="success">
                       Default
                     </Label>
                   )}
-                  <IconButton disabled={deletingId === card?.id} onClick={() => {
-                    setPendingDeleteId(card?.id);
-                    console.log(card?.id);
-                    confirm.onTrue();
-                  }}>
+                  <IconButton
+                    disabled={deletingId === card?.id}
+                    onClick={() => {
+                      setPendingDeleteId(card?.id);
+                      console.log(card?.id);
+                      confirm.onTrue();
+                    }}
+                  >
                     <Iconify icon="mynaui:trash" color="error.main" width={25} height={25} />
                   </IconButton>
                 </Stack>
@@ -163,7 +172,6 @@ const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
             ))}
           </Stack>
         )}
-
 
         {/* Divider */}
         <Divider sx={{ my: 4 }} />
@@ -191,21 +199,25 @@ const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
       </Card>
 
       <ConfirmDialog
-          open={confirm.value}
-          onClose={confirm.onFalse}
-          title="Delete Card"
-          content="Are you sure you want to delete this Card?"
-          action={
-            <Button variant="contained" color="error" onClick={() => {
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        title="Delete Card"
+        content="Are you sure you want to delete this Card?"
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
               handleDeleteCard(`${pendingDeleteId}`);
               confirm.onFalse();
-            }}>
-              Delete
-            </Button>
-          }
-        />
+            }}
+          >
+            Delete
+          </Button>
+        }
+      />
 
-          <AddCardForm open={open} onClose={handleCloseDialog} onCardAdded={handleCardAdded} />
+      <AddCardForm open={open} onClose={handleCloseDialog} onCardAdded={handleCardAdded} />
     </>
   );
 };

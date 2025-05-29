@@ -14,11 +14,11 @@ const ShopHomeView = () => {
         <ShopCategorySection />
         <ShopFeaturedProductsSection />
       </Container>
-        <ShopBecomeSellerSection />
-        <Container>
+      <ShopBecomeSellerSection />
+      <Container>
         <ShopTestimonialsSection />
       </Container>
-      </>
+    </>
   );
 };
 

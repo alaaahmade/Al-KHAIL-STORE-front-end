@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'src/utils/axios';
-import { 
-  IServiceCategory, 
-  CreateServiceDto, 
+import {
+  IServiceCategory,
+  CreateServiceDto,
   UpdateServiceDto,
   CreateCategoryDto,
   UpdateCategoryDto,
   CreateRatingDto,
-  ListingInterface
+  ListingInterface,
 } from 'src/types/services';
 
 interface ServiceState {
@@ -34,7 +34,7 @@ export const fetchServices = createAsyncThunk(
   async (storeId: string, { rejectWithValue }) => {
     try {
       const response = await axios.get(`/v1/products/store/${storeId}`);
-      
+
       return response.data.data.products;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch services');
@@ -70,7 +70,7 @@ export const fetchCategories = createAsyncThunk(
   'service/fetchCategories',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get('/v1/categories');      
+      const response = await axios.get('/v1/categories');
       return response.data.data.categories;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch categories');
@@ -152,7 +152,10 @@ export const deleteCategory = createAsyncThunk(
 
 export const addRating = createAsyncThunk(
   'service/addRating',
-  async ({ serviceId, data }: { serviceId: number; data: CreateRatingDto }, { rejectWithValue }) => {
+  async (
+    { serviceId, data }: { serviceId: number; data: CreateRatingDto },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axios.post(`/services/${serviceId}/ratings`, data);
       return { serviceId, rating: response.data };
@@ -242,7 +245,9 @@ const serviceSlice = createSlice({
 
       // Delete Service
       .addCase(deleteService.fulfilled, (state, action) => {
-        state.services = state.services.filter((service) => String(service.id) !== String(action.payload));
+        state.services = state.services.filter(
+          (service) => String(service.id) !== String(action.payload)
+        );
         if (String(state.currentProduct?.id) === String(action.payload)) {
           state.currentProduct = null;
         }
@@ -269,7 +274,9 @@ const serviceSlice = createSlice({
       // Add Rating
       .addCase(addRating.fulfilled, (state, action) => {
         const { serviceId, rating } = action.payload;
-        const serviceIndex = state.services.findIndex((service) => String(service.id) === String(serviceId));
+        const serviceIndex = state.services.findIndex(
+          (service) => String(service.id) === String(serviceId)
+        );
         if (serviceIndex !== -1) {
           if (!state.services[serviceIndex].ratings) {
             state.services[serviceIndex].ratings = [];
@@ -288,4 +295,4 @@ const serviceSlice = createSlice({
   },
 });
 
-export default serviceSlice.reducer; 
+export default serviceSlice.reducer;

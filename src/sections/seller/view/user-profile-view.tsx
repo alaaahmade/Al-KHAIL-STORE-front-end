@@ -37,9 +37,9 @@ const TABS = [
 export default function UserProfileView() {
   const settings = useSettingsContext();
   const { user } = useAuthContext();
-  const [store, setStore] = useState<any>(null)
-  const {sellerStore, loadingB} = useAppSelector(store => store.SellersSlice)
-  const dispatch = useAppDispatch()
+  const [store, setStore] = useState<any>(null);
+  const { sellerStore, loadingB } = useAppSelector((store) => store.SellersSlice);
+  const dispatch = useAppDispatch();
 
   const [currentTab, setCurrentTab] = useState('Products');
 
@@ -48,25 +48,24 @@ export default function UserProfileView() {
   }, []);
 
   useEffect(() => {
-    if(user && user.id){
-      dispatch(fetchSellerStore(user?.seller?.id))
+    if (user && user.id) {
+      dispatch(fetchSellerStore(user?.seller?.id));
     }
-  }, [user, dispatch])
+  }, [user, dispatch]);
 
   useEffect(() => {
-    if(sellerStore)
-    setStore(sellerStore)
-  }, [user, sellerStore])
+    if (sellerStore) setStore(sellerStore);
+  }, [user, sellerStore]);
 
-  if(loadingB) return <SplashScreen/>
+  if (loadingB) return <SplashScreen />;
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'lg'}
+    <Container
+      maxWidth={settings.themeStretch ? false : 'lg'}
       sx={{
-        bgcolor: 'rgba(229, 231, 235, 0.15)'
+        bgcolor: 'rgba(229, 231, 235, 0.15)',
       }}
     >
-
       <Card
         sx={{
           mb: 1,
@@ -77,19 +76,19 @@ export default function UserProfileView() {
           name={store?.name}
           avatarUrl={store?.logo}
           totalReview={Number(store?.totalReview).toFixed(1)}
-          totalProducts= {store?.products?.length || 0}
+          totalProducts={store?.products?.length || 0}
           numberOfReviews={store?.products?.length || 0}
-          totalFollowers= {12000}
+          totalFollowers={12000}
         />
       </Card>
 
       <Card
         sx={{
           width: 1,
-          p: 2
+          p: 2,
         }}
       >
-      <Tabs
+        <Tabs
           value={currentTab}
           onChange={handleChangeTab}
           sx={{
@@ -109,11 +108,13 @@ export default function UserProfileView() {
         </Tabs>
       </Card>
 
-      {currentTab === 'Products' && store?.products &&  <ProfileGallery products={store?.products} />}
+      {currentTab === 'Products' && store?.products && (
+        <ProfileGallery products={store?.products} />
+      )}
 
-{currentTab === 'Reviews' && store?.products && (
-  <StoreLastReviews products={store.products} max={5} />
-)}
+      {currentTab === 'Reviews' && store?.products && (
+        <StoreLastReviews products={store.products} max={5} />
+      )}
     </Container>
   );
 }

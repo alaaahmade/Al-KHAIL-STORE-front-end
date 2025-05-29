@@ -10,7 +10,11 @@ export async function uploadFile(file: File): Promise<{ url: string; type: strin
   formData.append('file', file);
   const response = await axiosInstance.post('/v1/files/upload', formData);
   const url = response.data.url;
-  let type = file.type.startsWith('image') ? 'image' : file.type.startsWith('video') ? 'video' : 'file';
+  const type = file.type.startsWith('image')
+    ? 'image'
+    : file.type.startsWith('video')
+      ? 'video'
+      : 'file';
   return { url, type };
 }
 

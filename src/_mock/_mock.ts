@@ -66,7 +66,8 @@ export const _mock = {
   // Image
   image: {
     cover: (index: number) => `${ASSETS_API}/assets/images/cover/cover_${index + 1}.jpg`,
-    avatar: (index: number) => `https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?semt=ais_hybrid&w=740`,
+    avatar: (index: number) =>
+      `https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?semt=ais_hybrid&w=740`,
     travel: (index: number) => `${ASSETS_API}/assets/images/travel/travel_${index + 1}.jpg`,
     company: (index: number) => `${ASSETS_API}/assets/images/company/company_${index + 1}.png`,
     product: (index: number) => `${ASSETS_API}/assets/images/m_product/product_${index + 1}.jpg`,

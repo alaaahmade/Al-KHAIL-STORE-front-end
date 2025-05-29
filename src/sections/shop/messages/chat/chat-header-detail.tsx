@@ -17,22 +17,28 @@ type Props = {
 };
 
 export default function ChatHeaderDetail({ participants }: Props) {
-  const {user} = useAuthContext()
-  const singleParticipant = participants.filter(p => p.id !== user?.id)[0];
-  const store = singleParticipant.role.toLowerCase() === 'seller'
-  
+  const { user } = useAuthContext();
+  const singleParticipant = participants.filter((p) => p.id !== user?.id)[0];
+  const store = singleParticipant.role.toLowerCase() === 'seller';
+
   const renderSingle = (
     <Stack flexGrow={1} direction="row" alignItems="center" spacing={2}>
       <Badge
-        variant={singleParticipant.isActive? 'online' : 'offline'}
+        variant={singleParticipant.isActive ? 'online' : 'offline'}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Avatar src={store ? singleParticipant.seller.store.logo : singleParticipant.photo} 
-        alt={store ? singleParticipant.seller.store.name : singleParticipant.firstName} />
+        <Avatar
+          src={store ? singleParticipant.seller.store.logo : singleParticipant.photo}
+          alt={store ? singleParticipant.seller.store.name : singleParticipant.firstName}
+        />
       </Badge>
 
       <ListItemText
-        primary={store ? singleParticipant.seller.store.name : singleParticipant.firstName + ' ' + singleParticipant.lastName}
+        primary={
+          store
+            ? singleParticipant.seller.store.name
+            : singleParticipant.firstName + ' ' + singleParticipant.lastName
+        }
         secondary={
           !singleParticipant.isActive
             ? fToNow(singleParticipant.lastActiveAt)

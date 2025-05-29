@@ -5,23 +5,22 @@ interface CartState {
   cart: any;
   loading: boolean;
   error: any;
-  order: any
+  order: any;
 }
 
 const initialState: CartState = {
-  cart:null,
+  cart: null,
   loading: false,
   error: null,
   order: null,
 };
-
 
 // Cart Actions
 export const fetchCart = createAsyncThunk(
   'cart/fetchCartes',
   async (cartId: string, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/v1/carts/${cartId}`);      
+      const response = await axios.get(`/v1/carts/${cartId}`);
       return response.data.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch cartes');
@@ -33,24 +32,24 @@ export const fetchOrder = createAsyncThunk(
   'cart/fetchOrder',
   async (sessionId: string, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/v1/orders/session/${sessionId}`);            
+      const response = await axios.get(`/v1/orders/session/${sessionId}`);
       return response.data.data.order;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch order');
     }
   }
-)
+);
 
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
     changeOrder: (state, action) => {
-      state.order = action.payload
-    }
+      state.order = action.payload;
+    },
   },
   extraReducers: (builder) => {
-    builder
+    builder;
     builder
       .addCase(fetchCart.pending, (state) => {
         state.loading = true;
@@ -75,7 +74,7 @@ const cartSlice = createSlice({
       .addCase(fetchOrder.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      })
+      });
   },
 });
 export const { changeOrder } = cartSlice.actions;

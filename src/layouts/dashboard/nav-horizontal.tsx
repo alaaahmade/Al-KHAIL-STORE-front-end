@@ -22,7 +22,6 @@ function NavHorizontal() {
   const { user } = useMockedUser();
 
   const navData = useNavData();
-  
 
   return (
     <AppBar

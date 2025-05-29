@@ -105,7 +105,7 @@ const COMMON = {
   secondary: SECONDARY,
   info: INFO,
   success: SUCCESS,
-  wGray:WGRAY ,
+  wGray: WGRAY,
   warning: WARNING,
   error: ERROR,
   grey: GREY,
@@ -150,7 +150,6 @@ export function palette(mode: 'light' | 'dark') {
       secondary: GREY[500],
       disabled: GREY[600],
       main: PRIMARY.main,
-
     },
     background: {
       paper: GREY[800],

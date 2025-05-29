@@ -1,1 +1,1 @@
-export {StyledAuthWrapper, SubmitButton} from './styles'
+export { StyledAuthWrapper, SubmitButton } from './styles';

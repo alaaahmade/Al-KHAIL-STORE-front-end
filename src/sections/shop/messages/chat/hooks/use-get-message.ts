@@ -17,14 +17,18 @@ export default function useGetMessage({ message, participants, currentUserId }: 
           type: 'me',
         }
       : {
-          avatarUrl: sender?.role?.toLowerCase() === 'seller' ? sender.seller.store.logo : sender?.photo,
-          firstName: sender?.role?.toLowerCase() === 'seller' ? sender.seller.store.name.split(' ')[0] : sender?.firstName,
+          avatarUrl:
+            sender?.role?.toLowerCase() === 'seller' ? sender.seller.store.logo : sender?.photo,
+          firstName:
+            sender?.role?.toLowerCase() === 'seller'
+              ? sender.seller.store.name.split(' ')[0]
+              : sender?.firstName,
         };
 
   const me = senderDetails.type === 'me';
 
   const hasImage = message.files?.type === 'image';
-  
+
   return {
     hasImage,
     me,

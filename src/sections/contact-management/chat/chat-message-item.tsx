@@ -26,9 +26,14 @@ type Props = {
   onDelete: (id: string) => void;
 };
 
-export default function ChatMessageItem({ message, participants, onDelete, onOpenLightbox }: Props) {
+export default function ChatMessageItem({
+  message,
+  participants,
+  onDelete,
+  onOpenLightbox,
+}: Props) {
   const { user } = useAuthContext();
-  
+
   const { me, senderDetails, hasImage, files } = useGetMessage({
     message,
     participants,
@@ -38,7 +43,6 @@ export default function ChatMessageItem({ message, participants, onDelete, onOpe
   const { firstName, avatarUrl } = senderDetails;
 
   const { content, createdAt } = message;
-
 
   const confirm = useBoolean();
 
@@ -90,25 +94,34 @@ export default function ChatMessageItem({ message, participants, onDelete, onOpe
       }}
     >
       {hasImage ? (
-        <Stack sx={{}} direction="column" alignItems={me ? "flex-end" : "flex-start"}>
-        <Box
-          component="img"
-          alt="attachment"
-          src={files.url}
-          onClick={() => onOpenLightbox(files.url)}
-          sx={{
-            minHeight: 220,
-            borderRadius: 1.5,
-            cursor: 'pointer',
-            '&:hover': {
-              opacity: 0.9,
-            },
-          }}
-        />
-        <Typography textAlign={me ? 'right' : 'left'} sx={{ mt: 1, bgcolor: 'primary.main', color: '#fff', borderRadius: 1, p: 2, width : 'fit-content' }}>
-          {files.text}
-        </Typography>
-        
+        <Stack sx={{}} direction="column" alignItems={me ? 'flex-end' : 'flex-start'}>
+          <Box
+            component="img"
+            alt="attachment"
+            src={files.url}
+            onClick={() => onOpenLightbox(files.url)}
+            sx={{
+              minHeight: 220,
+              borderRadius: 1.5,
+              cursor: 'pointer',
+              '&:hover': {
+                opacity: 0.9,
+              },
+            }}
+          />
+          <Typography
+            textAlign={me ? 'right' : 'left'}
+            sx={{
+              mt: 1,
+              bgcolor: 'primary.main',
+              color: '#fff',
+              borderRadius: 1,
+              p: 2,
+              width: 'fit-content',
+            }}
+          >
+            {files.text}
+          </Typography>
         </Stack>
       ) : (
         content
@@ -142,10 +155,7 @@ export default function ChatMessageItem({ message, participants, onDelete, onOpe
       <IconButton size="small">
         <Iconify icon="eva:smiling-face-fill" width={16} />
       </IconButton>
-      <IconButton
-        onClick={handleDeleteMessage}
-        size="small"
-      >
+      <IconButton onClick={handleDeleteMessage} size="small">
         <Iconify icon="solar:trash-bin-trash-bold" width={16} />
       </IconButton>
       <ConfirmDialog

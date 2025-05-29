@@ -1,4 +1,19 @@
-import { Card, Stack, CardHeader, CardContent, Grid, TextField, Avatar, Button, FormControl, InputLabel, Select, MenuItem, InputAdornment, SelectChangeEvent } from '@mui/material';
+import {
+  Card,
+  Stack,
+  CardHeader,
+  CardContent,
+  Grid,
+  TextField,
+  Avatar,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  InputAdornment,
+  SelectChangeEvent,
+} from '@mui/material';
 import Iconify from 'src/components/iconify';
 import { LoadingButton } from '@mui/lab';
 
@@ -31,7 +46,7 @@ interface StoreInformationProps {
   handleStoreTypeChange: (event: SelectChangeEvent<string>) => void;
   handleSaveChanges: any;
   handleLogoChange: (file: File) => void;
-  loading: boolean
+  loading: boolean;
 }
 
 const StoreInformation = ({
@@ -42,22 +57,21 @@ const StoreInformation = ({
   handleStoreTypeChange,
   handleSaveChanges,
   handleLogoChange,
-  loading
+  loading,
 }: StoreInformationProps) => {
-  
   return (
-    <Stack spacing={3} >
-      <Card sx={{ borderRadius: 2, position: 'relative' }} >
+    <Stack spacing={3}>
+      <Card sx={{ borderRadius: 2, position: 'relative' }}>
         <LoadingButton
-        size="small"
-        type="submit"
-        sx={{p: 1.5, bgcolor: 'primary.main', position: 'absolute', top: 10, right: 10}}
-        variant="contained"
-        onClick={handleSaveChanges}
-        loading={loading}
-      >
-        Save Changes
-      </LoadingButton>
+          size="small"
+          type="submit"
+          sx={{ p: 1.5, bgcolor: 'primary.main', position: 'absolute', top: 10, right: 10 }}
+          variant="contained"
+          onClick={handleSaveChanges}
+          loading={loading}
+        >
+          Save Changes
+        </LoadingButton>
         <CardHeader title="Store Information" />
         <CardContent>
           <Stack spacing={3}>
@@ -68,7 +82,7 @@ const StoreInformation = ({
                 accept="image/*"
                 id="logo-upload-input"
                 style={{ display: 'none' }}
-                onChange={e => {
+                onChange={(e) => {
                   if (e.target.files && e.target.files[0]) {
                     handleLogoChange(e.target.files[0]);
                   }
@@ -80,11 +94,16 @@ const StoreInformation = ({
               >
                 Change Logo
               </Button>
-
             </Stack>
 
             <Grid container spacing={2}>
-              <Stack width={'100%'} direction={"row"} alignItems={"center"} spacing={1} justifyContent={"space-between"}>
+              <Stack
+                width={'100%'}
+                direction={'row'}
+                alignItems={'center'}
+                spacing={1}
+                justifyContent={'space-between'}
+              >
                 <TextField
                   fullWidth
                   name="name"
@@ -100,12 +119,17 @@ const StoreInformation = ({
                   value={storeInfo.tagline}
                   onChange={handleInputChange}
                 />
-                </Stack>
+              </Stack>
             </Grid>
 
             <Grid container spacing={2}>
-
-                <Stack width={'100%'} direction={"row"} alignItems={"center"} spacing={1} justifyContent={"space-between"}>
+              <Stack
+                width={'100%'}
+                direction={'row'}
+                alignItems={'center'}
+                spacing={1}
+                justifyContent={'space-between'}
+              >
                 <TextField
                   fullWidth
                   name="phoneNumber"
@@ -127,19 +151,24 @@ const StoreInformation = ({
                     <MenuItem value="Other">Other</MenuItem>
                   </Select>
                 </FormControl>
-
-                </Stack>
+              </Stack>
             </Grid>
-            <Stack width={'100%'} direction={"row"} alignItems={"center"} spacing={1} justifyContent={"space-between"}>
-                <TextField
-                  fullWidth
-                  name="description"
-                  label="Store Description"
-                  multiline
-                  rows={4}
-                  value={storeInfo.description}
-                  onChange={handleInputChange}
-                />
+            <Stack
+              width={'100%'}
+              direction={'row'}
+              alignItems={'center'}
+              spacing={1}
+              justifyContent={'space-between'}
+            >
+              <TextField
+                fullWidth
+                name="description"
+                label="Store Description"
+                multiline
+                rows={4}
+                value={storeInfo.description}
+                onChange={handleInputChange}
+              />
             </Stack>
           </Stack>
         </CardContent>

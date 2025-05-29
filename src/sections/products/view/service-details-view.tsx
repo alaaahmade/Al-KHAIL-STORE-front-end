@@ -61,7 +61,7 @@ export default function ServiceDetailsView() {
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <ServiceDetailsToolbar
         publish={publish}
-        liveLink=''
+        liveLink=""
         publishOptions={TOUR_PUBLISH_OPTIONS}
         backLink={paths.dashboard.service.root}
         editLink={paths.dashboard.service.edit(`${currentService?.id}`)}

@@ -1,64 +1,66 @@
-'use client'
+'use client';
 import * as Yup from 'yup';
 import { useAuthContext } from '@/auth/hooks';
 import { Box, Button, Card, Grid, Stack, TextField, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const changePasswordSchema = Yup.object().shape({
   currentPassword: Yup.string().required('Current password is required'),
   newPassword: Yup.string().required('New password is required'),
-  confirmNewPassword: Yup.string().required('Confirm new password is required').oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
-})
-  const SecuritySettings = () => {
-    const [errors, setErrors] = useState({
+  confirmNewPassword: Yup.string()
+    .required('Confirm new password is required')
+    .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
+});
+const SecuritySettings = () => {
+  const [errors, setErrors] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmNewPassword: '',
+  });
+  const { resetPassword } = useAuthContext();
+
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+
+  const handleUpdatePassword = async () => {
+    // Implement password update logic here
+    try {
+      await changePasswordSchema.validateSync(
+        { currentPassword, newPassword, confirmNewPassword },
+        { abortEarly: false }
+      );
+      await resetPassword({ currentPassword, newPassword });
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmNewPassword('');
+      toast.success('Password updated successfully');
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        const validationErrors = {};
+        error.inner.forEach((err) => {
+          validationErrors[err.path] = err.message;
+        });
+        setErrors(validationErrors);
+      }
+      console.log(error);
+      toast.error(error.message || 'Something went wrong');
+    }
+    console.log('Updating password...');
+  };
+
+  useEffect(() => {
+    setErrors({
       currentPassword: '',
       newPassword: '',
       confirmNewPassword: '',
     });
-    const {resetPassword} = useAuthContext();
-  
-    const [currentPassword, setCurrentPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmNewPassword, setConfirmNewPassword] = useState('');
-  
+  }, [currentPassword, newPassword, confirmNewPassword]);
 
-    const handleUpdatePassword =async () => {
-      // Implement password update logic here
-        try {
-          await changePasswordSchema.validateSync({currentPassword, newPassword, confirmNewPassword}, { abortEarly: false });
-          await resetPassword({currentPassword, newPassword});
-          setCurrentPassword('');
-          setNewPassword('');
-          setConfirmNewPassword('');
-          toast.success('Password updated successfully');
-        } catch (error) {
-        if (error instanceof Yup.ValidationError) {
-          const validationErrors = {};
-          error.inner.forEach((err) => {
-            validationErrors[err.path] = err.message;
-          });
-          setErrors(validationErrors);
-          
-        }
-          console.log(error)
-          toast.error(error.message || 'Something went wrong');
-        }
-      console.log('Updating password...');
-    };
-
-    useEffect(() => {
-      setErrors({
-        currentPassword: '',
-        newPassword: '',
-        confirmNewPassword: '',
-      });
-    }
-    , [currentPassword, newPassword, confirmNewPassword]);
-    
   return (
     <Card sx={{ p: 3 }}>
-      <Typography variant="h6" sx={{ mb: 0}}>
+      <Typography variant="h6" sx={{ mb: 0 }}>
         Security Settings
       </Typography>
       <Grid container spacing={3}>
@@ -111,7 +113,6 @@ const changePasswordSchema = Yup.object().shape({
           </Card>
         </Grid>
       </Grid>
-      
     </Card>
   );
 };

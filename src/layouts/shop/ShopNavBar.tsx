@@ -1,10 +1,8 @@
-import { Box } from '@mui/material'
-import React from 'react'
+import { Box } from '@mui/material';
+import React from 'react';
 
 const ShopNavBar = () => {
-  return (
-<Box/>
-  )
-}
+  return <Box />;
+};
 
-export default ShopNavBar
+export default ShopNavBar;

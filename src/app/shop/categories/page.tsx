@@ -2,7 +2,6 @@
 
 import CategoriesProductsView from '@/sections/shop/view/CategoriesProductsView';
 
-
 export default function ShopProductsPage() {
   return <CategoriesProductsView />;
 }

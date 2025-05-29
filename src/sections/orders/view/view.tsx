@@ -33,7 +33,16 @@ import {
 // types
 import { IUserItem, IUserTableFilters, IUserTableFilterValue } from 'src/types/user';
 //
-import {  Box, FormControl, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useSelector } from 'react-redux';
 import UserTableRow from '../orders-table-row';
 import UserTableToolbar from '../orders-table-toolbar';
@@ -51,16 +60,14 @@ const STATUS_OPTIONS = [
   { value: 'withdrawal', label: 'Withdrawal' },
 ];
 
-
 const TABLE_HEAD = [
-  
-  { id: 'id', label: 'Order ID',  width: 100 },
+  { id: 'id', label: 'Order ID', width: 100 },
   { id: 'customer', label: 'Customer', width: 200 },
-  { id: 'total', label: 'Total', width :120 },
-  { id: 'products', label: 'Products', width :180 },
-  { id: 'date', label: 'Date', width :160 },
-  { id: 'status',label: 'Status', width: 180 },
-  { id: 'actions', label: 'Actions', width:100},
+  { id: 'total', label: 'Total', width: 120 },
+  { id: 'products', label: 'Products', width: 180 },
+  { id: 'date', label: 'Date', width: 160 },
+  { id: 'status', label: 'Status', width: 180 },
+  { id: 'actions', label: 'Actions', width: 100 },
 ];
 
 const defaultFilters: IUserTableFilters = {
@@ -84,7 +91,7 @@ export default function OrdersView() {
   const orders = useSelector((state: any) => state.ordersSlice.orders);
   // ;
   console.log(orders[0]);
-  
+
   const [filters, setFilters] = useState(defaultFilters);
 
   const dataFiltered = applyFilter({
@@ -105,7 +112,7 @@ export default function OrdersView() {
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
   const handleFilters = useCallback(
-    (name: string, value: IUserTableFilterValue) => {      
+    (name: string, value: IUserTableFilterValue) => {
       table.onResetPage();
       setFilters((prevState) => ({
         ...prevState,
@@ -117,13 +124,12 @@ export default function OrdersView() {
 
   const handleDeleteRow = useCallback(
     async (id: string) => {
-      const updatedTransactions = orders.filter((row: { id: string;}) => row.id !== id);
-      await dispatch(deleteOrders(id))
+      const updatedTransactions = orders.filter((row: { id: string }) => row.id !== id);
+      await dispatch(deleteOrders(id));
       dispatch(fetchOrders());
     },
     [orders, dataInPage.length, table]
   );
-
 
   const handleEditRow = useCallback(
     (id: string) => {
@@ -134,7 +140,6 @@ export default function OrdersView() {
 
   const handleFilterStatus = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      
       handleFilters('status', newValue);
       setFilters((prevState) => ({
         ...prevState,
@@ -150,12 +155,11 @@ export default function OrdersView() {
 
   useEffect(() => {
     dispatch(fetchOrders());
-  }, [])
+  }, []);
 
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-
         <Card>
           <Box
             sx={{
@@ -164,11 +168,10 @@ export default function OrdersView() {
               alignItems: 'center',
               justifyContent: 'space-between',
             }}
-
           >
-          <Typography variant="h4" sx={{ mb: 5 }}>
-          Orders Management
-          </Typography>
+            <Typography variant="h4" sx={{ mb: 5 }}>
+              Orders Management
+            </Typography>
             <Box
               sx={{
                 display: 'flex',
@@ -176,43 +179,41 @@ export default function OrdersView() {
                 gap: 2,
               }}
             >
-            <TextField
-              value={filters.name}
-              onChange={(event) => handleFilters('name', event.target.value)}
-              placeholder="Search Orders..."
-              size='small'
-              sx={{minWidth: 300}}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled' }} />
-                  </InputAdornment>
-                ),
-
-              }}
-            />
-          <FormControl sx={{  minWidth: 120,}}>
-            <InputLabel id="demo-simple-select-label">Status</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="status"
-              size='small'
-              sx={{ width: 100, }}
-              value={filters.status}
-              onChange={(e) => {
-                handleFilterStatus(e, e.target.value);
-              }}
-            >
-              <MenuItem value={'all'}>All</MenuItem>
-              <MenuItem value={'delivered'}>delivered</MenuItem>
-              <MenuItem value={'processing'}>Processing</MenuItem>
-              <MenuItem value={'canceled'}>Canceled</MenuItem>
-            </Select>
-          </FormControl>
+              <TextField
+                value={filters.name}
+                onChange={(event) => handleFilters('name', event.target.value)}
+                placeholder="Search Orders..."
+                size="small"
+                sx={{ minWidth: 300 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled' }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <FormControl sx={{ minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="status"
+                  size="small"
+                  sx={{ width: 100 }}
+                  value={filters.status}
+                  onChange={(e) => {
+                    handleFilterStatus(e, e.target.value);
+                  }}
+                >
+                  <MenuItem value={'all'}>All</MenuItem>
+                  <MenuItem value={'delivered'}>delivered</MenuItem>
+                  <MenuItem value={'processing'}>Processing</MenuItem>
+                  <MenuItem value={'canceled'}>Canceled</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
           </Box>
-
 
           {canReset && (
             <UserTableFiltersResult
@@ -227,9 +228,8 @@ export default function OrdersView() {
           )}
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-
             <Scrollbar>
-            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -240,7 +240,7 @@ export default function OrdersView() {
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      orders.map((row: { id: string;}) => row.id)
+                      orders.map((row: { id: string }) => row.id)
                     )
                   }
                 />
@@ -333,19 +333,18 @@ function applyFilter({
   inputData = stabilizedThis.map((el: any) => el[0]);
 
   if (name) {
-    inputData = inputData.filter(
-      (order: IOrder) =>
-        (
-          ((order?.user?.firstName || '') + ' ' + (order?.user?.lastName || ''))
-            .toLocaleLowerCase()
-            .includes(name.toLocaleLowerCase())
-        )
+    inputData = inputData.filter((order: IOrder) =>
+      ((order?.user?.firstName || '') + ' ' + (order?.user?.lastName || ''))
+        .toLocaleLowerCase()
+        .includes(name.toLocaleLowerCase())
     );
   }
 
   if (status !== 'all') {
-    inputData = inputData.filter((order: IOrder) => order.orderStatus.toLocaleLowerCase() === status.toLocaleLowerCase())
-   }
+    inputData = inputData.filter(
+      (order: IOrder) => order.orderStatus.toLocaleLowerCase() === status.toLocaleLowerCase()
+    );
+  }
 
   return inputData;
 }

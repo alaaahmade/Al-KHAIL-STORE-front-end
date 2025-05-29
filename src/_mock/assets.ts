@@ -1,8 +1,6 @@
 // ----------------------------------------------------------------------
 
-export const _id = [...Array(40)].map(
-  (_, index) => `#ODR-${index + 1*100}`
-);
+export const _id = [...Array(40)].map((_, index) => `#ODR-${index + 1 * 100}`);
 
 export const _fullAddress = [
   '19034 Verna Unions Apt. 164 - Honolulu, RI / 87535',

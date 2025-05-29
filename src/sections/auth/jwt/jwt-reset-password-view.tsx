@@ -48,7 +48,7 @@ function CodeInput({ length = 6, setValue, watch }: CodeInputProps) {
     const val = e.target.value.replace(/[^0-9]/g, '');
     if (!val) return;
     const chars = val.split('');
-    let newValue = value.split('');
+    const newValue = value.split('');
     newValue[idx] = chars[0];
     // If user pasted more than one character
     for (let i = 1; i < chars.length && idx + i < length; i++) {
@@ -62,7 +62,7 @@ function CodeInput({ length = 6, setValue, watch }: CodeInputProps) {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, idx: number) => {
     if (e.key === 'Backspace') {
-      let newValue = value.split('');
+      const newValue = value.split('');
       if (inputs[idx]) {
         // Clear current box and keep focus
         newValue[idx] = '';
@@ -95,8 +95,11 @@ function CodeInput({ length = 6, setValue, watch }: CodeInputProps) {
           key={idx}
           id={`code-input-${idx}`}
           value={char}
-          inputRef={el => (inputRefs.current[idx] = el)}
-          inputProps={{ maxLength: 1, style: { textAlign: 'center', fontSize: 24, width: 48, height: 56 } }}
+          inputRef={(el) => (inputRefs.current[idx] = el)}
+          inputProps={{
+            maxLength: 1,
+            style: { textAlign: 'center', fontSize: 24, width: 48, height: 56 },
+          }}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e, idx)}
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleKeyDown(e, idx)}
           onPaste={handlePaste}
@@ -112,7 +115,13 @@ function CodeInput({ length = 6, setValue, watch }: CodeInputProps) {
   );
 }
 
-export default function JwtResetPasswordView({sent, setSent}: {sent: boolean, setSent: Dispatch<SetStateAction<boolean>>}) {
+export default function JwtResetPasswordView({
+  sent,
+  setSent,
+}: {
+  sent: boolean;
+  setSent: Dispatch<SetStateAction<boolean>>;
+}) {
   const { resetPasswordWithCode } = usePublicResetContext();
   const [errorMsg, setErrorMsg] = useState('');
   const [success, setSuccess] = useState(false);
@@ -153,10 +162,10 @@ export default function JwtResetPasswordView({sent, setSent}: {sent: boolean, se
       setSuccess(true);
       setErrorMsg('');
       // setSent(false);
-      reset()
+      reset();
     } catch (error: any) {
       console.error(error.message);
-      setErrorMsg(error?.message|| 'Something went wrong');
+      setErrorMsg(error?.message || 'Something went wrong');
     }
   });
 
@@ -207,55 +216,48 @@ export default function JwtResetPasswordView({sent, setSent}: {sent: boolean, se
         }}
       />
 
-      <SubmitButton
-        fullWidth
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={isSubmitting}
-
-      >
+      <SubmitButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
         Reset Password
         <InputAdornment position="end">
           <IconButton onClick={password.onToggle} edge="end">
-            <Icon icon="eva:arrow-ios-forward-fill" width="24" height="24" color='#fff' />
+            <Icon icon="eva:arrow-ios-forward-fill" width="24" height="24" color="#fff" />
           </IconButton>
         </InputAdornment>
       </SubmitButton>
 
       <Stack spacing={0} direction="row" alignItems={'center'} justifyContent="space-between">
-      <Button
-        component={RouterLink}
-        href={paths.auth.jwt.login}
-        color="inherit"
-        // variant="subtitle2"
-        sx={{
-          alignItems: 'center',
-          display: 'inline-flex',
-          alignSelf: 'flex-end',
-          m: 0,
-          mt: -2
-        }}
-      >
-        Return to sign in
-      </Button>
-      <Link
-        component={Button}
-        onClick={() => {setSent(false)}}
-        // href={paths.auth.jwt.forgotPassword}
-        color="inherit"
-        variant="subtitle2"
-        sx={{
-          alignItems: 'center',
-          display: 'inline-flex',
-          alignSelf: 'flex-end',
-        }}
-      >
-       Don’t have a code?
-       <span
-        style={{color: '#DB2777', cursor: 'pointer'}}
-       > Resend</span>
-      </Link>
+        <Button
+          component={RouterLink}
+          href={paths.auth.jwt.login}
+          color="inherit"
+          // variant="subtitle2"
+          sx={{
+            alignItems: 'center',
+            display: 'inline-flex',
+            alignSelf: 'flex-end',
+            m: 0,
+            mt: -2,
+          }}
+        >
+          Return to sign in
+        </Button>
+        <Link
+          component={Button}
+          onClick={() => {
+            setSent(false);
+          }}
+          // href={paths.auth.jwt.forgotPassword}
+          color="inherit"
+          variant="subtitle2"
+          sx={{
+            alignItems: 'center',
+            display: 'inline-flex',
+            alignSelf: 'flex-end',
+          }}
+        >
+          Don’t have a code?
+          <span style={{ color: '#DB2777', cursor: 'pointer' }}> Resend</span>
+        </Link>
       </Stack>
     </Stack>
   );
@@ -264,9 +266,9 @@ export default function JwtResetPasswordView({sent, setSent}: {sent: boolean, se
     <FormProvider methods={methods} onSubmit={onSubmit}>
       {renderHead}
       {sent && !success && (
-        <Alert
-        sx={{p: 0.5, mb: 1}}
-        severity="success">Password reset code sent to your email.</Alert>
+        <Alert sx={{ p: 0.5, mb: 1 }} severity="success">
+          Password reset code sent to your email.
+        </Alert>
       )}
       {renderForm}
     </FormProvider>

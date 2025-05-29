@@ -7,8 +7,8 @@ interface UserState {
   currentUser: IUser | null;
   loading: boolean;
   error: string | null;
-  userSettings: any
-  customers: IUser[]
+  userSettings: any;
+  customers: IUser[];
 }
 
 const initialState: UserState = {
@@ -29,16 +29,17 @@ export const fetchUsers = createAsyncThunk('user/fetchUsers', async (_, { reject
   }
 });
 
-export const fetchCustomers = createAsyncThunk('user/fetchCustomers', async (_, { rejectWithValue }) => {
-  try {
-    const response = await axios.get('/users/customers');
-    return response.data.data;
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || 'Failed to fetch users');
+export const fetchCustomers = createAsyncThunk(
+  'user/fetchCustomers',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get('/users/customers');
+      return response.data.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch users');
+    }
   }
-});
-
-
+);
 
 export const createUser = createAsyncThunk(
   'user/createUser',
@@ -62,14 +63,14 @@ export const updateUserStore = createAsyncThunk(
       return rejectWithValue(error.response?.data?.message || 'Failed to create user');
     }
   }
-)
+);
 
 export const updateUser = createAsyncThunk(
   'user/updateUser',
   async ({ id, data }: { id: number; data: any }, { rejectWithValue }) => {
     try {
       const response = await axios.patch(`/users/${id}`, data);
-      
+
       return response.data.data.user; // Make sure we return the updated user data
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to update user');
@@ -85,8 +86,10 @@ export const deleteUser = createAsyncThunk(
       return id;
     } catch (error: any) {
       console.log(error?.message);
-      
-      return rejectWithValue(error.response?.data?.message || error?.message || 'Failed to delete user');
+
+      return rejectWithValue(
+        error.response?.data?.message || error?.message || 'Failed to delete user'
+      );
     }
   }
 );
@@ -95,13 +98,13 @@ export const fetchUserSettings = createAsyncThunk(
   'user/fetchUserSettings',
   async (userId: string, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/users/${userId}`);      
+      const response = await axios.get(`/users/${userId}`);
       return response.data.data.user;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch user settings');
     }
   }
-)
+);
 
 const userSlice = createSlice({
   name: 'user',
@@ -170,7 +173,7 @@ const userSlice = createSlice({
       .addCase(fetchCustomers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      })
+      });
   },
 });
 

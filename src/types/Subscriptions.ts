@@ -18,10 +18,10 @@ interface Customer {
 export interface ISubscription {
   user: any;
   customer: Customer;
-  date: string;  // ISO string format
+  date: string; // ISO string format
   status: string;
   id: string;
   price: string;
   category: number;
-  history: any[]
+  history: any[];
 }

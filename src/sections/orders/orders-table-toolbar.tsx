@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
-  import {  DatePicker } from '@mui/x-date-pickers';
+import { DatePicker } from '@mui/x-date-pickers';
 // types
 
 import { IUserTableFilters, IUserTableFilterValue } from 'src/types/user';
@@ -19,10 +19,7 @@ type Props = {
   onFilters: (name: string, value: IUserTableFilterValue) => void;
 };
 
-export default function UserTableToolbar({
-  filters,
-  onFilters,
-}: Props) {
+export default function UserTableToolbar({ filters, onFilters }: Props) {
   const popover = usePopover();
 
   const handleFilterName = useCallback(
@@ -44,8 +41,7 @@ export default function UserTableToolbar({
       onFilters('endDate', date);
     },
     [onFilters]
-  );  
-
+  );
 
   return (
     <>
@@ -62,23 +58,23 @@ export default function UserTableToolbar({
         }}
       >
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
-        <DatePicker
-            name='date'
+          <DatePicker
+            name="date"
             label="Start Date"
             maxDate={new Date()}
             openTo="day"
-            views={['day','year', 'month']}
+            views={['day', 'year', 'month']}
             yearsOrder="desc"
             value={filters.startDate}
             onChange={(date) => handleFilterStartDate(date)}
             sx={{ minWidth: 250 }}
           />
           <DatePicker
-            name='date'
+            name="date"
             label="End Date"
             maxDate={new Date()}
             openTo="day"
-            views={['day','year', 'month']}
+            views={['day', 'year', 'month']}
             yearsOrder="desc"
             value={filters.endDate}
             onChange={(date) => handleFilterEndDate(date)}
@@ -97,7 +93,6 @@ export default function UserTableToolbar({
               ),
             }}
           />
-
         </Stack>
       </Stack>
 

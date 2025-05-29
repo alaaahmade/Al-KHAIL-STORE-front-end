@@ -53,8 +53,18 @@ export default function ChatNavSearchResults({ query, results, onClickResult }: 
                 typography: 'subtitle2',
               }}
             >
-              <Avatar alt={ result.role.toLowerCase() === 'seller' ? result.seller.store.name : result.name} src={result.role.toLowerCase() === 'seller' ? result.seller.store.logo :result.photo} sx={{ mr: 2 }} />
-              {result.role.toLowerCase() === 'seller' ? result.seller.store.name : result.firstName + ' ' + result.lastName} 
+              <Avatar
+                alt={
+                  result.role.toLowerCase() === 'seller' ? result.seller.store.name : result.name
+                }
+                src={
+                  result.role.toLowerCase() === 'seller' ? result.seller.store.logo : result.photo
+                }
+                sx={{ mr: 2 }}
+              />
+              {result.role.toLowerCase() === 'seller'
+                ? result.seller.store.name
+                : result.firstName + ' ' + result.lastName}
             </ListItemButton>
           ))}
         </>

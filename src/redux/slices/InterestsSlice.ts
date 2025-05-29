@@ -1,7 +1,7 @@
-import { createSlice, } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import axios from 'src/utils/axios';
 
-export const gitInterests =  async () => {
+export const gitInterests = async () => {
   const response = await axios.get('/interests/');
   return response.data;
 };
@@ -39,8 +39,7 @@ const InterestsSlice = createSlice({
   initialState,
   reducers: {
     setInterests: (state, action) => {
-      state.interests =[ ...action.payload];
-      
+      state.interests = [...action.payload];
     },
     setError: (state, action) => {
       state.error = action.payload;
@@ -49,15 +48,18 @@ const InterestsSlice = createSlice({
       state.isLoading = action.payload;
     },
     changeNewInterest: (state, action) => {
-      const { field, value }: { field: keyof InterestsState['newInterest']; value: string | File | null } = action.payload;
+      const {
+        field,
+        value,
+      }: { field: keyof InterestsState['newInterest']; value: string | File | null } =
+        action.payload;
       if (field === 'image' && (value === null || value instanceof File)) {
         state.newInterest[field] = value;
       } else if (field === 'image' && typeof value === 'string') {
         state.newInterest[field] = value;
-      } 
-      else if (field !== 'image' && typeof value === 'string') {
+      } else if (field !== 'image' && typeof value === 'string') {
         state.newInterest[field] = value;
-      } 
+      }
     },
     openCreateDialog: (state) => {
       state.open = true;
@@ -70,10 +72,19 @@ const InterestsSlice = createSlice({
     },
     setEditMode: (state, action) => {
       state.editMode = action.payload;
-    }
+    },
   },
 });
 
-export const { setInterests, setError, setIsLoading, changeNewInterest, openCreateDialog, closeCreateDialog,setEditMode, setLadingB} = InterestsSlice.actions;
+export const {
+  setInterests,
+  setError,
+  setIsLoading,
+  changeNewInterest,
+  openCreateDialog,
+  closeCreateDialog,
+  setEditMode,
+  setLadingB,
+} = InterestsSlice.actions;
 
 export default InterestsSlice.reducer;

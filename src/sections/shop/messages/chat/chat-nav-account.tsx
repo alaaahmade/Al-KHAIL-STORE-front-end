@@ -37,6 +37,6 @@ export default function ChatNavAccount() {
         />
       </Badge>
       <Typography>{user?.firstName + ' ' + user?.lastName}</Typography>
-      </Stack>
+    </Stack>
   );
 }

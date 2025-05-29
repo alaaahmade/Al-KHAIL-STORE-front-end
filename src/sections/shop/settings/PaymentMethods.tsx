@@ -1,14 +1,6 @@
 // components/PaymentMethods.tsx
 import { useState, useEffect } from 'react';
-import {
-  Box,
-  Button,
-  Card,
-  Divider,
-  Stack,
-  Typography,
-  IconButton,
-} from '@mui/material';
+import { Box, Button, Card, Divider, Stack, Typography, IconButton } from '@mui/material';
 import Iconify from '@/components/iconify';
 import Label from '@/components/label';
 import AddCardForm from './AddCardForm';
@@ -46,14 +38,14 @@ const PaymentMethods = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  
+
   const fetchCards = async () => {
     setLoading(true);
     setError(null);
     try {
       const res = await axiosInstance.get('/v1/payments/payment-methods');
       const fetchedCards = res.data;
-      
+
       if (Array.isArray(fetchedCards) && fetchedCards.length > 0) {
         // Optionally, determine default card (if backend doesn't mark it)
         fetchedCards[0].card.isDefault = true;
@@ -93,7 +85,7 @@ const PaymentMethods = () => {
   };
 
   return (
-    <> 
+    <>
       <Card sx={{ p: 4 }}>
         {/* Header */}
         <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
@@ -117,9 +109,7 @@ const PaymentMethods = () => {
           <Typography color="error">{error}</Typography>
         ) : (
           <Stack spacing={2}>
-            {cards.length === 0 && (
-              <Typography color="text.secondary">No cards saved.</Typography>
-            )}
+            {cards.length === 0 && <Typography color="text.secondary">No cards saved.</Typography>}
             {cards.map((card) => (
               <Card
                 key={card?.id}
@@ -136,20 +126,31 @@ const PaymentMethods = () => {
                   {cardBrandIcon(card?.card?.brand)}
                   <Box>
                     <Typography variant="body1" fontWeight={500}>
-                      {card?.card?.brand?.charAt(0).toUpperCase() + card?.card?.brand?.slice(1)} ending in {card?.card?.last4}
+                      {card?.card?.brand?.charAt(0).toUpperCase() + card?.card?.brand?.slice(1)}{' '}
+                      ending in {card?.card?.last4}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Exp: {card?.card?.exp_month?.toString().padStart(2, '0')}/{card?.card?.exp_year}
+                      Exp: {card?.card?.exp_month?.toString().padStart(2, '0')}/
+                      {card?.card?.exp_year}
                     </Typography>
                   </Box>
                 </Stack>
-                <Stack direction="row" spacing={1} mt={1} alignItems={'center'} sx={{ position: 'absolute', top: 10, right: 10 }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  mt={1}
+                  alignItems={'center'}
+                  sx={{ position: 'absolute', top: 10, right: 10 }}
+                >
                   {card?.card?.isDefault && (
                     <Label sx={{ p: 2, borderRadius: 50 }} color="success">
                       Default
                     </Label>
                   )}
-                  <IconButton disabled={deletingId === card?.id} onClick={() => handleDeleteCard(card?.id)}>
+                  <IconButton
+                    disabled={deletingId === card?.id}
+                    onClick={() => handleDeleteCard(card?.id)}
+                  >
                     <Iconify icon="pepicons-pencil:dots-y" width={25} height={25} />
                   </IconButton>
                 </Stack>
@@ -157,7 +158,6 @@ const PaymentMethods = () => {
             ))}
           </Stack>
         )}
-
 
         {/* Divider */}
         <Divider sx={{ my: 4 }} />
@@ -183,8 +183,7 @@ const PaymentMethods = () => {
           </Box>
         </Stack>
       </Card>
-          <AddCardForm open={open} onClose={handleCloseDialog} onCardAdded={handleCardAdded} />
-
+      <AddCardForm open={open} onClose={handleCloseDialog} onCardAdded={handleCardAdded} />
     </>
   );
 };

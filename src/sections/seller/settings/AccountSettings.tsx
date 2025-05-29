@@ -2,12 +2,23 @@
 import * as Yup from 'yup';
 import { useAuthContext } from '@/auth/hooks';
 import { useSettingsContext } from '@/components/settings';
-import { Button, Card, Container, FormControl, Grid, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  Card,
+  Container,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import React, { useState } from 'react';
 import axiosInstance from '@/utils/axios';
 import { LoadingButton } from '@mui/lab';
 import { toast } from 'react-toastify';
-
 
 const dataSchema = Yup.object().shape({
   firstName: Yup.string().required('First name is required'),
@@ -17,51 +28,47 @@ const dataSchema = Yup.object().shape({
   orderNotifications: Yup.boolean(),
   reviewNotifications: Yup.boolean(),
   autoApproveReviews: Yup.boolean(),
-})
+});
 
 const AccountSettings = () => {
-
   const settings = useSettingsContext();
-    const {user} = useAuthContext();
-  
-    const [firstName, setFirstName] = useState(user?.firstName);
-    const [lastName, setLastName] = useState(user?.lastName);
-    const [email, setEmail] = useState(user?.email);
-    const [currency, setCurrency] = useState('USD ($)');
-    const [loading, setLoading] = useState(false);
-  
-    const handleSaveChanges =  async () => {
-      const data = {
-        firstName,
-        lastName,
-        email,
-        currency,
-      }
-       try {
-        setLoading(true);
-         await dataSchema.validateSync(data, { abortEarly: false });
-         const response = await axiosInstance.patch(`/users/${user?.id}`, data);
-         if(response.status === 200){
-          window.location.reload();
-         }
-         setLoading(false);
-       } catch (error) {
-        setLoading(false);
-        if (error instanceof Yup.ValidationError) {
-          const validationErrors = {};
-          error.inner.forEach((err) => {
-            validationErrors[err.path] = err.message;
-          });
-          toast.error(JSON.stringify(validationErrors));
-          console.log(validationErrors);
-        }
-        else {
+  const { user } = useAuthContext();
 
-          toast.error(error.message || 'Something went wrong');
-        }
-        }
-      
+  const [firstName, setFirstName] = useState(user?.firstName);
+  const [lastName, setLastName] = useState(user?.lastName);
+  const [email, setEmail] = useState(user?.email);
+  const [currency, setCurrency] = useState('USD ($)');
+  const [loading, setLoading] = useState(false);
+
+  const handleSaveChanges = async () => {
+    const data = {
+      firstName,
+      lastName,
+      email,
+      currency,
     };
+    try {
+      setLoading(true);
+      await dataSchema.validateSync(data, { abortEarly: false });
+      const response = await axiosInstance.patch(`/users/${user?.id}`, data);
+      if (response.status === 200) {
+        window.location.reload();
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      if (error instanceof Yup.ValidationError) {
+        const validationErrors = {};
+        error.inner.forEach((err) => {
+          validationErrors[err.path] = err.message;
+        });
+        toast.error(JSON.stringify(validationErrors));
+        console.log(validationErrors);
+      } else {
+        toast.error(error.message || 'Something went wrong');
+      }
+    }
+  };
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -81,18 +88,18 @@ const AccountSettings = () => {
             </Typography>
             <Stack spacing={2}>
               <Stack spacing={2} direction={'row'} alignItems={'center'}>
-              <TextField
-                fullWidth
-                label="firstName"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-              <TextField
-                fullWidth
-                label="LastName"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
+                <TextField
+                  fullWidth
+                  label="firstName"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+                <TextField
+                  fullWidth
+                  label="LastName"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
               </Stack>
               <TextField
                 fullWidth
@@ -131,6 +138,5 @@ const AccountSettings = () => {
     </Container>
   );
 };
-
 
 export default AccountSettings;

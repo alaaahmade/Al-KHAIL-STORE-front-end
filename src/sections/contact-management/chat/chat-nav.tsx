@@ -89,28 +89,27 @@ export default function ChatNav({
     router.push(paths.dashboard.contactManagement.root);
   }, [mdUp, onCloseMobile, router]);
 
-
   const handleSearchContacts = useCallback(
     (inputValue: string) => {
       setSearchContacts((prevState) => ({
         ...prevState,
         query: inputValue,
       }));
-  
+
       if (inputValue) {
         const allParticipants = contacts.flatMap((c) => c.participants);
-  
+
         // Deduplicate by ID
         const uniqueParticipants = Array.from(
           new Map(allParticipants.map((p) => [p.id, p])).values()
         );
-  
+
         const results = uniqueParticipants.filter((contact) =>
           (contact.firstName + ' ' + contact.lastName)
             .toLowerCase()
             .includes(inputValue.toLowerCase())
         );
-  
+
         setSearchContacts((prevState) => ({
           ...prevState,
           results,
@@ -124,8 +123,6 @@ export default function ChatNav({
     },
     [contacts]
   );
-  
-  
 
   const handleClickAwaySearch = useCallback(() => {
     setSearchContacts({
@@ -172,7 +169,7 @@ export default function ChatNav({
         <ChatNavItemSkeleton key={index} />
       ))}
     </>
-  );  
+  );
 
   const renderList = (
     <>

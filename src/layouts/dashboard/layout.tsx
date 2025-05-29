@@ -22,8 +22,8 @@ type Props = {
 export default function DashboardLayout({ children }: Props) {
   const settings = useSettingsContext();
 
-  const pathName = usePathname()
-  
+  const pathName = usePathname();
+
   const lgUp = useResponsive('up', 'lg');
 
   const nav = useBoolean();
@@ -34,9 +34,13 @@ export default function DashboardLayout({ children }: Props) {
 
   const renderNavMini = pathName.includes('/dashboard/profile/store/') ? null : <NavMini />;
 
-  const renderHorizontal =pathName.includes('/dashboard/profile/store/') ? null : <NavHorizontal />;
+  const renderHorizontal = pathName.includes('/dashboard/profile/store/') ? null : (
+    <NavHorizontal />
+  );
 
-  const renderNavVertical = pathName.includes('/dashboard/profile/store/') ? null :<NavVertical openNav={nav.value} onCloseNav={nav.onFalse} />;
+  const renderNavVertical = pathName.includes('/dashboard/profile/store/') ? null : (
+    <NavVertical openNav={nav.value} onCloseNav={nav.onFalse} />
+  );
 
   if (isHorizontal) {
     return (

@@ -53,6 +53,6 @@ const RejectionFiles: React.FC<RejectionFilesProps> = ({ fileRejections }) => {
       })}
     </Paper>
   );
-}
+};
 
 export default RejectionFiles;

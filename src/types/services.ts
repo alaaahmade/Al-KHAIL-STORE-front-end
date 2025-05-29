@@ -1,27 +1,24 @@
 export type Availability = {
-  
-    days: Array<{
-      value: any;
-      day: string;
+  days: Array<{
+    value: any;
+    day: string;
+    from: string;
+    to: string;
+  }>;
+  classes?: Array<{
+    day: string;
+    value?: any;
+    sessions: Array<{
       from: string;
       to: string;
     }>;
-    classes?: Array<{
-      day: string;
-      value?: any;
-      sessions: Array<{
-        from: string;
-        to: string;
-      }>;
-    }>,
-
-  }
-
+  }>;
+};
 
 export interface ListingInterface {
   productImage: string;
   productGallery: any;
-  taps: { Description: string; Ingredients: string; 'How to Use': string; Reviews: never[]; };
+  taps: { Description: string; Ingredients: string; 'How to Use': string; Reviews: never[] };
   standardPrice: any;
   productDate: any;
   store: any;
@@ -45,10 +42,9 @@ export interface ListingInterface {
   isFuture: boolean;
   date: Date;
   type?: string;
-  class?: boolean
+  class?: boolean;
   // attachments?: Array<string>;
 }
-
 
 export type IServicesReview = {
   id: string;
@@ -59,15 +55,14 @@ export type IServicesReview = {
   isPurchased: boolean;
   attachments?: string[];
   createdAt: Date;
-  user : {
+  user: {
     id: string;
     fullName: string;
     email: string;
     phone: string;
     profilePicture: string;
-  }
+  };
 };
-
 
 export type IPostHero = {
   title: string;

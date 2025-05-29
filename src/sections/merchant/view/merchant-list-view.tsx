@@ -26,14 +26,13 @@ import { CreateAdDialog } from 'src/components/custom-dialog/createAdDialog';
 import { useAppDispatch } from '@/redux/hooks';
 import { createSeller } from '@/redux/slices/SellersSlice';
 
-
 export const statusColors: Record<string, string> = {
   Active: 'success',
   Pending: 'warning',
   Suspended: 'error',
 };
 
-export default function MerchantListView({sellers}: {sellers: any[]}) {
+export default function MerchantListView({ sellers }: { sellers: any[] }) {
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('All');
   const [page, setPage] = useState(1);
@@ -41,28 +40,53 @@ export default function MerchantListView({sellers}: {sellers: any[]}) {
   const rowsPerPage = 10;
   const dispatch = useAppDispatch();
   const summaryStats = [
-    { label: 'Total Merchants', value: sellers.length, icon: 'fa6-solid:store', color: 'rgba(252, 231, 243, 1)', iconColor: "#d72660" },
-    { label: 'Active Merchants', value: sellers.filter((m) => m.isActive).length, icon: 'mdi:check-circle', color: 'rgba(209, 250, 229, 1)', iconColor: '#059669' },
-    { label: 'Pending Merchant', value: sellers.filter((m) => !m.isActive).length, icon: 'mdi:clock', color: 'rgba(254, 243, 199, 1)', iconColor: '#d97706' },
-    { label: 'Suspended', value: sellers.filter((m) => m.status === 'suspended').length, icon: 'mdi:denied', color: 'rgba(254, 226, 226, 1)', iconColor: '#dc2626' },
+    {
+      label: 'Total Merchants',
+      value: sellers.length,
+      icon: 'fa6-solid:store',
+      color: 'rgba(252, 231, 243, 1)',
+      iconColor: '#d72660',
+    },
+    {
+      label: 'Active Merchants',
+      value: sellers.filter((m) => m.isActive).length,
+      icon: 'mdi:check-circle',
+      color: 'rgba(209, 250, 229, 1)',
+      iconColor: '#059669',
+    },
+    {
+      label: 'Pending Merchant',
+      value: sellers.filter((m) => !m.isActive).length,
+      icon: 'mdi:clock',
+      color: 'rgba(254, 243, 199, 1)',
+      iconColor: '#d97706',
+    },
+    {
+      label: 'Suspended',
+      value: sellers.filter((m) => m.status === 'suspended').length,
+      icon: 'mdi:denied',
+      color: 'rgba(254, 226, 226, 1)',
+      iconColor: '#dc2626',
+    },
   ];
   const filtered = sellers.filter(
     (m) =>
-      (status === 'All' || m.isActive === Boolean(status === 'Active') || !m.isActive === Boolean(status === 'Pending')) &&
+      (status === 'All' ||
+        m.isActive === Boolean(status === 'Active') ||
+        !m.isActive === Boolean(status === 'Pending')) &&
       (m?.user?.firstName?.toLowerCase().includes(search.toLowerCase()) ||
         m?.user?.email?.toLowerCase().includes(search.toLowerCase()) ||
         m?.store?.name?.toLowerCase().includes(search.toLowerCase()))
   );
 
-  const handleCreate =async (data) => {
+  const handleCreate = async (data) => {
     try {
-    await dispatch(createSeller(data))
-    setOpenCreate(false)
+      await dispatch(createSeller(data));
+      setOpenCreate(false);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-    
-  }
+  };
 
   return (
     <Container maxWidth={false} sx={{ py: 4, mt: -4 }}>
@@ -105,14 +129,15 @@ export default function MerchantListView({sellers}: {sellers: any[]}) {
           </Typography>
           <Button
             variant="contained"
-            sx={{ bgcolor: 'primary.main',
+            sx={{
+              bgcolor: 'primary.main',
               color: '#fff',
               '&:hover': { bgcolor: '#7c2ee6' },
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
-            startIcon={<Icon icon="mdi:plus" />} 
+            startIcon={<Icon icon="mdi:plus" />}
             onClick={() => setOpenCreate(true)}
           >
             Add New Merchant

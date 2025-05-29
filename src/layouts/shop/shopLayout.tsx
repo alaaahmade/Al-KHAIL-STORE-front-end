@@ -48,7 +48,6 @@ export default function ShopLayout({ children }: Props) {
           <Main>{children}</Main>
         </Box>
         <ShopFooterSection />
-
       </>
     );
   }
@@ -67,7 +66,6 @@ export default function ShopLayout({ children }: Props) {
         <Main>{children}</Main>
       </Box>
       <ShopFooterSection />
-
     </>
   );
 }

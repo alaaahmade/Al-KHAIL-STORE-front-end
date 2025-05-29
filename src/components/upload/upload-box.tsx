@@ -9,11 +9,18 @@ import { UploadProps } from './types';
 
 // ----------------------------------------------------------------------
 
-export default function UploadBox({ placeholder, error, disabled, preview, sx, ...other }: UploadProps) {
+export default function UploadBox({
+  placeholder,
+  error,
+  disabled,
+  preview,
+  sx,
+  ...other
+}: UploadProps) {
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
     disabled,
     ...other,
-  });  
+  });
 
   const hasError = isDragReject || error;
 
@@ -53,16 +60,17 @@ export default function UploadBox({ placeholder, error, disabled, preview, sx, .
         ...sx,
       }}
     >
-      <input type="image"  accept='image/*'{...getInputProps()} />
+      <input type="image" accept="image/*" {...getInputProps()} />
       <Box
         sx={{
           display: 'flex',
-          alignItems: 'center',justifyContent: 'center',
+          alignItems: 'center',
+          justifyContent: 'center',
           flexDirection: 'column',
         }}
       >
-      <Iconify icon="eva:cloud-upload-fill" width={28} />
-      {placeholder }
+        <Iconify icon="eva:cloud-upload-fill" width={28} />
+        {placeholder}
       </Box>
     </Box>
   );

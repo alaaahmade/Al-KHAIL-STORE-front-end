@@ -36,7 +36,6 @@ build/*
 .vercel
 .netlify
 .unimportedrc.json
-.vscode
 
 # logs
 npm-debug.log*

@@ -6,7 +6,16 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 // components
 import { useSettingsContext } from 'src/components/settings';
-import {  CircularProgress, Card, TableContainer, IconButton, Tooltip, Table, TableBody, Toolbar } from '@mui/material';
+import {
+  CircularProgress,
+  Card,
+  TableContainer,
+  IconButton,
+  Tooltip,
+  Table,
+  TableBody,
+  Toolbar,
+} from '@mui/material';
 import Iconify from 'src/components/iconify';
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { paths } from 'src/routes/paths';
@@ -14,9 +23,17 @@ import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from 'src/redux/hooks';
 import { fetchProducts } from '@/redux/slices/productsReducer';
 import { useSnackbar } from 'notistack';
-import {  ProductInterface } from '@/types/product';
+import { ProductInterface } from '@/types/product';
 import { useBoolean } from '@/hooks/use-boolean';
-import { emptyRows, TableEmptyRows, TableHeadCustom, TableNoData, TablePaginationCustom, TableSelectedAction, useTable } from 'src/components/table';
+import {
+  emptyRows,
+  TableEmptyRows,
+  TableHeadCustom,
+  TableNoData,
+  TablePaginationCustom,
+  TableSelectedAction,
+  useTable,
+} from 'src/components/table';
 import { getComparator } from 'src/components/table';
 import { isEqual } from 'lodash';
 import Scrollbar from 'src/components/scrollbar';
@@ -25,7 +42,7 @@ import ProductTableRow from '../table/product-table-row';
 // ----------------------------------------------------------------------
 const TABLE_HEAD = [
   { id: 'product', label: 'Product', width: 200 },
-  { id: 'categoryName', label: 'Category' ,width: 120  },
+  { id: 'categoryName', label: 'Category', width: 120 },
   { id: 'price', label: 'Price', width: 100 },
   { id: 'Stock', label: 'Stock', width: 100 },
   { id: 'Status', label: 'Status', width: 80 },
@@ -45,11 +62,9 @@ export default function ProductsListView() {
   const { enqueueSnackbar } = useSnackbar();
   const productsState = useAppSelector((state) => state.products);
   const products = useMemo(() => productsState?.products || [], [productsState?.products]);
-  const loading = productsState?.loading || false; 
-
+  const loading = productsState?.loading || false;
 
   const table = useTable();
-
 
   const [tableData, setTableData] = useState<ProductInterface[]>([]);
 
@@ -78,7 +93,7 @@ export default function ProductsListView() {
 
   const canReset = !isEqual(defaultFilters, filters);
 
-  const notFound = (!dataFiltered.length && canReset) ;
+  const notFound = !dataFiltered.length && canReset;
 
   const handleFilters = useCallback(
     (name: string, value: any) => {
@@ -130,7 +145,6 @@ export default function ProductsListView() {
     setFilters(defaultFilters);
   }, []);
 
-  
   useEffect(() => {
     dispatch(fetchProducts())
       .unwrap()
@@ -140,10 +154,16 @@ export default function ProductsListView() {
   }, [dispatch, enqueueSnackbar]);
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'} >
-      <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Typography sx={{mb: 5}} variant="h4"> Products Management </Typography>
-      {/* <LoadingButton
+    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+      <Container
+        maxWidth={settings.themeStretch ? false : 'xl'}
+        sx={{ display: 'flex', justifyContent: 'space-between' }}
+      >
+        <Typography sx={{ mb: 5 }} variant="h4">
+          {' '}
+          Products Management{' '}
+        </Typography>
+        {/* <LoadingButton
         color="inherit"
         size="medium"
         type="submit"
@@ -157,7 +177,7 @@ export default function ProductsListView() {
         Create a listing
       </LoadingButton> */}
       </Container>
-      
+
       {loading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', my: 5 }}>
           <CircularProgress />
@@ -165,118 +185,108 @@ export default function ProductsListView() {
       ) : (
         ///
         <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-
-        <Card>
-          <Toolbar
-          sx={{
-            p: '2em',
-            border: '1px solid #f4f6f8',
-          }}
-        >
-          
-            <Typography
-              sx={{ flex: '1 1 100%' }}
-              variant="h6"
-              id="tableTitle"
-              component="div"
+          <Card>
+            <Toolbar
+              sx={{
+                p: '2em',
+                border: '1px solid #f4f6f8',
+              }}
             >
-              All Products
-            </Typography>
-      
-          
-        </Toolbar>
+              <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+                All Products
+              </Typography>
+            </Toolbar>
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={table.dense}
-              numSelected={table.selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                table.onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row.id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={confirm.onTrue}>
-                    <Iconify icon="solar:trash-bin-trash-bold" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
+            <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+              <TableSelectedAction
+                dense={table.dense}
+                numSelected={table.selected.length}
+                rowCount={tableData.length}
+                onSelectAllRows={(checked) =>
+                  table.onSelectAllRows(
+                    checked,
+                    tableData.map((row) => row.id)
+                  )
+                }
+                action={
+                  <Tooltip title="Delete">
+                    <IconButton color="primary" onClick={confirm.onTrue}>
+                      <Iconify icon="solar:trash-bin-trash-bold" />
+                    </IconButton>
+                  </Tooltip>
+                }
+              />
 
-            <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 600 }}>
-                <TableHeadCustom
-                  order={table.order}
-                  orderBy={table.orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={table.selected.length}
-                  onSort={table.onSort}
-                  onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
-                />
-
-                <TableBody>
-                  {loading ? (
-                    [...Array(table.rowsPerPage)].map((i, index) => (
-                      <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                    ))
-                  ) : (
-                    <>
-                      {dataFiltered
-                        .slice(
-                          table.page * table.rowsPerPage,
-                          table.page * table.rowsPerPage + table.rowsPerPage
-                        )
-                        .map((row) => (
-                          <ProductTableRow
-                            key={row.id}
-                            row={row}
-                            selected={table.selected.includes(String(row.id))}
-                            onSelectRow={() => table.onSelectRow(String(row.id))}
-                            onDeleteRow={() => handleDeleteRow(String(row.id))}
-                            onEditRow={() => handleEditRow(String(row.id))}
-                            onViewRow={() => handleViewRow(String(row.id))}
-                          />
-                        ))}
-                    </>
-                  )}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
+              <Scrollbar>
+                <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 600 }}>
+                  <TableHeadCustom
+                    order={table.order}
+                    orderBy={table.orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={tableData.length}
+                    numSelected={table.selected.length}
+                    onSort={table.onSort}
+                    onSelectAllRows={(checked) =>
+                      table.onSelectAllRows(
+                        checked,
+                        tableData.map((row) => row.id)
+                      )
+                    }
                   />
 
-                  <TableNoData notFound={notFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
+                  <TableBody>
+                    {loading ? (
+                      [...Array(table.rowsPerPage)].map((i, index) => (
+                        <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                      ))
+                    ) : (
+                      <>
+                        {dataFiltered
+                          .slice(
+                            table.page * table.rowsPerPage,
+                            table.page * table.rowsPerPage + table.rowsPerPage
+                          )
+                          .map((row) => (
+                            <ProductTableRow
+                              key={row.id}
+                              row={row}
+                              selected={table.selected.includes(String(row.id))}
+                              onSelectRow={() => table.onSelectRow(String(row.id))}
+                              onDeleteRow={() => handleDeleteRow(String(row.id))}
+                              onEditRow={() => handleEditRow(String(row.id))}
+                              onViewRow={() => handleViewRow(String(row.id))}
+                            />
+                          ))}
+                      </>
+                    )}
 
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={table.page}
-            rowsPerPage={table.rowsPerPage}
-            onPageChange={table.onChangePage}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
-            //
-            dense={table.dense}
-            onChangeDense={table.onChangeDense}
-          />
-        </Card>
-      </Container>
+                    <TableEmptyRows
+                      height={denseHeight}
+                      emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
+                    />
+
+                    <TableNoData notFound={notFound} />
+                  </TableBody>
+                </Table>
+              </Scrollbar>
+            </TableContainer>
+
+            <TablePaginationCustom
+              count={dataFiltered.length}
+              page={table.page}
+              rowsPerPage={table.rowsPerPage}
+              onPageChange={table.onChangePage}
+              onRowsPerPageChange={table.onChangeRowsPerPage}
+              //
+              dense={table.dense}
+              onChangeDense={table.onChangeDense}
+            />
+          </Card>
+        </Container>
       )}
     </Container>
   );
 }
-
 
 function applyFilter({
   inputData,
@@ -287,7 +297,6 @@ function applyFilter({
   comparator: (a: any, b: any) => number;
   filters: any;
 }) {
-
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 
   stabilizedThis.sort((a, b) => {

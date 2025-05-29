@@ -13,7 +13,7 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 
-import * as Yup from 'yup'
+import * as Yup from 'yup';
 
 import { useSettingsContext } from 'src/components/settings';
 import Iconify from '@/components/iconify';
@@ -32,9 +32,15 @@ import axiosInstance from '@/utils/axios';
 import { getFileNameFromUrl } from '@/sections/products/product-new-edit-form';
 
 const tabs = [
-  { label: 'Store Information', icon: <Iconify icon="fa6-solid:store" width="576" height="512" />},
-  { label: 'Notifications', icon: <Iconify icon="mingcute:notification-fill" width="24" height="24" /> },
-  { label: 'Payment Methods', icon: <Iconify icon="fluent:payment-16-filled" width="24" height="24" /> },
+  { label: 'Store Information', icon: <Iconify icon="fa6-solid:store" width="576" height="512" /> },
+  {
+    label: 'Notifications',
+    icon: <Iconify icon="mingcute:notification-fill" width="24" height="24" />,
+  },
+  {
+    label: 'Payment Methods',
+    icon: <Iconify icon="fluent:payment-16-filled" width="24" height="24" />,
+  },
   { label: 'Shipping', icon: <Iconify icon="fa-solid:shipping-fast" width="24" height="24" /> },
   { label: 'Account', icon: <Iconify icon="material-symbols:person" width="24" height="24" /> },
   { label: 'Security', icon: <Iconify icon="line-md:security-twotone" width="24" height="24" /> },
@@ -63,18 +69,17 @@ const updateSchema = Yup.object().shape({
   }),
 });
 
-
 export const SellerSettingsView = () => {
   const settings = useSettingsContext();
-  const searchParams = useSearchParams()
-  const tapSearch = searchParams.get('tapSearch')
-  const router = useRouter()
+  const searchParams = useSearchParams();
+  const tapSearch = searchParams.get('tapSearch');
+  const router = useRouter();
 
   const { user } = useAuthContext();
-  const {userSettings} = useAppSelector(state => state.user)
-  const dispatch = useAppDispatch()
-  const [newLogo, setNewLogo] = useState<File | null>(null)
-  const [loading, setLoading] = useState(false)
+  const { userSettings } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  const [newLogo, setNewLogo] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const [storeInfo, setStoreInfo] = useState({
     logo: '',
@@ -99,13 +104,12 @@ export const SellerSettingsView = () => {
     },
   });
 
-
   const handleLogoChange = (file: File) => {
-    setNewLogo(file)
+    setNewLogo(file);
     const imageUrl = URL.createObjectURL(file);
-    setStoreInfo(prev => ({
+    setStoreInfo((prev) => ({
       ...prev,
-      logo: imageUrl
+      logo: imageUrl,
     }));
   };
 
@@ -127,7 +131,7 @@ export const SellerSettingsView = () => {
     }));
   };
 
- const handleSocialLinkChange = (platform: keyof typeof storeInfo.socialLinks, value: string) => {
+  const handleSocialLinkChange = (platform: keyof typeof storeInfo.socialLinks, value: string) => {
     setStoreInfo((prev) => ({
       ...prev,
       socialLinks: {
@@ -144,16 +148,15 @@ export const SellerSettingsView = () => {
     }));
   };
 
-  const handleSaveChanges =async () => {
+  const handleSaveChanges = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const result = await updateSchema.validateSync(storeInfo, {
         abortEarly: false,
-      });      
-      if(newLogo){
-
+      });
+      if (newLogo) {
         if (userSettings?.seller?.store?.logo?.includes('mysstore.fra1.digitaloceanspaces.com')) {
-          const fileName = getFileNameFromUrl(userSettings?.seller.store.logo);          
+          const fileName = getFileNameFromUrl(userSettings?.seller.store.logo);
           try {
             await axiosInstance.delete(`/v1/files/${fileName}`);
           } catch (err) {
@@ -165,25 +168,25 @@ export const SellerSettingsView = () => {
         formData.append('file', newLogo);
         const data = await axiosInstance.post('/v1/files/upload', formData);
         const imageUrl = data.data.url;
-        setStoreInfo(prev => ({
+        setStoreInfo((prev) => ({
           ...prev,
-          logo: imageUrl
+          logo: imageUrl,
         }));
-        result.logo = imageUrl
+        result.logo = imageUrl;
       }
-      await dispatch(updateUserStore({...result, id: userSettings?.seller.store.id}))
-      await dispatch(fetchUserSettings(user?.id))
-      setLoading(false)
+      await dispatch(updateUserStore({ ...result, id: userSettings?.seller.store.id }));
+      await dispatch(fetchUserSettings(user?.id));
+      setLoading(false);
       toast.success('Changes saved successfully');
-    }catch (error) {
-      setLoading(false)
+    } catch (error) {
+      setLoading(false);
       if (error instanceof Yup.ValidationError) {
         console.log();
         error.errors.forEach((err: any) => {
           toast.error(err);
-        })
-      }else{
-        toast.error(error.message)
+        });
+      } else {
+        toast.error(error.message);
       }
       return;
     }
@@ -191,18 +194,18 @@ export const SellerSettingsView = () => {
     // You would typically make an API call here
   };
 
-  useEffect(()=>{
-    if(user && user.id){
-      dispatch(fetchUserSettings(user.id))
+  useEffect(() => {
+    if (user && user.id) {
+      dispatch(fetchUserSettings(user.id));
     }
-  }, [user, dispatch])
+  }, [user, dispatch]);
 
-  useEffect(()=>{
-    setStoreInfo(prev => ({
+  useEffect(() => {
+    setStoreInfo((prev) => ({
       ...prev,
-      ...userSettings?.seller?.store
-    }))
-  }, [userSettings])
+      ...userSettings?.seller?.store,
+    }));
+  }, [userSettings]);
 
   const handleChangeTab = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
@@ -214,12 +217,12 @@ export const SellerSettingsView = () => {
   );
 
   useEffect(() => {
-    if(!tapSearch){
+    if (!tapSearch) {
       const params = new URLSearchParams(searchParams.toString());
       params.set('tapSearch', 'Store Information');
       router.push(`?${params.toString()}`);
     }
-  }, [router, searchParams, tapSearch])
+  }, [router, searchParams, tapSearch]);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -244,47 +247,51 @@ export const SellerSettingsView = () => {
                     ...(tab.label === tapSearch && {
                       bgcolor: 'action.selected',
                       color: 'primary.main',
-                    })
+                    }),
                   }}
-                  
                 >
                   <ListItemIcon>{tab.icon}</ListItemIcon>
                   <MUIListItemText primary={tab.label} />
                 </ListItemButton>
               ))}
-            </List> 
+            </List>
           </Card>
         </Grid>
 
         <Grid item xs={12} md={9}>
-          {
-            tapSearch === 'Store Information' ? <StoreInformation 
-            storeInfo={storeInfo}
-            handleInputChange={handleInputChange}
-            handleBusinessHoursChange={handleBusinessHoursChange}
-            handleSocialLinkChange={handleSocialLinkChange}
-            handleStoreTypeChange={handleStoreTypeChange}
-            handleSaveChanges={handleSaveChanges}
-            handleLogoChange={handleLogoChange}
-            loading={loading}
-          />
-            : tapSearch === 'Account' ? <AccountSettings /> 
-            : tapSearch === 'Security' ? <SecuritySettings />
-            : tapSearch === 'Payment Methods' ? <PaymentMethods />
-            : tapSearch === 'Shipping' ? <ShippingAddress />
-            : tapSearch === 'Notifications' ? <NotificationsSettings />
-            : <StoreInformation 
-            storeInfo={storeInfo}
-            handleInputChange={handleInputChange}
-            handleBusinessHoursChange={handleBusinessHoursChange}
-            handleSocialLinkChange={handleSocialLinkChange}
-            handleStoreTypeChange={handleStoreTypeChange}
-            handleSaveChanges={handleSaveChanges}
-            handleLogoChange={handleLogoChange}
-            loading={loading}
-          />
-        }
-
+          {tapSearch === 'Store Information' ? (
+            <StoreInformation
+              storeInfo={storeInfo}
+              handleInputChange={handleInputChange}
+              handleBusinessHoursChange={handleBusinessHoursChange}
+              handleSocialLinkChange={handleSocialLinkChange}
+              handleStoreTypeChange={handleStoreTypeChange}
+              handleSaveChanges={handleSaveChanges}
+              handleLogoChange={handleLogoChange}
+              loading={loading}
+            />
+          ) : tapSearch === 'Account' ? (
+            <AccountSettings />
+          ) : tapSearch === 'Security' ? (
+            <SecuritySettings />
+          ) : tapSearch === 'Payment Methods' ? (
+            <PaymentMethods />
+          ) : tapSearch === 'Shipping' ? (
+            <ShippingAddress />
+          ) : tapSearch === 'Notifications' ? (
+            <NotificationsSettings />
+          ) : (
+            <StoreInformation
+              storeInfo={storeInfo}
+              handleInputChange={handleInputChange}
+              handleBusinessHoursChange={handleBusinessHoursChange}
+              handleSocialLinkChange={handleSocialLinkChange}
+              handleStoreTypeChange={handleStoreTypeChange}
+              handleSaveChanges={handleSaveChanges}
+              handleLogoChange={handleLogoChange}
+              loading={loading}
+            />
+          )}
         </Grid>
       </Grid>
     </Container>

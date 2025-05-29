@@ -33,7 +33,7 @@ type Props = {
 };
 
 export default function UserCard({ user }: Props) {
-  const { name, role, dateOfBirth, phoneNumber, avatarUrl, createdAt, email } = user;  
+  const { name, role, dateOfBirth, phoneNumber, avatarUrl, createdAt, email } = user;
   return (
     <Card sx={{ textAlign: 'center' }}>
       <Box sx={{ position: 'relative' }}>
@@ -71,7 +71,6 @@ export default function UserCard({ user }: Props) {
             position: 'relative',
           }}
         />
-
       </Box>
 
       <ListItemText
@@ -83,45 +82,47 @@ export default function UserCard({ user }: Props) {
       />
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2.5 }}>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: 'center',
-              flexDirection: 'column',
-              gap: 1,
-              p: 1,
-              borderRadius: 1,
-              bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
-              width: '40%'
-            }}
-          >
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            gap: 1,
+            p: 1,
+            borderRadius: 1,
+            bgcolor: (theme) =>
+              alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+            width: '40%',
+          }}
+        >
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Email: {email}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Phone: {phoneNumber}
+            Phone: {phoneNumber}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Birth Day: {fDate(dateOfBirth)}
+            Birth Day: {fDate(dateOfBirth)}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Joined: {fDate(createdAt)}
           </Typography>
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: 'center',
-              flexDirection: 'column',
-              gap: 1,
-              p: 1,
-              borderRadius: 1,
-              bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
-              width: '40%'
-            }}
-          >
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            gap: 1,
+            p: 1,
+            borderRadius: 1,
+            bgcolor: (theme) =>
+              alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+            width: '40%',
+          }}
+        >
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Status: {user.status.toUpperCase()}
           </Typography>
@@ -134,7 +135,7 @@ export default function UserCard({ user }: Props) {
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Credits: {user.credits}
           </Typography>
-          </Box>
+        </Box>
       </Stack>
 
       <Divider sx={{ borderStyle: 'dashed' }} />
@@ -148,19 +149,17 @@ export default function UserCard({ user }: Props) {
           <Typography variant="caption" component="div" sx={{ mb: 0.5, color: 'text.secondary' }}>
             Services
           </Typography>
-          <Box
-            sx={{p:2}}
-          >
+          <Box sx={{ p: 2 }}>
             {user.bookings.map((book) => (
               <Box
-              key={book.service.id}
+                key={book.service.id}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'flex-start',
                   width: '100%',
-                  p:1,
-                  gap:1
+                  p: 1,
+                  gap: 1,
                 }}
               >
                 <Box
@@ -174,9 +173,10 @@ export default function UserCard({ user }: Props) {
                   }}
                 />
                 <Box>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {book.service.title}
-              </Typography></Box>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    {book.service.title}
+                  </Typography>
+                </Box>
               </Box>
             ))}
           </Box>
@@ -186,19 +186,17 @@ export default function UserCard({ user }: Props) {
           <Typography variant="caption" component="div" sx={{ mb: 0.5, color: 'text.secondary' }}>
             Interests
           </Typography>
-          <Box
-            sx={{p:2}}
-          >
+          <Box sx={{ p: 2 }}>
             {user.interests.map((interest) => (
               <Box
-              key={interest.id}
+                key={interest.id}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'flex-start',
                   width: '100%',
-                  p:1,
-                  gap:1
+                  p: 1,
+                  gap: 1,
                 }}
               >
                 <Box
@@ -212,9 +210,10 @@ export default function UserCard({ user }: Props) {
                   }}
                 />
                 <Box>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {interest.name}
-              </Typography></Box>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    {interest.name}
+                  </Typography>
+                </Box>
               </Box>
             ))}
           </Box>

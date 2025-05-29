@@ -17,8 +17,6 @@ const MenuProps = {
   },
 };
 
-
-
 function getStyles(name: string, personName: string, theme: Theme) {
   return {
     fontWeight: personName.includes(name)
@@ -27,9 +25,18 @@ function getStyles(name: string, personName: string, theme: Theme) {
   };
 }
 
-export function MultipleSelect({options, lapel, handleChange, valu}: {options: string[], lapel: string,handleChange: any, valu: string }) {
+export function MultipleSelect({
+  options,
+  lapel,
+  handleChange,
+  valu,
+}: {
+  options: string[];
+  lapel: string;
+  handleChange: any;
+  valu: string;
+}) {
   const theme = useTheme();
-
 
   return (
     <div>
@@ -45,11 +52,7 @@ export function MultipleSelect({options, lapel, handleChange, valu}: {options: s
           MenuProps={MenuProps}
         >
           {options.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, valu, theme)}
-            >
+            <MenuItem key={name} value={name} style={getStyles(name, valu, theme)}>
               {name}
             </MenuItem>
           ))}

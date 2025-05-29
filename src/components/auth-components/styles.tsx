@@ -14,12 +14,11 @@ export const StyledAuthWrapper = styled(Box)(({ theme }) => ({
   m: 0,
   p: 0,
   borderRadius: 16,
-  
-}))
+}));
 
 export const SubmitButton = styled(LoadingButton)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-}))
+}));

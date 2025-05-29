@@ -55,7 +55,7 @@ export default function ChatNavSearchResults({ query, results, onClickResult }: 
               }}
             >
               <Avatar alt={result.name} src={result.photo} sx={{ mr: 2 }} />
-              {result.firstName + ' ' + result.lastName}  
+              {result.firstName + ' ' + result.lastName}
             </ListItemButton>
           ))}
         </>

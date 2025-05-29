@@ -26,7 +26,6 @@ export function ProfileLayout({ children }: Props) {
 
   const isMini = settings.themeLayout === 'mini';
 
-
   if (isHorizontal) {
     return (
       <>
@@ -46,8 +45,7 @@ export function ProfileLayout({ children }: Props) {
             display: 'flex',
             flexDirection: { xs: 'column', md: 'row' },
           }}
-        >
-        </Box>
+        ></Box>
       </>
     );
   }

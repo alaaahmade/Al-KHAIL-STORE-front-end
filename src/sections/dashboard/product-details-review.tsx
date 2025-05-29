@@ -24,26 +24,28 @@ type Props = {
   reviews: IProductReview[];
 };
 
-export default function ProductDetailsReview({
-  reviews,
-}: Props) {
+export default function ProductDetailsReview({ reviews }: Props) {
   const review = useBoolean();
-
 
   return (
     <Stack
-    direction="column"
-    sx={{ mb: 5, mt: 5, p: 2,
-      backgroundColor: '#fff',
-      borderRadius: 2,
-      border: '1px solid #f4f6f8'
-     }}
-  >
-    <Typography sx={{p: 2}} variant="h5">Latest Reviews</Typography>
+      direction="column"
+      sx={{
+        mb: 5,
+        mt: 5,
+        p: 2,
+        backgroundColor: '#fff',
+        borderRadius: 2,
+        border: '1px solid #f4f6f8',
+      }}
+    >
+      <Typography sx={{ p: 2 }} variant="h5">
+        Latest Reviews
+      </Typography>
 
-    <Divider />
-      
+      <Divider />
+
       <ProductReviewList reviews={reviews} />
-      </Stack>
+    </Stack>
   );
 }

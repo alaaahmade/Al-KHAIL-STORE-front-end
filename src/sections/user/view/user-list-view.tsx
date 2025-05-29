@@ -35,7 +35,7 @@ const TABLE_HEAD = [
   { id: 'user', label: 'User' },
   { id: 'role', label: 'Role' },
   { id: 'status', label: 'Status' },
-  {id: 'Last Active', label: 'Last Active'},
+  { id: 'Last Active', label: 'Last Active' },
   { id: 'actions', label: 'Actions' },
 ];
 
@@ -52,10 +52,9 @@ export default function UserListView() {
   const [filterName, setFilterName] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   const [currentUser, setCurrentUser] = useState<IUserItem | null>(null);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [currentRole, setCurrentRole] = useState('all');
 
-  
   useEffect(() => {
     dispatch(fetchUsers());
     dispatch(fetchRoles());
@@ -64,14 +63,14 @@ export default function UserListView() {
   const handleDeleteUser = useCallback(
     async (userId: number) => {
       try {
-        setLoading(true)
+        setLoading(true);
         await dispatch(deleteUser(userId)).unwrap();
         enqueueSnackbar('User deleted successfully', { variant: 'success' });
-        setLoading(false)
+        setLoading(false);
       } catch (error) {
         console.error(error);
         enqueueSnackbar(error || 'Failed to delete user', { variant: 'error' });
-        setLoading(false)
+        setLoading(false);
       }
     },
     [dispatch, enqueueSnackbar]
@@ -114,42 +113,47 @@ export default function UserListView() {
         }))
         .filter(
           (user: IUserItem) =>
-            (`${user.firstName} ${user.lastName}`.toLowerCase().includes(filterName.toLowerCase()) ||
-            user.email.toLowerCase().includes(filterName.toLowerCase())) &&
+            (`${user.firstName} ${user.lastName}`
+              .toLowerCase()
+              .includes(filterName.toLowerCase()) ||
+              user.email.toLowerCase().includes(filterName.toLowerCase())) &&
             (currentRole === 'all' || user.roles.some((role: any) => role.name === currentRole))
         )
     : [];
 
-
   return (
-    <Container maxWidth={false} sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 2,
-    }}>
-    <Card>
-    <CustomBreadcrumbs
-        heading="Users Management"
-        links={[
-        ]}
-        sx={{ mb: { xs: 3, md: 5 } }}
-      />
+    <Container
+      maxWidth={false}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+      }}
+    >
+      <Card>
+        <CustomBreadcrumbs heading="Users Management" links={[]} sx={{ mb: { xs: 3, md: 5 } }} />
         <Grid container spacing={3}>
           {[0, 1, 2].map((_, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
               <BookingWidgetSummary
-                title={["Administrators", "Moderators", "Support Staff", "Replied"][index]}
+                title={['Administrators', 'Moderators', 'Support Staff', 'Replied'][index]}
                 total={[8, 12, 24][index]}
-                color={[
-                  'rgba(219, 234, 254, 1)',
-                  'rgba(209, 250, 229, 1)',
-                  'rgba(237, 233, 254, 1)',
-                ][index]}
+                color={
+                  ['rgba(219, 234, 254, 1)', 'rgba(209, 250, 229, 1)', 'rgba(237, 233, 254, 1)'][
+                    index
+                  ]
+                }
                 type={['info', 'info', 'info', 'info'][index]}
                 icon={
                   <Icon
-                    color={['#2563eb', '#059669', '#7c3aed', ][index]}
-                    icon={['material-symbols:person-shield', 'fluent:person-tag-20-filled', 'material-symbols:person'][index]}
+                    color={['#2563eb', '#059669', '#7c3aed'][index]}
+                    icon={
+                      [
+                        'material-symbols:person-shield',
+                        'fluent:person-tag-20-filled',
+                        'material-symbols:person',
+                      ][index]
+                    }
                     width="20"
                     height="20"
                   />
@@ -158,7 +162,7 @@ export default function UserListView() {
             </Grid>
           ))}
         </Grid>
-    </Card>
+      </Card>
       <Card>
         <UserTableToolbar
           numSelected={selected.length}

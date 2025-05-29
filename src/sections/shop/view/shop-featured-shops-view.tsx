@@ -52,9 +52,7 @@ export default function ShopFeaturedShopsView() {
     if (sort === 'rating') return b.rating - a.rating;
     if (sort === 'followers') {
       const parseFollowers = (val) =>
-        typeof val === 'string' && val.includes('k')
-          ? parseFloat(val) * 1000
-          : parseFloat(val);
+        typeof val === 'string' && val.includes('k') ? parseFloat(val) * 1000 : parseFloat(val);
       return parseFollowers(b.followers) - parseFollowers(a.followers);
     }
     return 0; // featured or default

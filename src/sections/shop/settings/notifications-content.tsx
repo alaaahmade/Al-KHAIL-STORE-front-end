@@ -1,7 +1,15 @@
-'use client'
+'use client';
 import { useAuthContext } from '@/auth/hooks';
 import axiosInstance from '@/utils/axios';
-import { Box, Card, FormControlLabel, ListItemText, Stack, Switch, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  FormControlLabel,
+  ListItemText,
+  Stack,
+  Switch,
+  Typography,
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 const NotificationsSettings = () => {
@@ -59,11 +67,25 @@ const NotificationsSettings = () => {
             }
             labelPlacement="start"
             label={
-              <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <ListItemText primary="Order Updates" secondary="Get notified about your order status" />
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <ListItemText
+                  primary="Order Updates"
+                  secondary="Get notified about your order status"
+                />
               </Box>
             }
-            sx={{ justifyContent: 'space-between', ml: 0, '& .MuiFormControlLabel-label': { width: '100%' } }}
+            sx={{
+              justifyContent: 'space-between',
+              ml: 0,
+              '& .MuiFormControlLabel-label': { width: '100%' },
+            }}
           />
 
           <FormControlLabel
@@ -76,11 +98,25 @@ const NotificationsSettings = () => {
             }
             labelPlacement="start"
             label={
-              <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <ListItemText primary="Promotions & Deals" secondary="Receive updates about sales and special offers" />
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <ListItemText
+                  primary="Promotions & Deals"
+                  secondary="Receive updates about sales and special offers"
+                />
               </Box>
             }
-            sx={{ justifyContent: 'space-between', ml: 0, '& .MuiFormControlLabel-label': { width: '100%' } }}
+            sx={{
+              justifyContent: 'space-between',
+              ml: 0,
+              '& .MuiFormControlLabel-label': { width: '100%' },
+            }}
           />
 
           <FormControlLabel
@@ -93,11 +129,25 @@ const NotificationsSettings = () => {
             }
             labelPlacement="start"
             label={
-              <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <ListItemText primary="New Product Arrivals" secondary="Be the first to know about new products" />
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <ListItemText
+                  primary="New Product Arrivals"
+                  secondary="Be the first to know about new products"
+                />
               </Box>
             }
-            sx={{ justifyContent: 'space-between', ml: 0, '& .MuiFormControlLabel-label': { width: '100%' } }}
+            sx={{
+              justifyContent: 'space-between',
+              ml: 0,
+              '& .MuiFormControlLabel-label': { width: '100%' },
+            }}
           />
         </Stack>
       </Card>
@@ -118,11 +168,25 @@ const NotificationsSettings = () => {
             }
             labelPlacement="start"
             label={
-              <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <ListItemText primary="Order Status Updates" secondary="Receive real-time updates about your orders" />
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <ListItemText
+                  primary="Order Status Updates"
+                  secondary="Receive real-time updates about your orders"
+                />
               </Box>
             }
-            sx={{ justifyContent: 'space-between', ml: 0, '& .MuiFormControlLabel-label': { width: '100%' } }}
+            sx={{
+              justifyContent: 'space-between',
+              ml: 0,
+              '& .MuiFormControlLabel-label': { width: '100%' },
+            }}
           />
 
           <FormControlLabel
@@ -135,11 +199,25 @@ const NotificationsSettings = () => {
             }
             labelPlacement="start"
             label={
-              <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <ListItemText primary="Chat Messages" secondary="Get notified about new messages from sellers" />
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <ListItemText
+                  primary="Chat Messages"
+                  secondary="Get notified about new messages from sellers"
+                />
               </Box>
             }
-            sx={{ justifyContent: 'space-between', ml: 0, '& .MuiFormControlLabel-label': { width: '100%' } }}
+            sx={{
+              justifyContent: 'space-between',
+              ml: 0,
+              '& .MuiFormControlLabel-label': { width: '100%' },
+            }}
           />
         </Stack>
       </Card>
@@ -160,11 +238,25 @@ const NotificationsSettings = () => {
             }
             labelPlacement="start"
             label={
-              <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <ListItemText primary="Weekly Newsletter" secondary="Receive weekly updates about trending products" />
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <ListItemText
+                  primary="Weekly Newsletter"
+                  secondary="Receive weekly updates about trending products"
+                />
               </Box>
             }
-            sx={{ justifyContent: 'space-between', ml: 0, '& .MuiFormControlLabel-label': { width: '100%' } }}
+            sx={{
+              justifyContent: 'space-between',
+              ml: 0,
+              '& .MuiFormControlLabel-label': { width: '100%' },
+            }}
           />
         </Stack>
       </Card>

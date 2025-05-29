@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'src/utils/axios';
-import { 
-  IProductCategory, 
-  CreateProductDto, 
+import {
+  IProductCategory,
+  CreateProductDto,
   UpdateProductDto,
   CreateCategoryDto,
   UpdateCategoryDto,
   CreateRatingDto,
-  ProductInterface
+  ProductInterface,
 } from 'src/types/product';
 
 interface ProductState {
@@ -56,7 +56,7 @@ export const fetchCategories = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get('/v1/categories');
-      
+
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch categories');
@@ -202,7 +202,9 @@ const productSlice = createSlice({
 
       // Delete Product
       .addCase(deleteProduct.fulfilled, (state, action) => {
-        state.products = state.products.filter((product) => String(product.id) !== String(action.payload));
+        state.products = state.products.filter(
+          (product) => String(product.id) !== String(action.payload)
+        );
         if (String(state.currentProduct?.id) === String(action.payload)) {
           state.currentProduct = null;
         }
@@ -224,8 +226,8 @@ const productSlice = createSlice({
       // Delete Category
       .addCase(deleteCategory.fulfilled, (state, action) => {
         state.categories = state.categories.filter((category) => category.id !== action.payload);
-      })
+      });
   },
 });
 
-export default productSlice.reducer; 
+export default productSlice.reducer;

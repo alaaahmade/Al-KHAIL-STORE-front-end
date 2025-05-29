@@ -3,12 +3,10 @@ import 'simplebar-react/dist/simplebar.min.css';
 
 // image
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import "react-datepicker/dist/react-datepicker.css";
+import 'react-datepicker/dist/react-datepicker.css';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-
 
 // ----------------------------------------------------------------------
 
@@ -67,9 +65,7 @@ import { CheckoutProvider } from '@/auth/context/checkout-context';
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
-      <head>
-
-      </head>
+      <head></head>
 
       <body>
         <ReduxProvider>
@@ -92,8 +88,8 @@ export default function RootLayout({ children }: Props) {
                         <MotionLazy>
                           <SettingsDrawer />
                           <ProgressBar />
-                              <AuthConsumer>{children}</AuthConsumer>
-                            {/* </Elements> */}
+                          <AuthConsumer>{children}</AuthConsumer>
+                          {/* </Elements> */}
                           <ToastContainer position="top-right" autoClose={3000} />
                         </MotionLazy>
                       </ThemeProvider>

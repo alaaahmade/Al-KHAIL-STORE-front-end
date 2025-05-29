@@ -33,30 +33,20 @@ type Props = {
   onDeleteRow: VoidFunction;
 };
 
-export default function ProductTableRow({
-  row,
-  selected,
-  onViewRow,
-}: Props) {
-  const {
-  productImage,
-  productName,
-  id,
-  category,
-  productQuantity,
-  } = row;
+export default function ProductTableRow({ row, selected, onViewRow }: Props) {
+  const { productImage, productName, id, category, productQuantity } = row;
 
-    const dispatch = useAppDispatch()
-  
-    const handleDelete = async() => {
-      try {
-        const response =  await axiosInstance.delete(`/v1/products/${id}`);
-        dispatch(fetchProducts())
-        enqueueSnackbar('Product deleted successfully', { variant: 'success' });
-      } catch (error: any) {
-        enqueueSnackbar('somthing went wrong', { variant: 'error' });
-      }
+  const dispatch = useAppDispatch();
+
+  const handleDelete = async () => {
+    try {
+      const response = await axiosInstance.delete(`/v1/products/${id}`);
+      dispatch(fetchProducts());
+      enqueueSnackbar('Product deleted successfully', { variant: 'success' });
+    } catch (error: any) {
+      enqueueSnackbar('somthing went wrong', { variant: 'error' });
     }
+  };
 
   const confirm = useBoolean();
 
@@ -66,12 +56,7 @@ export default function ProductTableRow({
     <>
       <TableRow hover selected={selected}>
         <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar
-            alt={productName}
-            src={productImage}
-            variant="rounded"
-            sx={{ mr: 2 }}
-          />
+          <Avatar alt={productName} src={productImage} variant="rounded" sx={{ mr: 2 }} />
 
           <ListItemText
             disableTypography
@@ -86,9 +71,7 @@ export default function ProductTableRow({
                 {productName}
               </Link>
             }
-            secondary={
-              <Typography>{'#PRD-'+ (+id * 100)}</Typography>
-            }
+            secondary={<Typography>{'#PRD-' + +id * 100}</Typography>}
             // secondary={
             //   <Box component="div" sx={{ typography: 'body2', color: 'text.disabled' }}>
             //     {category}
@@ -96,44 +79,46 @@ export default function ProductTableRow({
             // }
           />
         </TableCell>
-      <TableCell>{category[0].categoryName}</TableCell>
-      <TableCell>{fCurrency(row.standardPrice)}</TableCell>
-      <TableCell>{Math.floor(+productQuantity)}</TableCell>
-      <TableCell>
-      <Label
-          variant="soft"
-          color={
-            (+productQuantity <= 50  && 'warning')||
-            (String(row.productStatus)?.toLocaleLowerCase() === 'active' && 'success') ||
-            (String(row.productStatus)?.toLocaleLowerCase() === 'pending' && 'warning') ||
-            (String(row.productStatus)?.toLocaleLowerCase() === 'cancelled' && 'error') ||
-            'default'
-          }
-        >
-          {+productQuantity <= 50 ? 'Low Stock' :row.productStatus}
-        </Label>
-      </TableCell>
-      <TableCell sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        <TableCell>{category[0].categoryName}</TableCell>
+        <TableCell>{fCurrency(row.standardPrice)}</TableCell>
+        <TableCell>{Math.floor(+productQuantity)}</TableCell>
+        <TableCell>
+          <Label
+            variant="soft"
+            color={
+              (+productQuantity <= 50 && 'warning') ||
+              (String(row.productStatus)?.toLocaleLowerCase() === 'active' && 'success') ||
+              (String(row.productStatus)?.toLocaleLowerCase() === 'pending' && 'warning') ||
+              (String(row.productStatus)?.toLocaleLowerCase() === 'cancelled' && 'error') ||
+              'default'
+            }
+          >
+            {+productQuantity <= 50 ? 'Low Stock' : row.productStatus}
+          </Label>
+        </TableCell>
+        <TableCell sx={{ px: 1, whiteSpace: 'nowrap' }}>
+          <IconButton onClick={confirm.onTrue}>
+            <Iconify color={'#dc2626'} icon="fa-solid:trash" width={20} height={20} />
+          </IconButton>
 
-        <IconButton onClick={confirm.onTrue}>
-          <Iconify color={'#dc2626'} icon="fa-solid:trash" width={20} height={20} />
-        </IconButton>
-
-        <ConfirmDialog
-          open={confirm.value}
-          onClose={confirm.onFalse}
-          title="Delete Product"
-          content="Are you sure you want to delete this product?"
-          action={
-            <Button variant="contained" color="error" onClick={() => {
-              handleDelete();
-              confirm.onFalse();
-            }}>
-              Delete
-            </Button>
-          }
-        />
-
+          <ConfirmDialog
+            open={confirm.value}
+            onClose={confirm.onFalse}
+            title="Delete Product"
+            content="Are you sure you want to delete this product?"
+            action={
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  handleDelete();
+                  confirm.onFalse();
+                }}
+              >
+                Delete
+              </Button>
+            }
+          />
         </TableCell>
       </TableRow>
     </>

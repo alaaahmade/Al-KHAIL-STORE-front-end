@@ -16,11 +16,11 @@ interface SubscriptionsState {
 const initialState: SubscriptionsState = {
   viewRow: '',
   history: {},
-  openRef:false,
+  openRef: false,
   openSub: false,
   cancelSub: false,
-  subscriptions:[],
-  refund: {}
+  subscriptions: [],
+  refund: {},
 };
 
 export const fetchSubscriptions = createAsyncThunk(
@@ -29,7 +29,6 @@ export const fetchSubscriptions = createAsyncThunk(
     try {
       const response = await axios.get('/subscriptions');
       return response.data;
-      
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch subscriptions  ');
     }
@@ -76,8 +75,7 @@ const SubscriptionsSlice = createSlice({
   name: 'Subscriptions',
   initialState,
   reducers: {
-
-    setSubscriptions : (state, action) => {
+    setSubscriptions: (state, action) => {
       state.subscriptions = action.payload.subscriptions;
     },
     onViewRow: (state, action) => {
@@ -87,57 +85,55 @@ const SubscriptionsSlice = createSlice({
       state.viewRow = '';
     },
     openSubF: (state) => {
-      state.openSub = true
+      state.openSub = true;
     },
     closeSubF: (state) => {
-      state.openSub = false
+      state.openSub = false;
     },
     openRefF: (state) => {
-      state.openRef = true
+      state.openRef = true;
     },
     closeRefF: (state) => {
-      state.openRef = false
+      state.openRef = false;
     },
     setHistory: (state, action) => {
       state.history = action.payload.history;
     },
 
     openCancelSub: (state) => {
-      state.cancelSub = true
+      state.cancelSub = true;
     },
     CloseCancelSub: (state) => {
-      state.cancelSub = false
+      state.cancelSub = false;
     },
     setRefund: (state, action) => {
-      state.refund = action.payload
-    }
+      state.refund = action.payload;
+    },
   },
-
 
   extraReducers: (builder) => {
-    builder.addCase(fetchSubscriptions.fulfilled, (state, action) => {      
-      state.subscriptions = action.payload;
-    })
-    .addCase(fetchSubscriptions.rejected, (state, action) => {
-      state.subscriptions = [];
-    })
-    .addCase(deleteSubscriptions.fulfilled, (state, action) => {
-      state.subscriptions = state.subscriptions.filter((subscription) => subscription.id !== action.payload.id);
-    }
-    )
-    .addCase(fetchHistory.fulfilled, (state, action) => {
-      state.history = action.payload;
-    })
-    .addCase(fetchHistory.rejected, (state, action) => {
-      state.history = {};
-    }
-    )
-    .addCase(fetchSubscriptions.pending, (state) => {
-      state.subscriptions = [];
-    }
-    )
+    builder
+      .addCase(fetchSubscriptions.fulfilled, (state, action) => {
+        state.subscriptions = action.payload;
+      })
+      .addCase(fetchSubscriptions.rejected, (state, action) => {
+        state.subscriptions = [];
+      })
+      .addCase(deleteSubscriptions.fulfilled, (state, action) => {
+        state.subscriptions = state.subscriptions.filter(
+          (subscription) => subscription.id !== action.payload.id
+        );
+      })
+      .addCase(fetchHistory.fulfilled, (state, action) => {
+        state.history = action.payload;
+      })
+      .addCase(fetchHistory.rejected, (state, action) => {
+        state.history = {};
+      })
+      .addCase(fetchSubscriptions.pending, (state) => {
+        state.subscriptions = [];
+      });
   },
-  
 });
 
 export const {

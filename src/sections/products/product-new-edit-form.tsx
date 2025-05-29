@@ -28,7 +28,7 @@ import {
   OutlinedInput,
   Box,
   FormControlLabel,
-  FormHelperText
+  FormHelperText,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import FormProvider, { RHFTextField, RHFUpload } from 'src/components/hook-form';
@@ -38,7 +38,6 @@ import { fetchCategories } from '@/redux/slices/serviceSlice';
 import { useAuthContext } from '@/auth/hooks';
 import axiosInstance from '@/utils/axios';
 import { getFileNameFromUrl } from '@/utils/file';
-
 
 const ProductSchema: Yup.ObjectSchema<ProductFormValues> = Yup.object().shape({
   productName: Yup.string().required('Product name is required'),
@@ -90,15 +89,13 @@ const PRODUCT_STATUS_OPTIONS = ['active', 'inactive', 'draft'];
 
 export default function ProductNewEditForm({ currentProduct }: Props) {
   const router = useRouter();
-  const {categories} = useAppSelector(state => state.serviceSlice);
+  const { categories } = useAppSelector((state) => state.serviceSlice);
   const [mainImage, setMainImage] = useState<any>(null);
   type GalleryImage = { file: File; preview: string };
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useAppDispatch();
-  const {user} = useAuthContext()
-  
-  
+  const { user } = useAuthContext();
 
   const defaultValues: ProductFormValues = {
     productName: currentProduct?.productName || '',
@@ -106,18 +103,24 @@ export default function ProductNewEditForm({ currentProduct }: Props) {
     productStatus: currentProduct?.productStatus || 'active',
     standardPrice: currentProduct?.standardPrice ?? undefined,
     offerPrice:
-    typeof currentProduct?.offerPrice === 'number'
-      ? currentProduct.offerPrice
-      : typeof currentProduct?.offerPrice === 'string'
-        ? Number(currentProduct.offerPrice)
-        : null,    productDescription: currentProduct?.productDescription || '',
-    productDate: currentProduct?.productDate ? dayjs(currentProduct.productDate).toDate() : new Date(),
+      typeof currentProduct?.offerPrice === 'number'
+        ? currentProduct.offerPrice
+        : typeof currentProduct?.offerPrice === 'string'
+          ? Number(currentProduct.offerPrice)
+          : null,
+    productDescription: currentProduct?.productDescription || '',
+    productDate: currentProduct?.productDate
+      ? dayjs(currentProduct.productDate).toDate()
+      : new Date(),
     productQuantity: currentProduct?.productQuantity ?? undefined,
     isFeatured: currentProduct?.isFeatured ?? true,
-    productGallery: Array.isArray(currentProduct?.productGallery) ? currentProduct.productGallery.filter((v: any): v is string => typeof v === 'string') : [],
+    productGallery: Array.isArray(currentProduct?.productGallery)
+      ? currentProduct.productGallery.filter((v: any): v is string => typeof v === 'string')
+      : [],
     category: Array.isArray(currentProduct?.category)
-    ? currentProduct.category.map((cat: any) => cat.id)
-    : [],  };
+      ? currentProduct.category.map((cat: any) => cat.id)
+      : [],
+  };
 
   const memoizedDefaults = useMemo(() => defaultValues, [currentProduct]);
 
@@ -132,178 +135,191 @@ export default function ProductNewEditForm({ currentProduct }: Props) {
     formState: { errors },
   } = methods;
 
-  
-
   const onSubmit = async (data: ProductFormValues) => {
-   if(!currentProduct){
-    try {
-      let imageUrl = '';
-      if (mainImage) {
-        const formData = new FormData();
-        formData.append('file', mainImage);
-        const data = await axiosInstance.post('/v1/files/upload', formData);
-        imageUrl = data.data.url;
-      }
-      const galleryUrls: string[] = [];
-      if (galleryImages.length > 0) {
-        
-        for (let i = 0; i < galleryImages.length; i++) {
+    if (!currentProduct) {
+      try {
+        let imageUrl = '';
+        if (mainImage) {
           const formData = new FormData();
-          formData.append('file', galleryImages[i].file);
+          formData.append('file', mainImage);
           const data = await axiosInstance.post('/v1/files/upload', formData);
-          galleryUrls.push(data.data.url);
+          imageUrl = data.data.url;
         }
-      }
-      
-      data.productGallery = galleryUrls
-
-      
-      await axiosInstance.post('/v1/products', {...data, productImage: imageUrl, productGallery: galleryUrls, storeId: user?.seller?.store?.id});
-      enqueueSnackbar('Product created successfully!', { variant: 'success' });
-      router.push('/dashboard/products');      
-
-    } catch (error) {
-      enqueueSnackbar('Something went wrong!', { variant: 'error' });
-    }
-   } else {
-    try {
-    let imageUrl = '';
-    if (mainImage) {
-      const formData = new FormData();
-      formData.append('file', mainImage);
-      const data = await axiosInstance.post('/v1/files/upload', formData);
-      imageUrl = data.data.url;
-    } else {
-      imageUrl = currentProduct?.productImage || '';
-    }
-
-    const currentGallery: string[] = Array.isArray(data.productGallery) ? data.productGallery.filter((v): v is string => typeof v === 'string') : [];
-    const newGalleryUrls: string[] = [];
-
-    if (galleryImages.length > 0) {
-      for (let i = 0; i < galleryImages.length; i++) {
-        if (currentGallery.includes(galleryImages[i].preview)) {
-          const formData = new FormData();
-          formData.append('file', galleryImages[i].file);
-          const uploadRes = await axiosInstance.post('/v1/files/upload', formData);
-          newGalleryUrls.push(uploadRes.data.url);
-        }
-      }
-    }
-
-    let updatedGallery = [...currentGallery];
-    if (newGalleryUrls.length > 0 && galleryImages.length > 0) {
-      let urlIdx = 0;
-
-      updatedGallery = currentGallery.map(entry => {
-        const isBase64 = typeof entry === 'string' && entry.startsWith('data:image');
-        if (isBase64 && urlIdx < newGalleryUrls.length) {
-          const url = newGalleryUrls[urlIdx];
-          urlIdx++;
-          return url;
-        }
-        return entry;
-      });
-    }
-    data.productGallery = updatedGallery;
-
-    
-      const originalMainImage = currentProduct?.productImage;
-      const originalGallery = Array.isArray(currentProduct?.productGallery)
-        ? currentProduct.productGallery
-        : [];
-      const newMainImage = imageUrl;
-      const newGallery = updatedGallery;
-      const removedImages: string[] = [];
-
-      if (originalMainImage && originalMainImage !== newMainImage && originalMainImage.startsWith('http')) {
-        removedImages.push(originalMainImage);
-      }
-
-      originalGallery.forEach((img: any) => {
-        if (!newGallery.includes(img) && img.startsWith('http')) {
-          removedImages.push(img);
-        }
-      });
-      for (const url of removedImages) {
-        const fileName = getFileNameFromUrl(url);
-        if (fileName) {
-          try {
-            await axiosInstance.delete(`/v1/files/${fileName}`);
-          } catch (err) {
-            console.error(`Failed to delete file ${fileName}:`, err);
+        const galleryUrls: string[] = [];
+        if (galleryImages.length > 0) {
+          for (let i = 0; i < galleryImages.length; i++) {
+            const formData = new FormData();
+            formData.append('file', galleryImages[i].file);
+            const data = await axiosInstance.post('/v1/files/upload', formData);
+            galleryUrls.push(data.data.url);
           }
         }
-      }
 
-      
-      const response = await axiosInstance.patch(`/v1/products/${currentProduct?.id}`, { ...data, productImage: imageUrl, productGallery: updatedGallery, storeId: user?.seller?.store?.id });
-      enqueueSnackbar('Product updated successfully!', { variant: 'success' });
-      router.push('/dashboard/products');
-    } catch (error: any) {
-      console.error('Product update error:', error);
-      enqueueSnackbar(`Something went wrong: ${error?.message || error}`, { variant: 'error' });
-    } 
-   }
+        data.productGallery = galleryUrls;
+
+        await axiosInstance.post('/v1/products', {
+          ...data,
+          productImage: imageUrl,
+          productGallery: galleryUrls,
+          storeId: user?.seller?.store?.id,
+        });
+        enqueueSnackbar('Product created successfully!', { variant: 'success' });
+        router.push('/dashboard/products');
+      } catch (error) {
+        enqueueSnackbar('Something went wrong!', { variant: 'error' });
+      }
+    } else {
+      try {
+        let imageUrl = '';
+        if (mainImage) {
+          const formData = new FormData();
+          formData.append('file', mainImage);
+          const data = await axiosInstance.post('/v1/files/upload', formData);
+          imageUrl = data.data.url;
+        } else {
+          imageUrl = currentProduct?.productImage || '';
+        }
+
+        const currentGallery: string[] = Array.isArray(data.productGallery)
+          ? data.productGallery.filter((v): v is string => typeof v === 'string')
+          : [];
+        const newGalleryUrls: string[] = [];
+
+        if (galleryImages.length > 0) {
+          for (let i = 0; i < galleryImages.length; i++) {
+            if (currentGallery.includes(galleryImages[i].preview)) {
+              const formData = new FormData();
+              formData.append('file', galleryImages[i].file);
+              const uploadRes = await axiosInstance.post('/v1/files/upload', formData);
+              newGalleryUrls.push(uploadRes.data.url);
+            }
+          }
+        }
+
+        let updatedGallery = [...currentGallery];
+        if (newGalleryUrls.length > 0 && galleryImages.length > 0) {
+          let urlIdx = 0;
+
+          updatedGallery = currentGallery.map((entry) => {
+            const isBase64 = typeof entry === 'string' && entry.startsWith('data:image');
+            if (isBase64 && urlIdx < newGalleryUrls.length) {
+              const url = newGalleryUrls[urlIdx];
+              urlIdx++;
+              return url;
+            }
+            return entry;
+          });
+        }
+        data.productGallery = updatedGallery;
+
+        const originalMainImage = currentProduct?.productImage;
+        const originalGallery = Array.isArray(currentProduct?.productGallery)
+          ? currentProduct.productGallery
+          : [];
+        const newMainImage = imageUrl;
+        const newGallery = updatedGallery;
+        const removedImages: string[] = [];
+
+        if (
+          originalMainImage &&
+          originalMainImage !== newMainImage &&
+          originalMainImage.startsWith('http')
+        ) {
+          removedImages.push(originalMainImage);
+        }
+
+        originalGallery.forEach((img: any) => {
+          if (!newGallery.includes(img) && img.startsWith('http')) {
+            removedImages.push(img);
+          }
+        });
+        for (const url of removedImages) {
+          const fileName = getFileNameFromUrl(url);
+          if (fileName) {
+            try {
+              await axiosInstance.delete(`/v1/files/${fileName}`);
+            } catch (err) {
+              console.error(`Failed to delete file ${fileName}:`, err);
+            }
+          }
+        }
+
+        const response = await axiosInstance.patch(`/v1/products/${currentProduct?.id}`, {
+          ...data,
+          productImage: imageUrl,
+          productGallery: updatedGallery,
+          storeId: user?.seller?.store?.id,
+        });
+        enqueueSnackbar('Product updated successfully!', { variant: 'success' });
+        router.push('/dashboard/products');
+      } catch (error: any) {
+        console.error('Product update error:', error);
+        enqueueSnackbar(`Something went wrong: ${error?.message || error}`, { variant: 'error' });
+      }
+    }
   };
 
-  const handleDropMainImage = useCallback((acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      setMainImage(file);
-      reader.onloadend = () => {
-        const base64Image = reader.result as string;
-        setValue('productImage', base64Image);
-      };
-    }
-  }, [setValue]);
-
-  useEffect(() => {
-    dispatch(fetchCategories())
-  }, [dispatch])
-
-
-  const handleDropGalleryImages = useCallback((acceptedFiles: File[]) => {
-  Promise.all(
-    acceptedFiles.map(file => {
-      return new Promise<{ file: File; preview: string }>((resolve, reject) => {
+  const handleDropMainImage = useCallback(
+    (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      if (file) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onloadend = () => resolve({ file, preview: reader.result as string });
-        reader.onerror = reject;
-      });
-    })
-  ).then((galleryObjs) => {
-    setGalleryImages((prev) => {
-
-      const previews = new Set(prev.map(img => img.preview));
-      const newImgs = galleryObjs.filter(img => !previews.has(img.preview));
-      return [...prev, ...newImgs];
-    });
-
-    const current = methods.getValues('productGallery') || [];
-    const allPreviews = [...current];
-    galleryObjs.forEach(img => {
-      if (!allPreviews.includes(img.preview)) {
-        allPreviews.push(img.preview);
+        setMainImage(file);
+        reader.onloadend = () => {
+          const base64Image = reader.result as string;
+          setValue('productImage', base64Image);
+        };
       }
-    });
-    setValue('productGallery', allPreviews);
+    },
+    [setValue]
+  );
 
-  });
-}, [setValue]);
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
+  const handleDropGalleryImages = useCallback(
+    (acceptedFiles: File[]) => {
+      Promise.all(
+        acceptedFiles.map((file) => {
+          return new Promise<{ file: File; preview: string }>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = () => resolve({ file, preview: reader.result as string });
+            reader.onerror = reject;
+          });
+        })
+      ).then((galleryObjs) => {
+        setGalleryImages((prev) => {
+          const previews = new Set(prev.map((img) => img.preview));
+          const newImgs = galleryObjs.filter((img) => !previews.has(img.preview));
+          return [...prev, ...newImgs];
+        });
 
-const onRemoveImage = useCallback((fileOrPreview: string | CustomFile) => {
-  const currentGallery = methods.getValues('productGallery') || [];
-  const updatedGallery = currentGallery.filter((image) => image !== fileOrPreview);
-  setValue('productGallery', updatedGallery);
+        const current = methods.getValues('productGallery') || [];
+        const allPreviews = [...current];
+        galleryObjs.forEach((img) => {
+          if (!allPreviews.includes(img.preview)) {
+            allPreviews.push(img.preview);
+          }
+        });
+        setValue('productGallery', allPreviews);
+      });
+    },
+    [setValue]
+  );
 
-  setGalleryImages((prev) => prev.filter(img => img.preview !== fileOrPreview));
-}, [setValue, methods]);
+  const onRemoveImage = useCallback(
+    (fileOrPreview: string | CustomFile) => {
+      const currentGallery = methods.getValues('productGallery') || [];
+      const updatedGallery = currentGallery.filter((image) => image !== fileOrPreview);
+      setValue('productGallery', updatedGallery);
 
+      setGalleryImages((prev) => prev.filter((img) => img.preview !== fileOrPreview));
+    },
+    [setValue, methods]
+  );
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -322,17 +338,29 @@ const onRemoveImage = useCallback((fileOrPreview: string | CustomFile) => {
               <RHFTextField name="productName" label="Name" />
               <RHFTextField name="productDescription" label="Description" multiline rows={4} />
               {/* Main Image Upload */}
-              <RHFUpload onDrop={handleDropMainImage} name="productImage" helperText="Upload main image" />
+              <RHFUpload
+                onDrop={handleDropMainImage}
+                name="productImage"
+                helperText="Upload main image"
+              />
               {/* Gallery Image Upload */}
-              <RHFUpload onRemove={onRemoveImage} onDrop={handleDropGalleryImages} name="productGallery" multiple helperText="Upload gallery images" />
+              <RHFUpload
+                onRemove={onRemoveImage}
+                onDrop={handleDropGalleryImages}
+                name="productGallery"
+                multiple
+                helperText="Upload gallery images"
+              />
             </Stack>
           </Card>
           {/* Type Section */}
           <Card sx={{ p: 3, mb: 3 }}>
             <Stack spacing={3}>
               <RHFTextField name="productStatus" label="Status" select>
-                {PRODUCT_STATUS_OPTIONS.map(option => (
-                  <MenuItem key={option} value={option}>{option}</MenuItem>
+                {PRODUCT_STATUS_OPTIONS.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
                 ))}
               </RHFTextField>
               {/* Add more type fields here if needed */}
@@ -351,7 +379,7 @@ const onRemoveImage = useCallback((fileOrPreview: string | CustomFile) => {
                     type="date"
                     InputLabelProps={{ shrink: true }}
                     value={dayjs(field.value).format('YYYY-MM-DD')}
-                    onChange={e => field.onChange(dayjs(e.target.value).toDate())}
+                    onChange={(e) => field.onChange(dayjs(e.target.value).toDate())}
                   />
                 )}
               />
@@ -368,9 +396,12 @@ const onRemoveImage = useCallback((fileOrPreview: string | CustomFile) => {
                           {...field}
                           input={<OutlinedInput label="Categories" />}
                           renderValue={(selected: string[]) =>
-                            categories.filter((cat: any) => selected.includes(cat.id)).map((cat: any) => cat.categoryName).join(', ')
+                            categories
+                              .filter((cat: any) => selected.includes(cat.id))
+                              .map((cat: any) => cat.categoryName)
+                              .join(', ')
                           }
-                          onChange={event => {
+                          onChange={(event) => {
                             const value = event.target.value;
                             field.onChange(typeof value === 'string' ? value.split(',') : value);
                           }}
@@ -397,7 +428,7 @@ const onRemoveImage = useCallback((fileOrPreview: string | CustomFile) => {
                     control={
                       <Checkbox
                         checked={!!field.value}
-                        onChange={e => field.onChange(e.target.checked)}
+                        onChange={(e) => field.onChange(e.target.checked)}
                       />
                     }
                     label="Featured"
@@ -408,11 +439,28 @@ const onRemoveImage = useCallback((fileOrPreview: string | CustomFile) => {
           </Card>
           {/* Price Section */}
           <Card sx={{ p: 3 }}>
-          
             <Stack spacing={3}>
-              <RHFTextField error={!!errors.standardPrice} helperText={errors.standardPrice?.message} name="standardPrice" label="Standard Price" type="number" />
-              <RHFTextField error={!!errors.offerPrice} helperText={errors.offerPrice?.message} name="offerPrice" label="Offer Price" type="number" />
-              <RHFTextField error={!!errors.productQuantity} helperText={errors.productQuantity?.message} name="productQuantity" label="Quantity" type="number" />
+              <RHFTextField
+                error={!!errors.standardPrice}
+                helperText={errors.standardPrice?.message}
+                name="standardPrice"
+                label="Standard Price"
+                type="number"
+              />
+              <RHFTextField
+                error={!!errors.offerPrice}
+                helperText={errors.offerPrice?.message}
+                name="offerPrice"
+                label="Offer Price"
+                type="number"
+              />
+              <RHFTextField
+                error={!!errors.productQuantity}
+                helperText={errors.productQuantity?.message}
+                name="productQuantity"
+                label="Quantity"
+                type="number"
+              />
             </Stack>
           </Card>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>

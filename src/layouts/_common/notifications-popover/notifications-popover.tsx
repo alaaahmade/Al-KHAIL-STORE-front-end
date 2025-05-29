@@ -148,7 +148,6 @@ export default function NotificationsPopover() {
       >
         <Badge badgeContent={totalUnRead} color="warning">
           <Iconify icon="mi:notification" width={24} />
-          
         </Badge>
       </IconButton>
 

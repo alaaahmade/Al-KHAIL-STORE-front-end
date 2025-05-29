@@ -17,7 +17,6 @@ const initialState: OrdersState = {
   error: null,
 };
 
-
 // Orders Actions
 export const fetchLatestOrders = createAsyncThunk(
   'orders/fetchLatestOrders',

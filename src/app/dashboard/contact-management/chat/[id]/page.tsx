@@ -1,19 +1,18 @@
-'use client'
-import {useParams, useRouter} from 'next/navigation';
+'use client';
+import { useParams, useRouter } from 'next/navigation';
 // import {useParams} from 'react-router-dom';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { ChatView } from '@/sections/contact-management/chat/view';
 import { SplashScreen } from 'src/components/loading-screen';
 import axiosInstance from '@/utils/axios';
 import NotFoundPage from '@/app/not-found';
 
 export default function ChatPage() {
-  const {id} = useParams();
+  const { id } = useParams();
   const router = useRouter();
   const [currentChat, setCurrentChat] = useState<any>(null);
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  
 
   useEffect(() => {
     if (!id) {
@@ -32,12 +31,12 @@ export default function ChatPage() {
         setLoading(false);
       }
     };
-  
+
     getChatDetails();
   }, [id]);
-  
-  if (error) return <NotFoundPage/>
+
+  if (error) return <NotFoundPage />;
 
   // return <SplashScreen/>
-  return loading ? <SplashScreen/> :currentChat && <ChatView chatId={id} chat={currentChat} />;
+  return loading ? <SplashScreen /> : currentChat && <ChatView chatId={id} chat={currentChat} />;
 }

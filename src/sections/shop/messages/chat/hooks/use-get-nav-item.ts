@@ -9,7 +9,7 @@ type Props = {
 
 export default function useGetNavItem({ currentUserId, conversation }: Props) {
   const { messages, participants } = conversation;
-  
+
   const participantsInConversation = participants?.filter(
     (participant: any) => participant.id !== currentUserId
   );
@@ -18,25 +18,27 @@ export default function useGetNavItem({ currentUserId, conversation }: Props) {
 
   const group = participantsInConversation.length > 1;
 
-  const displayName = participantsInConversation.map((participant: any) => participant.firstName + ' ' + participant.lastName).join(', ');
+  const displayName = participantsInConversation
+    .map((participant: any) => participant.firstName + ' ' + participant.lastName)
+    .join(', ');
 
   const hasOnlineInGroup = group
     ? participantsInConversation.map((item: any) => item.isActive)
     : false;
 
   let displayText = '';
-  
+
   if (lastMessage) {
     const sender = String(lastMessage?.sender?.id) === String(currentUserId) ? 'You: ' : '';
 
     const message = lastMessage?.contentType === 'image' ? 'Sent a photo' : lastMessage?.content;
 
     displayText = `${sender}${message}`;
-  }  
+  }
 
   return {
     group,
-    displayName,  
+    displayName,
     displayText,
     participants: participantsInConversation,
     lastActivity: lastMessage?.createdAt,

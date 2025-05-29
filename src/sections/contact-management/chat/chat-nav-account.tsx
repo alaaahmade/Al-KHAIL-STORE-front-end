@@ -112,6 +112,6 @@ export default function ChatNavAccount() {
           </MenuItem>
         </Stack>
       </CustomPopover>
-      </Stack>
+    </Stack>
   );
 }

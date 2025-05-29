@@ -25,16 +25,16 @@ export default function ProductEditView() {
   const dispatch = useAppDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const ProductsState = useAppSelector((state) => state.products);
-  const currentProduct = ProductsState?.currentProduct ;
-  const loading = ProductsState?.loading || false;  
-  
+  const currentProduct = ProductsState?.currentProduct;
+  const loading = ProductsState?.loading || false;
+
   useEffect(() => {
     if (productId) {
-      dispatch(fetchProductById(Number(productId)))
+      dispatch(fetchProductById(Number(productId)));
     }
   }, [dispatch, productId, enqueueSnackbar]);
 
-  if (loading) return <LoadingScreen/>
+  if (loading) return <LoadingScreen />;
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs

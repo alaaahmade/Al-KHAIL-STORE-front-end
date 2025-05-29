@@ -2,7 +2,17 @@ import { useAuthContext } from '@/auth/hooks';
 import { useAppDispatch } from '@/redux/hooks';
 import { createReviews } from '@/redux/slices/reviewsSlice';
 import { fetchServiceById } from '@/redux/slices/serviceSlice';
-import { Box, Button, Rating, Stack, TextField, Typography, IconButton, CircularProgress, InputAdornment } from '@mui/material';
+import {
+  Box,
+  Button,
+  Rating,
+  Stack,
+  TextField,
+  Typography,
+  IconButton,
+  CircularProgress,
+  InputAdornment,
+} from '@mui/material';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -15,7 +25,9 @@ export function ReviewForm() {
   const [review, setReview] = useState('');
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<{ url: string; type: string; text?: string }[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<
+    { url: string; type: string; text?: string }[]
+  >([]);
   const [fileCaptions, setFileCaptions] = useState<string[]>([]);
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
@@ -36,15 +48,19 @@ export function ReviewForm() {
       try {
         const data = await axiosInstance.post('/v1/files/upload', formData);
         const url = data.data.url;
-        let type = file.type.startsWith('image') ? 'image' : file.type.startsWith('video') ? 'video' : 'file';
+        const type = file.type.startsWith('image')
+          ? 'image'
+          : file.type.startsWith('video')
+            ? 'video'
+            : 'file';
         uploaded.push({ url, type });
         captions.push('');
       } catch (err) {
         toast.error(`Failed to upload file: ${file.name}`);
       }
     }
-    setUploadedFiles(prev => [...prev, ...uploaded]);
-    setFileCaptions(prev => [...prev, ...captions]);
+    setUploadedFiles((prev) => [...prev, ...uploaded]);
+    setFileCaptions((prev) => [...prev, ...captions]);
     setUploading(false);
     // Reset file input value
     e.target.value = '';
@@ -129,11 +145,19 @@ export function ReviewForm() {
           {uploadedFiles.map((file, idx) => (
             <Box key={file.url} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               {file.type === 'image' ? (
-                <img src={file.url} alt="uploaded" width={56} height={56} style={{ objectFit: 'cover', borderRadius: 4 }} />
+                <img
+                  src={file.url}
+                  alt="uploaded"
+                  width={56}
+                  height={56}
+                  style={{ objectFit: 'cover', borderRadius: 4 }}
+                />
               ) : file.type === 'video' ? (
                 <video src={file.url} width={56} height={56} style={{ borderRadius: 4 }} controls />
               ) : (
-                <a href={file.url} target="_blank" rel="noopener noreferrer">File</a>
+                <a href={file.url} target="_blank" rel="noopener noreferrer">
+                  File
+                </a>
               )}
               <TextField
                 size="small"
@@ -188,11 +212,8 @@ export function ReviewForm() {
             {loading ? 'Submitting...' : 'Submit Review'}
           </Button>
         </Stack>
-        {uploading && (
-          <CircularProgress size={20} sx={{ ml: 2, mt: 2 }} />
-        )}
+        {uploading && <CircularProgress size={20} sx={{ ml: 2, mt: 2 }} />}
       </Box>
     </Box>
   );
 }
-

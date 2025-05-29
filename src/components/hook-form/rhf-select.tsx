@@ -96,7 +96,7 @@ export function RHFMultiSelect({
   const { control } = useFormContext();
 
   const renderValues = (selected: unknown) => {
-    const selectedIds = Array.isArray(selected) ? selected as string[] : [];
+    const selectedIds = Array.isArray(selected) ? (selected as string[]) : [];
     const selectedItems = options.filter((item) => selectedIds.includes(item.value));
 
     if (!selectedItems.length && placeholder) {
@@ -164,6 +164,5 @@ export function RHFMultiSelect({
     />
   );
 }
-
 
 export default RHFSelect;

@@ -55,7 +55,6 @@ export type IOrderProductItem = {
   quantity: number;
 };
 
-
 export interface IOrder {
   id: number;
   orderNumber: string;
@@ -84,7 +83,7 @@ export interface IOrder {
   };
 
   cart: {
-    total(total: any): import("react").ReactNode;
+    total(total: any): import('react').ReactNode;
     id: number;
     // extend as needed
     totalAmount?: number;

@@ -8,27 +8,27 @@ import Iconify from '@/components/iconify';
 interface ProductCardProps {
   productName: string;
   productImage: string[];
-  hours?: number;  // Optional, in case `hours` is not always available
+  hours?: number; // Optional, in case `hours` is not always available
   store?: {
-    id: string
-    name: string
-    logo: string
-  },
-  offerPrice: number
-  standardPrice: number
-  id: string
-  productQuantity: string
-  category: any[]
-  comments: any[]
+    id: string;
+    name: string;
+    logo: string;
+  };
+  offerPrice: number;
+  standardPrice: number;
+  id: string;
+  productQuantity: string;
+  category: any[];
+  comments: any[];
 }
 
-export function ProductCard({product}: {product: ProductCardProps}) {
+export function ProductCard({ product }: { product: ProductCardProps }) {
   const router = useRouter();
-  const { id, productName, productImage, standardPrice, category, comments, productQuantity } = product
+  const { id, productName, productImage, standardPrice, category, comments, productQuantity } =
+    product;
   const totalRating = comments.reduce((sum, review) => sum + review.rating, 0);
   const numberOfReviews = comments.length;
-  const averageRating = totalRating > 0 ?  (totalRating / numberOfReviews).toFixed(1) : 0;  
-
+  const averageRating = totalRating > 0 ? (totalRating / numberOfReviews).toFixed(1) : 0;
 
   return (
     <Box
@@ -36,28 +36,32 @@ export function ProductCard({product}: {product: ProductCardProps}) {
         height: '20em',
         flexWrap: 'wrap',
         pb: '1em',
-        
+
         m: 0,
         mb: 0.5,
         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
         borderRadius: 2,
         cursor: 'pointer',
-        position: 'relative'
+        position: 'relative',
       }}
     >
       <Label
         variant="filled"
-        color={
-          '#fff'
-        }
-        sx={{p: '0 1em', borderRadius: 50, right: 15, top: 15, position: 'absolute', zIndex: 2, 
+        color={'#fff'}
+        sx={{
+          p: '0 1em',
+          borderRadius: 50,
+          right: 15,
+          top: 15,
+          position: 'absolute',
+          zIndex: 2,
           width: 40,
           height: 40,
         }}
       >
         <Iconify icon="flowbite:heart-outline" width={40} height={40} />
       </Label>
-      <Box 
+      <Box
         sx={{
           width: '100%',
           minHeight: '55%',
@@ -68,50 +72,44 @@ export function ProductCard({product}: {product: ProductCardProps}) {
           borderBottomRightRadius: 0,
           backgroundSize: 'cover',
           backgroundImage: `url(${productImage})`,
-        }} 
+        }}
       />
-      <Box
-      sx={{p:'0 1em'}}
-      >
-      <Typography variant='body2' sx={{color: 'primary.main', mt: '1em'}}> {category[0]?.categoryName}</Typography>
-      <Typography >{productName}</Typography>
-        <Box
-        sx={{
-          mt: '0.5em',
-          mb: '0.5em'
-        }}>
-
-        <Typography color={'#000'}  fontSize={12}>
-        {`⭐ ${averageRating} (${numberOfReviews} reviews)`}
+      <Box sx={{ p: '0 1em' }}>
+        <Typography variant="body2" sx={{ color: 'primary.main', mt: '1em' }}>
+          {' '}
+          {category[0]?.categoryName}
         </Typography>
-
+        <Typography>{productName}</Typography>
+        <Box
+          sx={{
+            mt: '0.5em',
+            mb: '0.5em',
+          }}
+        >
+          <Typography color={'#000'} fontSize={12}>
+            {`⭐ ${averageRating} (${numberOfReviews} reviews)`}
+          </Typography>
         </Box>
         <Box
-        sx={{ display: 'flex', alignItems: 'center' ,
-          justifyContent: 'space-between',
-          p: '0 1em',
-        }}>
-        <Typography sx={{fontWeight: 'bold', color: '#000'}}
-              variant='body2'>
-              {fCurrency(standardPrice)}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            p: '0 1em',
+          }}
+        >
+          <Typography sx={{ fontWeight: 'bold', color: '#000' }} variant="body2">
+            {fCurrency(standardPrice)}
           </Typography>
-            <Label
-              variant="filled"
-              color={
-                '#fff'
-              }
-              sx={{p: '0 1em', borderRadius: 50, 
-                width: 40,
-                height: 40,
-              }}
-            >
-          {+productQuantity > 20 ? "In Stock" : "Low Stock"}
-
+          <Label
+            variant="filled"
+            color={'#fff'}
+            sx={{ p: '0 1em', borderRadius: 50, width: 40, height: 40 }}
+          >
+            {+productQuantity > 20 ? 'In Stock' : 'Low Stock'}
           </Label>
         </Box>
-        </Box>
+      </Box>
     </Box>
   );
 }
-
-

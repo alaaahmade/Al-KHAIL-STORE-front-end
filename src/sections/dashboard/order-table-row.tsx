@@ -31,22 +31,15 @@ type Props = {
   selected: boolean;
 };
 
-export default function OrderTableRow({
-  row,
-  selected,
-}: Props) {
+export default function OrderTableRow({ row, selected }: Props) {
   const { orderNumber, user, cart, orderStatus } = row;
 
-  
-
   const confirm = useBoolean();
-
 
   const popover = usePopover();
 
   const renderPrimary = (
     <TableRow hover selected={selected}>
-
       <TableCell>
         <Box
           sx={{
@@ -56,8 +49,8 @@ export default function OrderTableRow({
             },
           }}
         >
-    {orderNumber.slice(0, 10)}
-    </Box>
+          {orderNumber.slice(0, 10)}
+        </Box>
       </TableCell>
 
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
@@ -73,8 +66,12 @@ export default function OrderTableRow({
         />
       </TableCell>
 
-
-      <TableCell> {cart.items.length > 1 ? cart.items[0].product.productName + ' and more items...' : cart.items[0].product.productName} </TableCell>
+      <TableCell>
+        {' '}
+        {cart.items.length > 1
+          ? cart.items[0].product.productName + ' and more items...'
+          : cart.items[0].product.productName}{' '}
+      </TableCell>
       {/* <TableCell> {cart.items[0].product.productName} </TableCell> */}
 
       <TableCell> {fCurrency(cart.total)} </TableCell>
@@ -95,10 +92,5 @@ export default function OrderTableRow({
     </TableRow>
   );
 
-  return (
-    <>
-      {renderPrimary}
-
-    </>
-  );
+  return <>{renderPrimary}</>;
 }

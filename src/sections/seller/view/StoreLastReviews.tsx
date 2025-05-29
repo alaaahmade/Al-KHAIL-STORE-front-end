@@ -23,7 +23,7 @@ interface StoreLastReviewsProps {
 
 export default function StoreLastReviews({ products, max = 5 }: StoreLastReviewsProps) {
   // Aggregate all comments from products, attach product info
-  const allComments = products.flatMap(product =>
+  const allComments = products.flatMap((product) =>
     (product.comments || []).map((comment: any) => ({
       ...comment,
       productName: product.productName,
@@ -33,21 +33,33 @@ export default function StoreLastReviews({ products, max = 5 }: StoreLastReviews
   );
 
   // Sort by createdAt (latest first)
-  const sorted = allComments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const sorted = allComments.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
   const displayComments = sorted.slice(0, max);
 
   if (displayComments.length === 0) {
-    return <Typography variant="body2" color="text.secondary">No reviews yet.</Typography>;
+    return (
+      <Typography variant="body2" color="text.secondary">
+        No reviews yet.
+      </Typography>
+    );
   }
 
   return (
     <Stack spacing={2}>
       {displayComments.map((review) => (
         <Card key={review.id} sx={{ p: 2, display: 'flex', alignItems: 'flex-start', gap: 2 }}>
-          <Avatar src={review.productImage} alt={review.productName} sx={{ width: 56, height: 56, mr: 2 }} />
+          <Avatar
+            src={review.productImage}
+            alt={review.productName}
+            sx={{ width: 56, height: 56, mr: 2 }}
+          />
           <Box sx={{ flex: 1 }}>
             <Stack direction="row" alignItems="center" spacing={1}>
-              <Typography variant="subtitle1" fontWeight={600}>{review.productName}</Typography>
+              <Typography variant="subtitle1" fontWeight={600}>
+                {review.productName}
+              </Typography>
               <ReviewStars value={review.rating} />
             </Stack>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>

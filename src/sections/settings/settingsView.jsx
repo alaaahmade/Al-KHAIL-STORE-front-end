@@ -1,8 +1,23 @@
-'use client'
+'use client';
 import * as Yup from 'yup';
 import { useSettingsContext } from 'src/components/settings';
-import { Box, Button, Card, Container, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, Stack, Switch, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react'
+import {
+  Box,
+  Button,
+  Card,
+  Container,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  Switch,
+  TextField,
+  Typography,
+} from '@mui/material';
+import React, { useState } from 'react';
 import { useAuthContext } from '@/auth/hooks';
 import axiosInstance from '@/utils/axios';
 import { toast } from 'react-toastify';
@@ -19,64 +34,68 @@ const dataSchema = Yup.object().shape({
   reviewNotifications: Yup.boolean(),
   autoApproveReviews: Yup.boolean(),
   defaultReplyTemplate: Yup.string().required('Default reply template is required'),
-})
+});
 
 const changePasswordSchema = Yup.object().shape({
   currentPassword: Yup.string().required('Current password is required'),
   newPassword: Yup.string().required('New password is required'),
-  confirmNewPassword: Yup.string().required('Confirm new password is required').oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
-})
+  confirmNewPassword: Yup.string()
+    .required('Confirm new password is required')
+    .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
+});
 
 const SettingsView = () => {
   const settings = useSettingsContext();
-  const {user, resetPassword} = useAuthContext();
+  const { user, resetPassword } = useAuthContext();
 
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [email, setEmail] = useState(user.email);
   const [currency, setCurrency] = useState('USD ($)');
-  const [defaultReplyTemplate, setDefaultReplyTemplate] = useState(user?.defaultReplyTemplate || 'Thank you for your review!');
+  const [defaultReplyTemplate, setDefaultReplyTemplate] = useState(
+    user?.defaultReplyTemplate || 'Thank you for your review!'
+  );
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
-
-
-  const handleUpdatePassword =async () => {
+  const handleUpdatePassword = async () => {
     // Implement password update logic here
-      try {
-        await changePasswordSchema.validateSync({currentPassword, newPassword, confirmNewPassword}, { abortEarly: false });
-        await resetPassword({currentPassword, newPassword});
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmNewPassword('');
-        toast.success('Password updated successfully');
-      } catch (error) {
-        console.log(error)
-        toast.error(error.message || 'Something went wrong');
-      }
+    try {
+      await changePasswordSchema.validateSync(
+        { currentPassword, newPassword, confirmNewPassword },
+        { abortEarly: false }
+      );
+      await resetPassword({ currentPassword, newPassword });
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmNewPassword('');
+      toast.success('Password updated successfully');
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message || 'Something went wrong');
+    }
     // await login?.(data.email, data.password);
     console.log('Updating password...');
   };
 
-  const handleSaveChanges =  async () => {
+  const handleSaveChanges = async () => {
     const data = {
       firstName,
       lastName,
       email,
       currency,
       defaultReplyTemplate,
-    }
-     try {
-       await dataSchema.validateSync(data, { abortEarly: false });
-       const response = await axiosInstance.patch(`/users/${user.id}`, data);
-       if(response.status === 200){
+    };
+    try {
+      await dataSchema.validateSync(data, { abortEarly: false });
+      const response = await axiosInstance.patch(`/users/${user.id}`, data);
+      if (response.status === 200) {
         window.location.reload();
-       }
-     } catch (error) {
-       console.log(error);
-     }
-    
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -97,18 +116,18 @@ const SettingsView = () => {
             </Typography>
             <Stack spacing={2}>
               <Stack spacing={2} direction={'row'} alignItems={'center'}>
-              <TextField
-                fullWidth
-                label="firstName"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-              <TextField
-                fullWidth
-                label="LastName"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
+                <TextField
+                  fullWidth
+                  label="firstName"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+                <TextField
+                  fullWidth
+                  label="LastName"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
               </Stack>
               <TextField
                 fullWidth
@@ -153,8 +172,8 @@ const SettingsView = () => {
             Save Changes
           </Button>
         </Grid>
-                {/* Password Settings */}
-                <Grid item xs={12}>
+        {/* Password Settings */}
+        <Grid item xs={12}>
           <Card sx={{ p: 3 }}>
             <Typography variant="h6" sx={{ mb: 2 }}>
               Password Settings
@@ -200,6 +219,6 @@ const SettingsView = () => {
       </Grid>
     </Container>
   );
-}
+};
 
-export default SettingsView
+export default SettingsView;

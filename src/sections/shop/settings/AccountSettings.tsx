@@ -19,7 +19,7 @@ const AccountSettings = () => {
   const [orderUpdates, setOrderUpdates] = useState(true);
   const [promotions, setPromotions] = useState(false);
   const [edit, setEdit] = useState(false);
-  const {user} = useAuthContext();
+  const { user } = useAuthContext();
   const [currentSettings, setCurrentSettings] = useState<any>({
     firstName: 'John Doe',
     lastName: 'Doe',
@@ -32,17 +32,17 @@ const AccountSettings = () => {
   const [loadingPhoto, setLoadingPhoto] = useState(false);
 
   useEffect(() => {
-    if(user) {
+    if (user) {
       setCurrentSettings({
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
         phone: user.phoneNumber,
-        photo: user.photo
+        photo: user.photo,
       });
       setPreviewPhoto(user.photo || null);
     }
-  }, [user])
+  }, [user]);
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -59,13 +59,13 @@ const AccountSettings = () => {
   };
 
   const handleSave = async () => {
-    if(!edit){
+    if (!edit) {
       setEdit(true);
-      return
+      return;
     }
     try {
       let photoUrl = currentSettings.photo;
-      if(newPhoto) {
+      if (newPhoto) {
         setLoadingPhoto(true);
         const formData = new FormData();
         formData.append('file', newPhoto);
@@ -75,7 +75,7 @@ const AccountSettings = () => {
       }
       const response = await axiosInstance.patch(`/users/${user?.id}`, {
         ...currentSettings,
-        photo: photoUrl
+        photo: photoUrl,
       });
       setCurrentSettings((prev: any) => ({ ...prev, photo: photoUrl }));
       setEdit(false);
@@ -85,7 +85,7 @@ const AccountSettings = () => {
       setLoadingPhoto(false);
       toast.error(error.message || 'Failed to update profile');
     }
-  }
+  };
 
   return (
     <Box sx={{ flex: 1 }}>
@@ -97,18 +97,27 @@ const AccountSettings = () => {
             top: 16,
             right: 16,
           }}
-          color='primary'
-          startIcon={edit ? <Iconify icon="eva:save-fill" width="24" height="24" />  : <Iconify icon="mage:edit" width="24" height="24" />}
+          color="primary"
+          startIcon={
+            edit ? (
+              <Iconify icon="eva:save-fill" width="24" height="24" />
+            ) : (
+              <Iconify icon="mage:edit" width="24" height="24" />
+            )
+          }
           onClick={handleSave}
         >
-          {edit ? 
-            'Save'
-          : 'Edit'}
+          {edit ? 'Save' : 'Edit'}
         </Button>
         <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
           Profile Information
         </Typography>
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} alignItems="center" sx={{ mb: 3 }}>
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          spacing={3}
+          alignItems="center"
+          sx={{ mb: 3 }}
+        >
           <Avatar
             src={previewPhoto || currentSettings.photo}
             alt="Profile"
@@ -117,7 +126,10 @@ const AccountSettings = () => {
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
             <Button
               component="label"
-              variant="contained" color="primary" size="small" sx={{ textTransform: 'none', mb: 0.5, color: '#fff' }}
+              variant="contained"
+              color="primary"
+              size="small"
+              sx={{ textTransform: 'none', mb: 0.5, color: '#fff' }}
               disabled={!edit}
             >
               {loadingPhoto ? 'Uploading...' : 'Change Photo'}
@@ -134,7 +146,7 @@ const AccountSettings = () => {
               label="First Name"
               size="small"
               value={currentSettings.firstName}
-              name='firstName'
+              name="firstName"
               onChange={handleChangeField}
               disabled={!edit}
               fullWidth
@@ -143,34 +155,34 @@ const AccountSettings = () => {
             <TextField
               label="Last Name"
               size="small"
-              name='lastName'
+              name="lastName"
               onChange={handleChangeField}
               value={currentSettings.lastName}
               disabled={!edit}
               fullWidth
-              InputProps={{ readOnly: !edit  }}
+              InputProps={{ readOnly: !edit }}
             />
           </Stack>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <TextField
               label="Email"
               size="small"
-              name='email'
+              name="email"
               onChange={handleChangeField}
               value={currentSettings.email}
               disabled={!edit}
               fullWidth
-              InputProps={{ readOnly: !edit  }}
+              InputProps={{ readOnly: !edit }}
             />
             <TextField
               label="Phone"
               size="small"
-              name='phone'
+              name="phone"
               onChange={handleChangeField}
               value={currentSettings.phone}
               disabled={!edit}
               fullWidth
-              InputProps={{ readOnly: !edit  }}
+              InputProps={{ readOnly: !edit }}
             />
           </Stack>
         </Box>
@@ -182,14 +194,16 @@ const AccountSettings = () => {
         <Stack spacing={2}>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Box>
-              <Typography variant="body2" fontWeight={500}>Order Updates</Typography>
+              <Typography variant="body2" fontWeight={500}>
+                Order Updates
+              </Typography>
               <Typography variant="caption" color="text.secondary">
                 Receive updates about your orders
               </Typography>
             </Box>
             <Switch
               checked={orderUpdates}
-              onChange={e => setOrderUpdates(e.target.checked)}
+              onChange={(e) => setOrderUpdates(e.target.checked)}
               color="primary"
               sx={{
                 '& .MuiSwitch-switchBase.Mui-checked': {
@@ -203,14 +217,16 @@ const AccountSettings = () => {
           </Stack>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Box>
-              <Typography variant="body2" fontWeight={500}>Promotions</Typography>
+              <Typography variant="body2" fontWeight={500}>
+                Promotions
+              </Typography>
               <Typography variant="caption" color="text.secondary">
                 Receive promotional offers and discounts
               </Typography>
             </Box>
             <Switch
               checked={promotions}
-              onChange={e => setPromotions(e.target.checked)}
+              onChange={(e) => setPromotions(e.target.checked)}
               color="secondary"
               sx={{
                 '& .MuiSwitch-switchBase.Mui-checked': {

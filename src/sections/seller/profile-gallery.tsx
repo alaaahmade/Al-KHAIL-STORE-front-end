@@ -1,4 +1,4 @@
-'use client'
+'use client';
 // @mui
 import { alpha, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -26,15 +26,11 @@ export default function ProfileProducts({ products }: Props) {
   const [page, setPage] = useState(1);
   const itemsPerPage = 8;
 
-
   const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
 
-  const paginatedProducts = products.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
+  const paginatedProducts = products.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
   const totalPages = Math.ceil(products.length / itemsPerPage);
 
@@ -53,9 +49,8 @@ export default function ProfileProducts({ products }: Props) {
           md: 'repeat(4, 1fr)',
         }}
       >
-         {Array.isArray(products) && paginatedProducts?.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        {Array.isArray(products) &&
+          paginatedProducts?.map((product) => <ProductCard key={product.id} product={product} />)}
       </Box>
       <Box mt={4} display="flex" justifyContent="center">
         <Pagination
@@ -65,7 +60,6 @@ export default function ProfileProducts({ products }: Props) {
           shape="rounded"
           color="primary"
           sx={{
-
             '& .Mui-selected': {
               backgroundColor: '#D81B60',
               color: '#fff',

@@ -16,9 +16,9 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
-  const {user} = useAuthContext()
-  if(user?.role.toLowerCase() !== 'user'){
-    return redirect('/')
+  const { user } = useAuthContext();
+  if (user?.role.toLowerCase() !== 'user') {
+    return redirect('/');
   }
   return (
     <AuthGuard>

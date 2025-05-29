@@ -19,7 +19,6 @@ const initialState: ReviewsState = {
   error: null,
 };
 
-
 // Reviews Actions
 export const fetchReviews = createAsyncThunk(
   'reviews/fetchReviews',
@@ -27,7 +26,6 @@ export const fetchReviews = createAsyncThunk(
     try {
       const response = await axios.get('/v1/comments');
       return response.data.data;
-      
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch reviews');
     }
@@ -72,15 +70,15 @@ export const createReviews = createAsyncThunk(
 
 export const fetchCommentsByStore = createAsyncThunk(
   'reviews/fetchCommentsByStore',
-  async(StoreId: string, {rejectWithValue}) => {
+  async (StoreId: string, { rejectWithValue }) => {
     try {
-      const {data} = await axios.get(`/v1/comments/store/${StoreId}`)
-      return data.data
+      const { data } = await axios.get(`/v1/comments/store/${StoreId}`);
+      return data.data;
     } catch (error) {
-      rejectWithValue(error?.response?.data?.message || 'Failed to fetch reviews')
+      rejectWithValue(error?.response?.data?.message || 'Failed to fetch reviews');
     }
   }
-)
+);
 
 export const updateReviews = createAsyncThunk(
   'reviews/updateReviews',
@@ -116,13 +114,12 @@ export const fetchCommentsByProduct = createAsyncThunk(
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch reviews');
     }
   }
-) 
+);
 
 const reviewsSlice = createSlice({
   name: 'reviews',
   initialState,
-  reducers: {
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       // Reviews
@@ -154,7 +151,7 @@ const reviewsSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchLatestReviews.fulfilled, (state, action) => {
-        state.loading = false;        
+        state.loading = false;
         state.latestReviews = action.payload.data;
       })
       .addCase(fetchLatestReviews.rejected, (state, action) => {
@@ -182,10 +179,8 @@ const reviewsSlice = createSlice({
       .addCase(fetchCommentsByProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      })
-      
+      });
   },
 });
-
 
 export default reviewsSlice.reducer;

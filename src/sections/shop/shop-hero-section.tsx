@@ -33,7 +33,8 @@ const ShopHeroSection = () => (
           lineHeight: 1.15,
         }}
       >
-        Discover Your Perfect <br />Beauty Products
+        Discover Your Perfect <br />
+        Beauty Products
       </Typography>
       <Typography
         variant="subtitle1"
@@ -56,7 +57,7 @@ const ShopHeroSection = () => (
             '&:hover': { background: '#c80055' },
           }}
           component={Link}
-          href='products'
+          href="products"
         >
           Shop Now
         </Button>
@@ -78,7 +79,7 @@ const ShopHeroSection = () => (
             },
           }}
           component={Link}
-          href='/auth/jwt/becom-seller'
+          href="/auth/jwt/becom-seller"
         >
           Sell Products
         </Button>

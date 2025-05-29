@@ -28,13 +28,17 @@ import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchUserSettings, updateUserStore } from '@/redux/slices/userSlice';
-import { Alert, LoadingButton } from '@mui/lab';
+import { LoadingButton } from '@mui/lab';
 import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
 const TABS = [
-  { value: 'store_information', label: 'Store Information', icon: <Iconify icon="solar:shop-bold" /> },
+  {
+    value: 'store_information',
+    label: 'Store Information',
+    icon: <Iconify icon="solar:shop-bold" />,
+  },
   { value: 'account', label: 'Account', icon: <Iconify icon="solar:user-bold" /> },
   { value: 'payment_methods', label: 'Payment Methods', icon: <Iconify icon="solar:card-bold" /> },
   { value: 'shipping', label: 'Shipping', icon: <Iconify icon="solar:delivery-bold" /> },
@@ -69,10 +73,9 @@ const updateSchema = Yup.object().shape({
 export function StoreSettingsView() {
   const settings = useSettingsContext();
   const { user } = useAuthContext();
-  const {userSettings} = useAppSelector(state => state.user)
+  const { userSettings } = useAppSelector((state) => state.user);
   const [currentStoreSetting, setCurrentStoreSetting] = useState({});
-  const [errors, setErrors] = useState([]);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const [currentTab, setCurrentTab] = useState('store_information');
   const [storeInfo, setStoreInfo] = useState({
@@ -119,7 +122,7 @@ export function StoreSettingsView() {
     }));
   };
 
- const handleSocialLinkChange = (platform: keyof typeof storeInfo.socialLinks, value: string) => {
+  const handleSocialLinkChange = (platform: keyof typeof storeInfo.socialLinks, value: string) => {
     setStoreInfo((prev) => ({
       ...prev,
       socialLinks: {
@@ -136,26 +139,26 @@ export function StoreSettingsView() {
     }));
   };
 
-  const handleSaveChanges =async () => {
+  const handleSaveChanges = async () => {
     // Implement save logic here
     try {
       const result = await updateSchema.validateSync(storeInfo, {
         abortEarly: false,
       });
       console.log('Saving changes:', result);
-      await dispatch(updateUserStore({...result, id: userSettings?.seller.store.id}))
-      await dispatch(fetchUserSettings(user?.id))
+      await dispatch(updateUserStore({ ...result, id: userSettings?.seller.store.id }));
+      await dispatch(fetchUserSettings(user?.id));
       toast.success('Changes saved successfully');
-    }catch (error) {
+    } catch (error) {
       console.log(error);
-      
+
       if (error instanceof Yup.ValidationError) {
         console.log();
         error.errors.forEach((err: any) => {
           toast.error(err);
-        })
-      }else{
-        toast.error(error.message)
+        });
+      } else {
+        toast.error(error.message);
       }
       return;
     }
@@ -163,39 +166,39 @@ export function StoreSettingsView() {
     // You would typically make an API call here
   };
 
-  useEffect(()=>{
-    if(user && user.id){
-      dispatch(fetchUserSettings(user.id))
+  useEffect(() => {
+    if (user && user.id) {
+      dispatch(fetchUserSettings(user.id));
     }
-  }, [user])
+  }, [user, dispatch]);
 
-  useEffect(()=>{
-    setCurrentStoreSetting(prev => ({
+  useEffect(() => {
+    setCurrentStoreSetting((prev) => ({
       ...prev,
-      ...userSettings
-    }))
-    setStoreInfo(prev => ({
+      ...userSettings,
+    }));
+    setStoreInfo((prev) => ({
       ...prev,
-      ...userSettings?.seller?.store
-    }))
-  }, [userSettings])
-
+      ...userSettings?.seller?.store,
+    }));
+  }, [userSettings]);
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'lg'} sx={{bgcolor: 'f9fafb', position: 'relative'}}>
+    <Container
+      maxWidth={settings.themeStretch ? false : 'lg'}
+      sx={{ bgcolor: 'f9fafb', position: 'relative' }}
+    >
       <Stack direction={'row'} alignItems="flex-start" justifyContent="space-between" mb={5}>
         <Box>
-            <CustomBreadcrumbs
-            heading="Store Settings"
-            links={[]}
-            sx={{ mb: 0}}
-          />
-          <Typography m={0} variant="caption">Manage your store preferences and account settings</Typography>
-        </Box>      
+          <CustomBreadcrumbs heading="Store Settings" links={[]} sx={{ mb: 0 }} />
+          <Typography m={0} variant="caption">
+            Manage your store preferences and account settings
+          </Typography>
+        </Box>
         <LoadingButton
           size="small"
           type="submit"
-          sx={{p: 1.5, bgcolor: 'primary.main'}}
+          sx={{ p: 1.5, bgcolor: 'primary.main' }}
           variant="contained"
           onClick={handleSaveChanges}
         >
@@ -211,22 +214,22 @@ export function StoreSettingsView() {
               variant="scrollable"
               value={currentTab}
               onChange={handleChangeTab}
-              sx={{ 
+              sx={{
                 '& .MuiTabs-indicator': { backgroundColor: 'primary.main' },
-                '& .MuiTab-root': { 
-                  justifyContent: 'flex-start', 
-                  minHeight: 48, 
+                '& .MuiTab-root': {
+                  justifyContent: 'flex-start',
+                  minHeight: 48,
                   px: 2.5,
                   mb: 0.5,
                   borderRadius: 1,
-                  '&.Mui-selected': { 
+                  '&.Mui-selected': {
                     backgroundColor: (theme) => theme.palette.action.selected,
                     color: 'primary.main',
                     fontWeight: 'fontWeightBold',
-                   },
-                   '&:hover': {
+                  },
+                  '&:hover': {
                     backgroundColor: (theme) => theme.palette.action.hover,
-                   }
+                  },
                 },
               }}
             >
@@ -277,35 +280,34 @@ export function StoreSettingsView() {
                     </Grid>
 
                     <Grid container spacing={2}>
-                        <Grid xs={12} md={6}>
-                            <TextField
-                                fullWidth
-                                name="description"
-                                label="Store Description"
-                                multiline
-                                rows={4}
-                                value={storeInfo.description}
-                                onChange={handleInputChange}
-                            />
-                        </Grid>
-                        <Grid xs={12} md={6}>
-                            <FormControl fullWidth>
-                                <InputLabel id="store-type-label">Store Type</InputLabel>
-                                <Select
-                                labelId="store-type-label"
-                                value={storeInfo.storeType}
-                                label="Store Type"
-                                onChange={handleStoreTypeChange}
-                                >
-                                <MenuItem value="Retail Store">Retail Store</MenuItem>
-                                <MenuItem value="Online Store">Online Store</MenuItem>
-                                <MenuItem value="Service Provider">Service Provider</MenuItem>
-                                <MenuItem value="Other">Other</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                      <Grid xs={12} md={6}>
+                        <TextField
+                          fullWidth
+                          name="description"
+                          label="Store Description"
+                          multiline
+                          rows={4}
+                          value={storeInfo.description}
+                          onChange={handleInputChange}
+                        />
+                      </Grid>
+                      <Grid xs={12} md={6}>
+                        <FormControl fullWidth>
+                          <InputLabel id="store-type-label">Store Type</InputLabel>
+                          <Select
+                            labelId="store-type-label"
+                            value={storeInfo.storeType}
+                            label="Store Type"
+                            onChange={handleStoreTypeChange}
+                          >
+                            <MenuItem value="Retail Store">Retail Store</MenuItem>
+                            <MenuItem value="Online Store">Online Store</MenuItem>
+                            <MenuItem value="Service Provider">Service Provider</MenuItem>
+                            <MenuItem value="Other">Other</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
                     </Grid>
-
                   </Stack>
                 </CardContent>
               </Card>

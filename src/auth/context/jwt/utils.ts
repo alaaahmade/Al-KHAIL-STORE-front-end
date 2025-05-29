@@ -36,7 +36,6 @@ export const isValidToken = (accessToken: string) => {
 
 // ----------------------------------------------------------------------
 
-
 // ----------------------------------------------------------------------
 
 export function setSession(accessToken: string | null) {

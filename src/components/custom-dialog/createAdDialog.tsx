@@ -1,8 +1,20 @@
 import * as Yup from 'yup';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton, Box, Slide, TextField, MenuItem, Grid } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  IconButton,
+  Box,
+  Slide,
+  TextField,
+  MenuItem,
+  Grid,
+} from '@mui/material';
 import React, { useState } from 'react';
 import { TransitionProps } from 'notistack';
-import { useSelector  } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { UploadBox } from '../upload';
 import Iconify from '../iconify';
 
@@ -13,13 +25,14 @@ interface CreateAdDialogProps {
 }
 const categories = ['Skincare', 'Makeup', 'Hair Care', 'Fragrance'];
 
-
-const Transition = React.forwardRef((
-  props: TransitionProps & {
-    children: React.ReactElement<any, any>;
-  },
-  ref: React.Ref<unknown>,
-) => <Slide direction="up" ref={ref} {...props} />);
+const Transition = React.forwardRef(
+  (
+    props: TransitionProps & {
+      children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>
+  ) => <Slide direction="up" ref={ref} {...props} />
+);
 
 const formSchema = Yup.object().shape({
   firstName: Yup.string().required('First name is required'),
@@ -31,11 +44,12 @@ const formSchema = Yup.object().shape({
   // storeLogo: Yup.string().required('Store logo is required'),
   storeCategory: Yup.string().required('Store category is required'),
   password: Yup.string().required('Password is required'),
-  confirmPassword: Yup.string().required('Confirm password is required').oneOf([Yup.ref('password'), null], 'Passwords must match'),
+  confirmPassword: Yup.string()
+    .required('Confirm password is required')
+    .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+});
 
-})
-
-export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProps) { 
+export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProps) {
   const isHome = useSelector((state: any) => state.SellersSlice.isHome);
   const error = useSelector((state: any) => state.SellersSlice.error);
   const newSeller = useSelector((state: any) => state.SellersSlice.newSeller);
@@ -56,10 +70,8 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
     photo: '',
   });
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
-    
-  
-    const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  
+
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -70,11 +82,15 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
       setFormErrors({});
       await formSchema.validate(form, { abortEarly: false });
       if (!form.logoFile) {
-        setForm((prev) => ({ ...prev, storeLogo: 'https://static.vecteezy.com/system/resources/previews/022/257/158/non_2x/store-logo-design-illustration-vector.jpg' }));
+        setForm((prev) => ({
+          ...prev,
+          storeLogo:
+            'https://static.vecteezy.com/system/resources/previews/022/257/158/non_2x/store-logo-design-illustration-vector.jpg',
+        }));
       }
       let imageUrl;
       if (form.logoFile) {
-        loadingB
+        loadingB;
       }
       await handleSave({ ...form, photo: imageUrl });
       setForm({
@@ -105,7 +121,7 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
       }
       console.log(error);
     }
-  }
+  };
 
   const handleFileDrop = async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -120,7 +136,6 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await handleOnSave();
-
   };
 
   return (
@@ -132,7 +147,7 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
       onClose={onClose}
       aria-describedby="alert-dialog-slide-description"
       BackdropProps={{
-        sx: { backgroundColor: "rgba(0, 0, 0, 0.3)" },
+        sx: { backgroundColor: 'rgba(0, 0, 0, 0.3)' },
       }}
     >
       <DialogTitle
@@ -144,11 +159,9 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
         }}
       >
         Add New Merchant
-
         <IconButton onClick={onClose} sx={{}}>
           <Iconify icon="eva:close-fill" />
         </IconButton>
-
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
@@ -157,7 +170,7 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: .5,
+                gap: 0.5,
               }}
             >
               <TextField
@@ -167,8 +180,8 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
                 onChange={handleChange}
                 fullWidth
                 required
-                size='small'
-                sx={{ m: .5 }}
+                size="small"
+                sx={{ m: 0.5 }}
                 error={!!formErrors.firstName}
                 helperText={formErrors.firstName}
               />
@@ -179,8 +192,8 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
                 onChange={handleChange}
                 fullWidth
                 required
-                size='small'
-                sx={{ m: .5 }}
+                size="small"
+                sx={{ m: 0.5 }}
                 error={!!formErrors.lastName}
                 helperText={formErrors.lastName}
               />
@@ -194,8 +207,8 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
               onChange={handleChange}
               fullWidth
               required
-              sx={{ m: .5 }}
-              size='small'
+              sx={{ m: 0.5 }}
+              size="small"
               type="email"
               error={!!formErrors.email}
               helperText={formErrors.email}
@@ -209,8 +222,8 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
               onChange={handleChange}
               fullWidth
               required
-              size='small'
-              sx={{ m: .5 }}
+              size="small"
+              sx={{ m: 0.5 }}
               multiline
               minRows={2}
               error={!!formErrors.storeDescription}
@@ -224,8 +237,8 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
               value={form.password}
               onChange={handleChange}
               fullWidth
-              sx={{ m: .5 }}
-              size='small'
+              sx={{ m: 0.5 }}
+              size="small"
               required
               error={!!formErrors.password}
               helperText={formErrors.password}
@@ -237,8 +250,8 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
               name="confirmPassword"
               value={form.confirmPassword}
               onChange={handleChange}
-              size='small'
-              sx={{ m: .5 }}
+              size="small"
+              sx={{ m: 0.5 }}
               fullWidth
               required
               error={!!formErrors.confirmPassword}
@@ -251,8 +264,8 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
               name="contactNumber"
               value={form.contactNumber}
               onChange={handleChange}
-              size='small'
-              sx={{ m: .5 }}
+              size="small"
+              sx={{ m: 0.5 }}
               fullWidth
               required
               error={!!formErrors.contactNumber}
@@ -266,15 +279,17 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
               value={form.storeAddress}
               onChange={handleChange}
               fullWidth
-              sx={{ m: .5 }}
-              size='small'
+              sx={{ m: 0.5 }}
+              size="small"
               required
               error={!!formErrors.storeAddress}
               helperText={formErrors.storeAddress}
             />
           </Grid>
           <Grid item xs={12}>
-            <UploadBox placeholder='Upload file' sx={{ width: 1, height: '10em' }}
+            <UploadBox
+              placeholder="Upload file"
+              sx={{ width: 1, height: '10em' }}
               onDrop={handleFileDrop}
               preview={logoPreview}
               error={!!formErrors.storeLogo}
@@ -287,31 +302,36 @@ export function CreateAdDialog({ onClose, open, handleSave }: CreateAdDialogProp
               label="Store Category"
               name="storeCategory"
               value={form.storeCategory}
-              sx={{ m: .5 }}
+              sx={{ m: 0.5 }}
               onChange={handleChange}
-              size='small'
+              size="small"
               fullWidth
               required
               error={!!formErrors.storeCategory}
               helperText={formErrors.storeCategory}
             >
-              {categories.map(cat => (
-                <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+              {categories.map((cat) => (
+                <MenuItem key={cat} value={cat}>
+                  {cat}
+                </MenuItem>
               ))}
             </TextField>
           </Grid>
         </Grid>
       </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button onClick={onClose} variant="outlined" color="inherit">
-            Cancel
-          </Button>
-          <Button 
-            onClick={handleOnSave}
-           variant="contained" color="secondary" sx={{ bgcolor: '#d72660', color: '#fff' }}>
-            Create Merchant
-          </Button>
-        </DialogActions>
+      <DialogActions sx={{ px: 3, pb: 3 }}>
+        <Button onClick={onClose} variant="outlined" color="inherit">
+          Cancel
+        </Button>
+        <Button
+          onClick={handleOnSave}
+          variant="contained"
+          color="secondary"
+          sx={{ bgcolor: '#d72660', color: '#fff' }}
+        >
+          Create Merchant
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 }

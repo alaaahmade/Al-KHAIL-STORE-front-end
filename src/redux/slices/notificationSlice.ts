@@ -5,10 +5,10 @@ interface INotificationsSlice {
   target: string;
   title: string;
   content: string;
-  SOptions: any[]
+  SOptions: any[];
   error: {
     [key: string]: string;
-  },
+  };
   targetId: string;
 }
 
@@ -19,7 +19,7 @@ const initialState: INotificationsSlice = {
   content: '',
   error: {},
   SOptions: [],
-  targetId: ''
+  targetId: '',
 };
 
 const NotificationsSlice = createSlice({
@@ -27,25 +27,34 @@ const NotificationsSlice = createSlice({
   initialState,
   reducers: {
     openNotificationsDialog: (state) => {
-      state.openNotification = true; 
+      state.openNotification = true;
     },
     closeNotificationsDialog: (state) => {
-      state.openNotification = false; 
+      state.openNotification = false;
     },
 
-    changeStateValue: (state, action: { payload: { type: keyof INotificationsSlice; value: any } }) => {
+    changeStateValue: (
+      state,
+      action: { payload: { type: keyof INotificationsSlice; value: any } }
+    ) => {
       (state[action.payload.type] as typeof action.payload.value) = action.payload.value;
-  },
+    },
 
-  setError: (state, action) => {
-    state.error = action.payload;
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
+    setSOptions: (state, action) => {
+      state.SOptions = action.payload;
+    },
   },
-  setSOptions: (state, action) => {
-    state.SOptions = action.payload;
-  }
-}
 });
 
-export const { openNotificationsDialog, changeStateValue, closeNotificationsDialog,setError, setSOptions } = NotificationsSlice.actions;
+export const {
+  openNotificationsDialog,
+  changeStateValue,
+  closeNotificationsDialog,
+  setError,
+  setSOptions,
+} = NotificationsSlice.actions;
 
 export default NotificationsSlice.reducer;

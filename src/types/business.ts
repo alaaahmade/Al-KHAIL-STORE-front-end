@@ -26,5 +26,3 @@ export interface IBusiness {
   createdAt: string;
   updatedAt: string;
 }
-
-

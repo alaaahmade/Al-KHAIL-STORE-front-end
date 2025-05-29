@@ -44,8 +44,8 @@ export default function ChatNavItem({ selected, collapse, conversation, onCloseM
     });
 
   const singleParticipant = participants[0];
-  
-  const store = singleParticipant.role.toLowerCase() === 'seller'
+
+  const store = singleParticipant.role.toLowerCase() === 'seller';
 
   const { firstName, photo, isActive } = singleParticipant;
 
@@ -69,15 +69,27 @@ export default function ChatNavItem({ selected, collapse, conversation, onCloseM
     >
       <AvatarGroup variant="compact" sx={{ width: 48, height: 48 }}>
         {participants.slice(0, 2).map((participant: any) => (
-          <Avatar key={participant.id} alt={store ? singleParticipant.seller.store.name : participant.firstName} src={store ? singleParticipant.seller.store.logo : participant.photo} />
+          <Avatar
+            key={participant.id}
+            alt={store ? singleParticipant.seller.store.name : participant.firstName}
+            src={store ? singleParticipant.seller.store.logo : participant.photo}
+          />
         ))}
       </AvatarGroup>
     </Badge>
   );
 
   const renderSingle = (
-    <Badge key={firstName} variant={isActive ? 'online' : 'invisible'} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-      <Avatar alt={store ? singleParticipant.seller.store.name : firstName} src={store ? singleParticipant.seller.store.logo : photo} sx={{ width: 48, height: 48 }} />
+    <Badge
+      key={firstName}
+      variant={isActive ? 'online' : 'invisible'}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+    >
+      <Avatar
+        alt={store ? singleParticipant.seller.store.name : firstName}
+        src={store ? singleParticipant.seller.store.logo : photo}
+        sx={{ width: 48, height: 48 }}
+      />
     </Badge>
   );
 
@@ -130,9 +142,10 @@ export default function ChatNavItem({ selected, collapse, conversation, onCloseM
                 color: 'text.disabled',
               }}
             >
-              {lastActivity && formatDistanceToNowStrict(new Date(lastActivity), {
-                addSuffix: false,
-              })}
+              {lastActivity &&
+                formatDistanceToNowStrict(new Date(lastActivity), {
+                  addSuffix: false,
+                })}
             </Typography>
 
             {!!conversation.unreadCount && (

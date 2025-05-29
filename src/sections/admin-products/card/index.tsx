@@ -57,16 +57,10 @@ export default function ListingCard({ id, title, images, hours, vendor, credits 
           </Typography>
         )}
 
-        <Button
-          fullWidth
-          size="small"
-          color="inherit"
-          variant="outlined"
-          sx={{ mt: 1 }}
-        >
+        <Button fullWidth size="small" color="inherit" variant="outlined" sx={{ mt: 1 }}>
           View Details
         </Button>
       </Stack>
     </Card>
   );
-} 
+}

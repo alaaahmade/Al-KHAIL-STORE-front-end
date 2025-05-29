@@ -3,9 +3,10 @@ import { SellerSettingsView } from '@/sections/seller/settings/view/sellersettin
 import { Elements } from '@stripe/react-stripe-js';
 import { stripePromise } from '@/utils/stripe';
 
-
 export default function SettingsPage() {
-  return <Elements stripe={stripePromise}>
-  <SellerSettingsView/>
-  </Elements>
+  return (
+    <Elements stripe={stripePromise}>
+      <SellerSettingsView />
+    </Elements>
+  );
 }

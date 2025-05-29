@@ -59,9 +59,12 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
         alignItems="center"
         justifyContent="flex-start"
         gap={1}
-        sx={{ mt: 3, ml: 4, mb: 1 }}>
-        <Logo  />
-        <Typography color={'primary.main'} variant='h6'>AL KHAIL STORE</Typography>
+        sx={{ mt: 3, ml: 4, mb: 1 }}
+      >
+        <Logo />
+        <Typography color={'primary.main'} variant="h6">
+          AL KHAIL STORE
+        </Typography>
       </Stack>
 
       <NavSectionVertical

@@ -106,8 +106,16 @@ const AddCardForm = ({ onCardAdded, open, onClose }: AddCardFormProps) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth PaperProps={{ style: { borderRadius: 16, padding: 0 } }}>
-      <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pb: 1 }}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="xs"
+      fullWidth
+      PaperProps={{ style: { borderRadius: 16, padding: 0 } }}
+    >
+      <DialogTitle
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pb: 1 }}
+      >
         <span style={{ fontWeight: 500, fontSize: 18 }}>Add New Card</span>
         <IconButton aria-label="close" onClick={onClose} size="small">
           <Iconify icon="ic:round-close" />
@@ -116,7 +124,15 @@ const AddCardForm = ({ onCardAdded, open, onClose }: AddCardFormProps) => {
       <DialogContent sx={{ pt: 1, pb: 2 }}>
         <form id="add-card-form" onSubmit={handleSubmit}>
           <div style={{ margin: '10px 0 18px 0' }}>
-            <label style={{ fontSize: 14, color: '#888', marginBottom: 6, display: 'block', fontWeight: 500 }}>
+            <label
+              style={{
+                fontSize: 14,
+                color: '#888',
+                marginBottom: 6,
+                display: 'block',
+                fontWeight: 500,
+              }}
+            >
               Card Details
             </label>
             <div
@@ -131,7 +147,10 @@ const AddCardForm = ({ onCardAdded, open, onClose }: AddCardFormProps) => {
                 boxShadow: '0 1px 4px 0 rgba(0,0,0,0.03)',
               }}
             >
-              <Icon icon="mdi:credit-card-outline" style={{ color: '#b0b0b0', fontSize: 22, marginRight: 8 }} />
+              <Icon
+                icon="mdi:credit-card-outline"
+                style={{ color: '#b0b0b0', fontSize: 22, marginRight: 8 }}
+              />
               <div style={{ flex: 1 }}>
                 <CardElement
                   options={{
@@ -160,13 +179,13 @@ const AddCardForm = ({ onCardAdded, open, onClose }: AddCardFormProps) => {
             fullWidth
             margin="normal"
             value={cardholder}
-            onChange={e => setCardholder(e.target.value)}
+            onChange={(e) => setCardholder(e.target.value)}
           />
           <FormControlLabel
             control={
               <Checkbox
                 checked={isDefault}
-                onChange={e => setIsDefault(e.target.checked)}
+                onChange={(e) => setIsDefault(e.target.checked)}
                 color="primary"
               />
             }
@@ -174,11 +193,11 @@ const AddCardForm = ({ onCardAdded, open, onClose }: AddCardFormProps) => {
             sx={{ mt: 1, mb: 0.5 }}
           />
 
-          {error && (
-            <div style={{ color: 'red', marginTop: 12, fontSize: 13 }}>{error}</div>
-          )}
+          {error && <div style={{ color: 'red', marginTop: 12, fontSize: 13 }}>{error}</div>}
           {success && (
-            <div style={{ color: 'green', marginTop: 12, fontSize: 13 }}>Card added successfully!</div>
+            <div style={{ color: 'green', marginTop: 12, fontSize: 13 }}>
+              Card added successfully!
+            </div>
           )}
         </form>
       </DialogContent>

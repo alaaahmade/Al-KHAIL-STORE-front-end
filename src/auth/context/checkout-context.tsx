@@ -28,18 +28,22 @@ const CheckoutContext = createContext<CheckoutContextType | undefined>(undefined
 
 export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
   const [shipping, setShipping] = useState<ShippingInfo>({
-    firstName: '', lastName: '', address: '', city: '', postalCode: ''
+    firstName: '',
+    lastName: '',
+    address: '',
+    city: '',
+    postalCode: '',
   });
   const [payment, setPayment] = useState<PaymentInfo>({
-    cardNumber: '', expiry: '', cvv: ''
+    cardNumber: '',
+    expiry: '',
+    cvv: '',
   });
-
 
   const [cart, setCart] = useState<any>({
     items: [],
     total: 0,
   });
-
 
   return (
     <CheckoutContext.Provider value={{ shipping, setShipping, payment, setPayment, cart, setCart }}>

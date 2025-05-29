@@ -15,10 +15,7 @@ import SvgColor from 'src/components/svg-color';
 import { useSettingsContext } from 'src/components/settings';
 //
 import { HEADER, NAV } from '../config-layout';
-import {
-  AccountPopover,
-  NotificationsPopover,
-} from '../_common';
+import { AccountPopover, NotificationsPopover } from '../_common';
 import Label from 'src/components/label';
 import { useAuthContext } from '@/auth/hooks';
 import { usePathname } from 'next/navigation';
@@ -33,7 +30,7 @@ type Props = {
 export default function Header({ onOpenNav }: Props) {
   const theme = useTheme();
 
-  const {user} = useAuthContext()
+  const { user } = useAuthContext();
 
   const settings = useSettingsContext();
 
@@ -47,27 +44,29 @@ export default function Header({ onOpenNav }: Props) {
 
   const offsetTop = offset && !isNavHorizontal;
 
-  const pathName = usePathname()
+  const pathName = usePathname();
 
-  const isProfile = pathName.includes('/dashboard/profile/store/') 
-  
+  const isProfile = pathName.includes('/dashboard/profile/store/');
 
   const renderContent = (
     <>
-      {isProfile && 
-      <Stack
-        direction="row" alignItems="center" gap={0}
-        sx={{
-          position: 'absolute',
-          left: 10,
-          top: 15
-        }}
+      {isProfile && (
+        <Stack
+          direction="row"
+          alignItems="center"
+          gap={0}
+          sx={{
+            position: 'absolute',
+            left: 10,
+            top: 15,
+          }}
         >
           <Logo sx={{ mr: 2.5 }} />
-          <Typography color={'primary.main'} variant="h5">AL KHAIL STORE</Typography>
-          </Stack>
-          
-        }
+          <Typography color={'primary.main'} variant="h5">
+            AL KHAIL STORE
+          </Typography>
+        </Stack>
+      )}
       {lgUp && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
 
       {!lgUp && !isProfile && (
@@ -76,18 +75,18 @@ export default function Header({ onOpenNav }: Props) {
         </IconButton>
       )}
 
-
-      {user?.role.toLowerCase() === 'seller' && 
-      <Label
-        // color="info"
-        sx={{
-          ml: isProfile ? 30 : 1,
-          backgroundColor: 'rgba(252, 231, 243, 1) !important',
-          color: 'primary.main',
-        }}
-      >
-        Merchant Dashboard
-      </Label>  }
+      {user?.role.toLowerCase() === 'seller' && (
+        <Label
+          // color="info"
+          sx={{
+            ml: isProfile ? 30 : 1,
+            backgroundColor: 'rgba(252, 231, 243, 1) !important',
+            color: 'primary.main',
+          }}
+        >
+          Merchant Dashboard
+        </Label>
+      )}
       <Stack
         flexGrow={1}
         direction="row"
@@ -95,7 +94,6 @@ export default function Header({ onOpenNav }: Props) {
         justifyContent="flex-end"
         spacing={{ xs: 0.5, sm: 1 }}
       >
-        
         <NotificationsPopover />
 
         <AccountPopover />
@@ -139,11 +137,10 @@ export default function Header({ onOpenNav }: Props) {
         sx={{
           height: 1,
           px: { lg: 5 },
-          position: 'relative'
+          position: 'relative',
         }}
       >
         {renderContent}
-
       </Toolbar>
     </AppBar>
   );

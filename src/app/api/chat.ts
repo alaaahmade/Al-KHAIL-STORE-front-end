@@ -126,14 +126,13 @@ export async function sendMessage(conversationId: string, messageData: any) {
     (currentData: any) => {
       const { conversations: currentConversations } = currentData;
 
-      const conversations: any[] = currentConversations.map(
-        (conversation: any) =>
-          conversation.id === conversationId
-            ? {
-                ...conversation,
-                messages: [...conversation.messages, messageData],
-              }
-            : conversation
+      const conversations: any[] = currentConversations.map((conversation: any) =>
+        conversation.id === conversationId
+          ? {
+              ...conversation,
+              messages: [...conversation.messages, messageData],
+            }
+          : conversation
       );
 
       return {
@@ -194,9 +193,8 @@ export async function clickConversation(conversationId: string) {
       },
     ],
     (currentData: any) => {
-      const conversations: any = currentData.conversations.map(
-        (conversation: any) =>
-          conversation.id === conversationId ? { ...conversation, unreadCount: 0 } : conversation
+      const conversations: any = currentData.conversations.map((conversation: any) =>
+        conversation.id === conversationId ? { ...conversation, unreadCount: 0 } : conversation
       );
 
       return {

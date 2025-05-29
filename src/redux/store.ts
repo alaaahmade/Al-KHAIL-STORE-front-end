@@ -8,7 +8,7 @@ import businessReducer from './slices/businessSlice';
 import roleReducer from './slices/roleSlice';
 import permissionReducer from './slices/permissionSlice';
 import userReducer from './slices/userSlice';
-import signDialogSlice  from './slices/ContactSlice';
+import signDialogSlice from './slices/ContactSlice';
 import NotificationsSlice from './slices/notificationSlice';
 import TransactionsSlice from './slices/transactionsSlice';
 import SubscriptionsSlice from './slices/subscriptionsSlice';
@@ -49,7 +49,7 @@ const store = configureStore({
     serviceSlice,
     contactManagement,
     cartSlice,
-    AnalyticsSlice
+    AnalyticsSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

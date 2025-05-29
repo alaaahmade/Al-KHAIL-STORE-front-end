@@ -8,36 +8,32 @@ interface TransactionsState {
 }
 
 const initialState: TransactionsState = {
-
-  transactions:_transactions.map((user: any) => ({
+  transactions: _transactions.map((user: any) => ({
     id: user.id,
     name: user.customer.name,
     date: user.date,
     amount: user.amount,
     avatarUrl: user.customer.avatarUrl,
-    status: user.status
-  }),),
-
+    status: user.status,
+  })),
 };
 
 export const gitTransactions = async () => {
-  const transactions = await axios.get(`${HOST_API}users/transactions`)
+  const transactions = await axios.get(`${HOST_API}users/transactions`);
 
-  return transactions.data.transactions
-}
+  return transactions.data.transactions;
+};
 
 const TransactionsSlice = createSlice({
   name: 'Transactions',
   initialState,
   reducers: {
-
-    setTransactions : (state, action) => {
+    setTransactions: (state, action) => {
       state.transactions = action.payload.transactions;
-    }
-    
+    },
   },
 });
 
-export const {  setTransactions } = TransactionsSlice.actions;
+export const { setTransactions } = TransactionsSlice.actions;
 
 export default TransactionsSlice.reducer;

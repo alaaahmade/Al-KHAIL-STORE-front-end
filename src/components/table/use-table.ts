@@ -87,7 +87,6 @@ export default function useTable(props?: UseTableProps): ReturnType {
     [page]
   );
 
-
   const onUpdatePageDeleteRows = useCallback(
     ({
       totalRows,

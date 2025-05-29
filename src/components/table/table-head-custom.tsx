@@ -44,11 +44,9 @@ export default function TableHeadCustom({
   onSelectAllRows,
   sx,
 }: Props) {
-  
   return (
     <TableHead sx={sx}>
       <TableRow>
-
         {headLabel.map((headCell) => (
           <TableCell
             key={headCell.id}

@@ -1,4 +1,5 @@
-'use client'
+/* eslint-disable @typescript-eslint/no-var-requires */
+'use client';
 import React, { useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -16,10 +17,7 @@ import Logo from 'src/components/logo';
 import { useSettingsContext } from 'src/components/settings';
 //
 import { HEADER, NAV } from '../config-layout';
-import {
-  AccountPopover,
-  NotificationsPopover,
-} from '../_common';
+import { AccountPopover, NotificationsPopover } from '../_common';
 import { InputAdornment, TextField, Typography } from '@mui/material';
 import Iconify from '@/components/iconify';
 import Label from '@/components/label';
@@ -63,45 +61,115 @@ export default function ShopHeader() {
         </Typography>
       </Stack>
       {/* Center: Nav Links + Search */}
-      <Stack direction="row" alignItems="center" spacing={1} flexGrow={1} justifyContent="space-between">
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={1}
+        flexGrow={1}
+        justifyContent="space-between"
+      >
         <Stack direction="row" spacing={2}>
-          <Typography component="a" href="/shop" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Home</Typography>
-          <Typography component="a" href="/shop/shops" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Shop</Typography>
-          <Typography component="a" href="/shop/products" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Products</Typography>
-          <Typography component="a" href="/shop/categories" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Categories</Typography>
-          <Typography component="a" href="/shop/messages" sx={{ color: 'text.primary', fontWeight: 500, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}>Messages</Typography>
+          <Typography
+            component="a"
+            href="/shop"
+            sx={{
+              color: 'text.primary',
+              fontWeight: 500,
+              textDecoration: 'none',
+              '&:hover': { color: 'primary.main' },
+            }}
+          >
+            Home
+          </Typography>
+          <Typography
+            component="a"
+            href="/shop/shops"
+            sx={{
+              color: 'text.primary',
+              fontWeight: 500,
+              textDecoration: 'none',
+              '&:hover': { color: 'primary.main' },
+            }}
+          >
+            Shop
+          </Typography>
+          <Typography
+            component="a"
+            href="/shop/products"
+            sx={{
+              color: 'text.primary',
+              fontWeight: 500,
+              textDecoration: 'none',
+              '&:hover': { color: 'primary.main' },
+            }}
+          >
+            Products
+          </Typography>
+          <Typography
+            component="a"
+            href="/shop/categories"
+            sx={{
+              color: 'text.primary',
+              fontWeight: 500,
+              textDecoration: 'none',
+              '&:hover': { color: 'primary.main' },
+            }}
+          >
+            Categories
+          </Typography>
+          <Typography
+            component="a"
+            href="/shop/messages"
+            sx={{
+              color: 'text.primary',
+              fontWeight: 500,
+              textDecoration: 'none',
+              '&:hover': { color: 'primary.main' },
+            }}
+          >
+            Messages
+          </Typography>
         </Stack>
         <TextField
           type="text"
           placeholder="Search products..."
-          size='small'
-          sx={{ fontSize: 16, width: 200, borderRadius: 50, 
+          size="small"
+          sx={{
+            fontSize: 16,
+            width: 200,
+            borderRadius: 50,
             '& .MuiOutlinedInput-root': {
               borderRadius: 50,
             },
           }}
           value={searchValue}
-          onChange={e => setSearchValue(e.target.value)}
+          onChange={(e) => setSearchValue(e.target.value)}
           onKeyDown={handleKeyDown}
           InputProps={{
             endAdornment: (
               <InputAdornment position="start">
-                <Iconify icon="eva:search-fill" width={24} height={24} style={{ cursor: 'pointer' }} onClick={handleSearch} />
+                <Iconify
+                  icon="eva:search-fill"
+                  width={24}
+                  height={24}
+                  style={{ cursor: 'pointer' }}
+                  onClick={handleSearch}
+                />
               </InputAdornment>
             ),
           }}
         />
       </Stack>
-      <Stack direction="row" alignItems="center" spacing={0} sx={{ minWidth: 180, justifyContent: 'flex-end' }}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={0}
+        sx={{ minWidth: 180, justifyContent: 'flex-end' }}
+      >
         <IconButton color="default">
           <Iconify icon="mdi:heart-outline" width="20" height="20" />
         </IconButton>
-        <IconButton
-          component="a"
-          href="/shop/cart"
-          color="default"
-          sx={{ position: 'relative' }}
-        >
+        <IconButton component="a" href="/shop/cart" color="default" sx={{ position: 'relative' }}>
           <Label
             color="warning"
             sx={{
@@ -136,9 +204,10 @@ export default function ShopHeader() {
         ...(lgUp && {
           width: `calc(100% - ${NAV.W_VERTICAL + 1}px)`,
           height: HEADER.H_DESKTOP,
-          ...(offsetTop && {
-            // height: HEADER.H_DESKTOP_OFFSET,
-          }),
+          ...(offsetTop &&
+            {
+              // height: HEADER.H_DESKTOP_OFFSET,
+            }),
           ...(isNavHorizontal && {
             width: 1,
             bgcolor: 'background.default',
@@ -149,20 +218,19 @@ export default function ShopHeader() {
             width: `calc(100% - ${NAV.W_MINI + 1}px)`,
           }),
         }),
-          width: 1,
-          borderBottom: `1px solid  ${theme.palette.divider}`,
-          height: '4em'
+        width: 1,
+        borderBottom: `1px solid  ${theme.palette.divider}`,
+        height: '4em',
       }}
     >
       <Toolbar
         sx={{
           height: 1,
           px: { lg: 5 },
-          position: 'relative'
+          position: 'relative',
         }}
       >
         {renderContent}
-
       </Toolbar>
     </AppBar>
   );

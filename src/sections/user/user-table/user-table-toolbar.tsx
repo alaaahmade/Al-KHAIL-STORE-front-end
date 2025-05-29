@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -15,29 +15,39 @@ type Props = {
   setCurrentRole: (role: string) => void;
 };
 
-export default function UserTableToolbar({ filterName, onFilterName, numSelected, currentRole, setCurrentRole }: Props) {
-    const {roles = []} = useAppSelector((state) => state.role)
+export default function UserTableToolbar({
+  filterName,
+  onFilterName,
+  numSelected,
+  currentRole,
+  setCurrentRole,
+}: Props) {
+  const { roles = [] } = useAppSelector((state) => state.role);
 
   return (
-    <Stack spacing={2} alignItems="center" justifyContent={"space-between"} direction="row" sx={{ px: 2.5, py: 2 }}>
-      <Typography>
-        System Users
-      </Typography>
-      <Stack direction={'row'} spacing={2} alignItems="center" sx={{p: 2}}>
-      <TextField
-        fullWidth
-        size="small"
-        value={filterName}
-        onChange={onFilterName}
-        placeholder="Search user..."
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-            </InputAdornment>
-          ),
-        }}
-      />
+    <Stack
+      spacing={2}
+      alignItems="center"
+      justifyContent={'space-between'}
+      direction="row"
+      sx={{ px: 2.5, py: 2 }}
+    >
+      <Typography>System Users</Typography>
+      <Stack direction={'row'} spacing={2} alignItems="center" sx={{ p: 2 }}>
+        <TextField
+          fullWidth
+          size="small"
+          value={filterName}
+          onChange={onFilterName}
+          placeholder="Search user..."
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+              </InputAdornment>
+            ),
+          }}
+        />
         <FormControl>
           <InputLabel id="demo-simple-select-label">Roles</InputLabel>
           <Select
@@ -46,17 +56,20 @@ export default function UserTableToolbar({ filterName, onFilterName, numSelected
             value={currentRole}
             label="Products"
             onChange={(e) => {
-              setCurrentRole(e.target.value)
+              setCurrentRole(e.target.value);
             }}
-            size='small'
+            size="small"
             sx={{
-              minWidth: 110
+              minWidth: 110,
             }}
           >
             <MenuItem value={'all'}>All Roles</MenuItem>
-            {roles.length > 0 && roles.map((role) => (
-              <MenuItem key={role.id} value={role.name}>{role.name}</MenuItem>
-            ))}
+            {roles.length > 0 &&
+              roles.map((role) => (
+                <MenuItem key={role.id} value={role.name}>
+                  {role.name}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
       </Stack>

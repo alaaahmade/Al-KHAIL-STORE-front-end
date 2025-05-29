@@ -21,20 +21,25 @@ import PaymentMethods from '../PaymentMethods';
 import ShippingAddress from '../ShippingAddress';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-
 const tabs = [
   { label: 'Account', icon: <Iconify icon="material-symbols:person" width="24" height="24" /> },
-  { label: 'Notifications', icon: <Iconify icon="mingcute:notification-fill" width="24" height="24" /> },
-  { label: 'Payment Methods', icon: <Iconify icon="fluent:payment-16-filled" width="24" height="24" /> },
+  {
+    label: 'Notifications',
+    icon: <Iconify icon="mingcute:notification-fill" width="24" height="24" />,
+  },
+  {
+    label: 'Payment Methods',
+    icon: <Iconify icon="fluent:payment-16-filled" width="24" height="24" />,
+  },
   { label: 'Shipping', icon: <Iconify icon="fa-solid:shipping-fast" width="24" height="24" /> },
   { label: 'Security', icon: <Iconify icon="line-md:security-twotone" width="24" height="24" /> },
 ];
 
 export const ShopSettingsView = () => {
   const settings = useSettingsContext();
-  const searchParams = useSearchParams()
-  const tapSearch = searchParams.get('tapSearch')
-  const router = useRouter()
+  const searchParams = useSearchParams();
+  const tapSearch = searchParams.get('tapSearch');
+  const router = useRouter();
 
   const handleChangeTab = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
@@ -46,12 +51,12 @@ export const ShopSettingsView = () => {
   );
 
   useEffect(() => {
-    if(!tapSearch){
+    if (!tapSearch) {
       const params = new URLSearchParams(searchParams.toString());
       params.set('tapSearch', 'Account');
       router.push(`?${params.toString()}`);
     }
-  }, [router, searchParams, tapSearch])
+  }, [router, searchParams, tapSearch]);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -76,26 +81,29 @@ export const ShopSettingsView = () => {
                     ...(tab.label === tapSearch && {
                       bgcolor: 'action.selected',
                       color: 'primary.main',
-                    })
+                    }),
                   }}
-                  
                 >
                   <ListItemIcon>{tab.icon}</ListItemIcon>
                   <MUIListItemText primary={tab.label} />
                 </ListItemButton>
               ))}
-            </List> 
+            </List>
           </Card>
         </Grid>
 
         <Grid item xs={12} md={9}>
-          {tapSearch === 'Notifications' ? <NotificationsSettings /> 
-            : tapSearch === 'Security' ? <SecuritySettings />
-            : tapSearch === 'Payment Methods' ? <PaymentMethods />
-            : tapSearch === 'Shipping' ? <ShippingAddress />
-            : <AccountSettings /> 
-        }
-
+          {tapSearch === 'Notifications' ? (
+            <NotificationsSettings />
+          ) : tapSearch === 'Security' ? (
+            <SecuritySettings />
+          ) : tapSearch === 'Payment Methods' ? (
+            <PaymentMethods />
+          ) : tapSearch === 'Shipping' ? (
+            <ShippingAddress />
+          ) : (
+            <AccountSettings />
+          )}
         </Grid>
       </Grid>
     </Container>

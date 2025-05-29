@@ -11,7 +11,7 @@ type Props = {
   reviews: IProductReview[];
 };
 
-export default function ProductReviewList({ reviews }: Props) {  
+export default function ProductReviewList({ reviews }: Props) {
   return (
     <>
       {reviews.map((review) => (

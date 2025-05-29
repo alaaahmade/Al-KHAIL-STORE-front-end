@@ -26,8 +26,8 @@ export interface IUser {
 
 export interface IUserItem extends IUser {
   isActive: boolean;
-  lastActiveAt(lastActiveAt: any): import("react").ReactNode;
-  date? : string;
+  lastActiveAt(lastActiveAt: any): import('react').ReactNode;
+  date?: string;
 }
 
 export type IUserTableFilterValue = string | string[];
@@ -38,6 +38,3 @@ export type IUserTableFilters = {
   startDate: Date | null;
   endDate: Date | null;
 };
-
-
-

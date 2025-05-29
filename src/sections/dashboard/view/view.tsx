@@ -24,25 +24,23 @@ import { fetchProducts } from '@/redux/slices/productsReducer';
 
 export default function OneView() {
   const settings = useSettingsContext();
-  const appDispatch = useAppDispatch()
-  const latestReviews = useAppSelector(state => state.reviewsSlice.latestReviews)
+  const appDispatch = useAppDispatch();
+  const latestReviews = useAppSelector((state) => state.reviewsSlice.latestReviews);
 
   useEffect(() => {
-    appDispatch(fetchLatestReviews())
-    appDispatch(fetchReviews())
-    appDispatch(fetchCustomers())
-    appDispatch(fetchLatestOrders())
-    appDispatch(fetchProducts())
-  }, [])
+    appDispatch(fetchLatestReviews());
+    appDispatch(fetchReviews());
+    appDispatch(fetchCustomers());
+    appDispatch(fetchLatestOrders());
+    appDispatch(fetchProducts());
+  }, []);
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'}>  
+    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <DashboardContent />
-    <Container maxWidth={settings.themeStretch ? false : 'xl'}  sx={{p: 4}}>
-      <ProductDetailsReview
-            reviews={latestReviews}
-          />
-    </Container>
+      <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ p: 4 }}>
+        <ProductDetailsReview reviews={latestReviews} />
+      </Container>
     </Container>
   );
 }

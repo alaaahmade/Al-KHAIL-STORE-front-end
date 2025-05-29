@@ -28,7 +28,7 @@ type Props = {
   onSelectRow: (id: string) => void;
   onDeleteRow: (id: number) => void;
   onEditRow: VoidFunction;
-  loading: boolean
+  loading: boolean;
 };
 
 export default function UserTableRow({
@@ -37,7 +37,7 @@ export default function UserTableRow({
   onSelectRow,
   onDeleteRow,
   onEditRow,
-  loading
+  loading,
 }: Props) {
   const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -48,89 +48,84 @@ export default function UserTableRow({
   const handleCloseMenu = () => {
     setOpenMenu(null);
   };
-  
-  
+
   const handleConfirmDelete = async () => {
-     await onDeleteRow(row.id);
-      setOpenConfirm(false);
-      handleCloseMenu();
-  };  
-  
+    await onDeleteRow(row.id);
+    setOpenConfirm(false);
+    handleCloseMenu();
+  };
 
   return (
     <>
       <TableRow hover selected={selected}>
+        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar alt={row.firstName} src={row.photo} sx={{ mr: 2 }} />
 
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={row.firstName} src={row.photo} sx={{ mr: 2 }} />
-
-        <ListItemText
-          primary={row.firstName + ' ' + row.lastName}
-          primaryTypographyProps={{ typography: 'body2' }}
-          secondary={row.email}
-          secondaryTypographyProps={{
-            component: 'span',
-            color: 'text.disabled',
-          }}
-        />
-      </TableCell>
-      <TableCell>
-        {
-          row?.roles?.length > 0 ?
-          row?.roles?.map((role: any) => (
-            <Label
-            sx={{ml: 0.5}}
-            variant="soft"
-            color={
-              (String(role?.name)?.toLocaleLowerCase() === 'admin' && 'info') ||
-              (String(role?.name)?.toLocaleLowerCase() === 'manager' && 'success') ||
-            (String(role?.name)?.toLocaleLowerCase() === 'seller' && 'warning') ||
-            'default'
-          }
-        > 
-          {role?.name}
-        </Label>
-        ))
-        : null}
-      </TableCell>
+          <ListItemText
+            primary={row.firstName + ' ' + row.lastName}
+            primaryTypographyProps={{ typography: 'body2' }}
+            secondary={row.email}
+            secondaryTypographyProps={{
+              component: 'span',
+              color: 'text.disabled',
+            }}
+          />
+        </TableCell>
+        <TableCell>
+          {row?.roles?.length > 0
+            ? row?.roles?.map((role: any) => (
+                <Label
+                  key={role?.id}
+                  sx={{ ml: 0.5 }}
+                  variant="soft"
+                  color={
+                    (String(role?.name)?.toLocaleLowerCase() === 'admin' && 'info') ||
+                    (String(role?.name)?.toLocaleLowerCase() === 'manager' && 'success') ||
+                    (String(role?.name)?.toLocaleLowerCase() === 'seller' && 'warning') ||
+                    'default'
+                  }
+                >
+                  {role?.name}
+                </Label>
+              ))
+            : null}
+        </TableCell>
 
         <TableCell>
           <Stack direction="row" spacing={1}>
-              <Label
+            <Label
               variant="soft"
               color={
                 (String(row?.roles[0]?.name) && 'success') ||
-                !(String(row?.roles[0]?.name)  && 'error') ||
+                !(String(row?.roles[0]?.name) && 'error') ||
                 'default'
               }
-            > 
-            
+            >
               {row?.isActive ? 'Active' : 'Inactive'}
             </Label>
           </Stack>
         </TableCell>
 
-        <TableCell>
-          {timeAgo(row?.lastActiveAt)}
-        </TableCell>
+        <TableCell>{timeAgo(row?.lastActiveAt)}</TableCell>
 
-        <TableCell  >
+        <TableCell>
           <IconButton
-           onClick={() => {
-            onEditRow();
-            handleCloseMenu();
-          }}>
-          <Iconify icon="eva:edit-fill" width={20} height={20}  /> 
+            onClick={() => {
+              onEditRow();
+              handleCloseMenu();
+            }}
+          >
+            <Iconify icon="eva:edit-fill" width={20} height={20} />
           </IconButton>
           <IconButton
-          onClick={() => {
-            setOpenConfirm(true);
-            handleCloseMenu();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="eva:trash-2-outline" width={20} height={20}  />
-        </IconButton>
+            onClick={() => {
+              setOpenConfirm(true);
+              handleCloseMenu();
+            }}
+            sx={{ color: 'error.main' }}
+          >
+            <Iconify icon="eva:trash-2-outline" width={20} height={20} />
+          </IconButton>
         </TableCell>
       </TableRow>
 
@@ -144,14 +139,10 @@ export default function UserTableRow({
           sx: { width: 140 },
         }}
       >
-        <MenuItem
-
-        >
+        <MenuItem>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
           Edit
         </MenuItem>
-
-
       </Popover>
 
       {/* Confirmation Dialog */}
@@ -164,7 +155,13 @@ export default function UserTableRow({
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenConfirm(false)}>Cancel</Button>
-          <LoadingButton disabled={loading} loading={loading} onClick={handleConfirmDelete} variant="contained" color="error">
+          <LoadingButton
+            disabled={loading}
+            loading={loading}
+            onClick={handleConfirmDelete}
+            variant="contained"
+            color="error"
+          >
             Delete
           </LoadingButton>
         </DialogActions>

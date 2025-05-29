@@ -13,7 +13,7 @@ type Props = {
 
 export default function ProductReviewList({ reviews }: Props) {
   console.log(reviews);
-  
+
   return (
     <>
       {reviews.map((review) => (

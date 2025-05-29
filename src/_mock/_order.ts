@@ -68,13 +68,13 @@ export const _orders = [...Array(20)].map((_, index) => {
 
   return {
     id: _mock.id(index),
-    customer, 
-    product:  (index % 2 && 'Luxury Face Cream') || 'Anti-Aging Serum',
+    customer,
+    product: (index % 2 && 'Luxury Face Cream') || 'Anti-Aging Serum',
     amount: totalAmount,
     status:
       (index % 2 && 'Delivered') ||
       (index % 3 && 'Processing') ||
-      (index % 4 && 'cancelled') || 
+      (index % 4 && 'cancelled') ||
       'Delivered',
   };
 });

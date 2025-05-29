@@ -1,22 +1,20 @@
 // @mui
-import {  useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 
 // theme
 // components
 import Logo from 'src/components/logo';
-import {  Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
-
 
 type Props = {
   title?: string;
   image?: string;
   children: React.ReactNode;
 };
-
 
 const navigation = [
   {
@@ -44,26 +42,25 @@ export default function AuthClassicLayout({ children, image, title }: Props) {
         justifyContent: 'center',
         gap: 2,
         position: 'absolute',
-        m: { xs: 1.5, md: 1.5},
+        m: { xs: 1.5, md: 1.5 },
         zIndex: 9,
-      }}
-    ><Logo
-    />
-    <Typography
-      variant="h5"
-      component="h1"
-      sx={{
-        zIndex: 9,
-        color: 'primary.main',
-        fontWeight: 400,
-        fontSize: '24px',
-        LineHeight: '100%',
-        LetterSpacing: '0%',
       }}
     >
-      Al KHAIL STORE
-    </Typography>
-
+      <Logo />
+      <Typography
+        variant="h5"
+        component="h1"
+        sx={{
+          zIndex: 9,
+          color: 'primary.main',
+          fontWeight: 400,
+          fontSize: '24px',
+          LineHeight: '100%',
+          LetterSpacing: '0%',
+        }}
+      >
+        Al KHAIL STORE
+      </Typography>
     </Box>
   );
   const helpSupport = (
@@ -80,7 +77,7 @@ export default function AuthClassicLayout({ children, image, title }: Props) {
         width: '100%',
         position: 'absolute',
         bottom: 0,
-        mb:1
+        mb: 1,
       }}
     >
       ll rights reserved.
@@ -89,10 +86,9 @@ export default function AuthClassicLayout({ children, image, title }: Props) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 4
+          gap: 4,
         }}
       >
-
         {navigation.map((link) => (
           <Typography
             key={link.label}
@@ -107,9 +103,9 @@ export default function AuthClassicLayout({ children, image, title }: Props) {
             {link.label}
           </Typography>
         ))}
-
       </Box>
-      </Box>)
+    </Box>
+  );
 
   const renderContent = (
     <Stack
@@ -123,23 +119,18 @@ export default function AuthClassicLayout({ children, image, title }: Props) {
     </Stack>
   );
 
-
-
   return (
     <Stack
       // direction="column"
       sx={{
         p: 0,
         m: 0,
-        boxSizing: "border-box",
+        boxSizing: 'border-box',
       }}
     >
-         {renderLogo}
-          {renderContent}
-          {helpSupport}
-
-
-
+      {renderLogo}
+      {renderContent}
+      {helpSupport}
     </Stack>
   );
 }

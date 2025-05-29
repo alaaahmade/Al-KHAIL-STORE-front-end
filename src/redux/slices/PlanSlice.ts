@@ -9,21 +9,21 @@ interface PlanSliceState {
     name: string;
     credits: string;
     amountJOD: string;
-    id?: string
-  }
-  editMode: boolean
-  loadingB: boolean
+    id?: string;
+  };
+  editMode: boolean;
+  loadingB: boolean;
   error: {
     name: string;
     credits: string;
     amountJOD: string;
     id: string;
     message: string;
-  }
+  };
 }
 
 const initialState: PlanSliceState = {
-  plans:[],
+  plans: [],
   open: false,
   editMode: false,
   isHome: false,
@@ -31,9 +31,9 @@ const initialState: PlanSliceState = {
     name: '',
     credits: '',
     amountJOD: '',
-    id: ''
+    id: '',
   },
-  loadingB : false,
+  loadingB: false,
   error: {
     name: '',
     credits: '',
@@ -48,7 +48,7 @@ export const fetchPlans = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`/subscriptions/plans`);
-       return response.data;
+      return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to add rating');
     }
@@ -71,22 +71,23 @@ const PlansSlice = createSlice({
   name: 'Plans',
   initialState,
   reducers: {
-    setPlans : (state, action) => {
+    setPlans: (state, action) => {
       state.plans = action.payload;
     },
 
     openCreateDialog: (state) => {
-      state.open = true
+      state.open = true;
     },
     closeCreateDialog: (state) => {
-      state.open = false
+      state.open = false;
     },
     changeIsHome: (state, action) => {
-      state.isHome = action.payload
+      state.isHome = action.payload;
     },
     changeNewPlan: (state, action) => {
-      const { field, value }: { field: keyof PlanSliceState['newPlan']; value: string } = action.payload;
-      state.newPlan[field] = value;  
+      const { field, value }: { field: keyof PlanSliceState['newPlan']; value: string } =
+        action.payload;
+      state.newPlan[field] = value;
     },
 
     setEditMode: (state, action) => {
@@ -97,8 +98,7 @@ const PlansSlice = createSlice({
     },
     setError: (state, action) => {
       state.error = action.payload;
-    }
-    
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -118,15 +118,22 @@ const PlansSlice = createSlice({
       .addCase(deletePlan.fulfilled, (state, action) => {
         state.plans = state.plans.filter((plan) => plan.id !== action.payload.id);
         state.loadingB = false;
-      }
-      )
+      })
       .addCase(deletePlan.rejected, (state) => {
         state.loadingB = false;
-      }
-      );
+      });
   },
 });
 
-export const {  setPlans, setError, openCreateDialog,setLadingB, closeCreateDialog, setEditMode,changeIsHome, changeNewPlan } = PlansSlice.actions;
+export const {
+  setPlans,
+  setError,
+  openCreateDialog,
+  setLadingB,
+  closeCreateDialog,
+  setEditMode,
+  changeIsHome,
+  changeNewPlan,
+} = PlansSlice.actions;
 
 export default PlansSlice.reducer;

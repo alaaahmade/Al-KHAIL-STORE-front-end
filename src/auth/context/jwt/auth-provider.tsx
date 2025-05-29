@@ -6,7 +6,6 @@ import axios, { endpoints } from 'src/utils/axios';
 //
 import { io, Socket } from 'socket.io-client';
 
-
 import { AuthContext } from './auth-context';
 import { isValidToken, setSession } from './utils';
 import { ActionMapType, AuthStateType, AuthUserType } from '../../types';
@@ -94,7 +93,6 @@ type Props = {
   children: React.ReactNode;
 };
 
-
 // Initialize Firebase
 
 export function AuthProvider({ children }: Props) {
@@ -107,7 +105,7 @@ export function AuthProvider({ children }: Props) {
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
 
-        const response = await axios.get(endpoints.auth.me);         
+        const response = await axios.get(endpoints.auth.me);
         const { user } = response.data.data;
 
         dispatch({
@@ -135,11 +133,10 @@ export function AuthProvider({ children }: Props) {
 
   // LOGIN
   const login = useCallback(async (email: string, password: string) => {
-    const {data} = await axios.post(endpoints.auth.login, {
+    const { data } = await axios.post(endpoints.auth.login, {
       email,
       password,
-    },
-    );
+    });
     const { token, user } = data;
     sessionStorage.setItem(STORAGE_KEY, token);
     setSession(token);
@@ -152,14 +149,20 @@ export function AuthProvider({ children }: Props) {
 
   // REGISTER
   const register = useCallback(
-    async (email: string, password: string, firstName: string, lastName: string, phoneNumber: string) => {
+    async (
+      email: string,
+      password: string,
+      firstName: string,
+      lastName: string,
+      phoneNumber: string
+    ) => {
       const response = await axios.post(endpoints.auth.register, {
         email,
         password,
         firstName,
         lastName,
-        phoneNumber
-      });      
+        phoneNumber,
+      });
       const { accessToken, user } = response.data;
 
       sessionStorage.setItem(STORAGE_KEY, accessToken);
@@ -232,10 +235,9 @@ export function AuthProvider({ children }: Props) {
   }, []);
 
   // RESET PASSWORD
-  const resetPassword = useCallback(async ( data: any) => {
+  const resetPassword = useCallback(async (data: any) => {
     await axios.patch(endpoints.auth.resetPassword, data);
   }, []);
-
 
   // ----------------------------------------------------------------------
 
@@ -243,46 +245,57 @@ export function AuthProvider({ children }: Props) {
 
   const status = state.loading ? 'loading' : checkAuthenticated;
 
-
   const socketRef = useRef<Socket | null>(null);
 
-const [socket, setSocket] = useState<Socket | null>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
 
-useEffect(() => {
-  if (status === 'authenticated' && state.user) {
-    const socketInstance = io(process.env.SERVER_BASE_URL || 'http://localhost:3000', {
-      auth: { userId: state.user.id },
-    });
+  useEffect(() => {
+    if (status === 'authenticated' && state.user) {
+      const socketInstance = io(process.env.SERVER_BASE_URL || 'http://localhost:3000', {
+        auth: { userId: state.user.id },
+      });
 
-    socketInstance.on('connect', () => {
-      console.log('Socket connected:', socketInstance.id);
-    });
+      socketInstance.on('connect', () => {
+        console.log('Socket connected:', socketInstance.id);
+      });
 
-    socketRef.current = socketInstance;
-    setSocket(socketInstance); // update state here so context re-renders
+      socketRef.current = socketInstance;
+      setSocket(socketInstance); // update state here so context re-renders
 
-    return () => {
-      socketInstance.disconnect();
-      setSocket(null);
-    };
-  }
-}, [status, state.user]);
+      return () => {
+        socketInstance.disconnect();
+        setSocket(null);
+      };
+    }
+  }, [status, state.user]);
 
-const contextValue = useMemo(() => ({
-  user: state.user,
-  method: 'jwt',
-  loading: status === 'loading',
-  authenticated: status === 'authenticated',
-  unauthenticated: status === 'unauthenticated',
-  login,
-  register,
-  createASeller,
-  logout,
-  forgotPassword,
-  resetPassword,
-  socket,  // <-- use state variable here
-}), [state.user, status, socket, login, register, createASeller, logout, forgotPassword, resetPassword]);
-  
+  const contextValue = useMemo(
+    () => ({
+      user: state.user,
+      method: 'jwt',
+      loading: status === 'loading',
+      authenticated: status === 'authenticated',
+      unauthenticated: status === 'unauthenticated',
+      login,
+      register,
+      createASeller,
+      logout,
+      forgotPassword,
+      resetPassword,
+      socket, // <-- use state variable here
+    }),
+    [
+      state.user,
+      status,
+      socket,
+      login,
+      register,
+      createASeller,
+      logout,
+      forgotPassword,
+      resetPassword,
+    ]
+  );
+
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
-  
 }

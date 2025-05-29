@@ -17,14 +17,14 @@ type Props = {
 };
 
 export default function ChatHeaderDetail({ participants }: Props) {
-  const {user} = useAuthContext()
-  
-    const singleParticipant = participants.filter(p => p.id !== user?.id)[0];
-  
+  const { user } = useAuthContext();
+
+  const singleParticipant = participants.filter((p) => p.id !== user?.id)[0];
+
   const renderSingle = (
     <Stack flexGrow={1} direction="row" alignItems="center" spacing={2}>
       <Badge
-        variant={singleParticipant.isActive? 'online' : 'offline'}
+        variant={singleParticipant.isActive ? 'online' : 'offline'}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Avatar src={singleParticipant.photo} alt={singleParticipant.firstName} />

@@ -18,7 +18,8 @@ const ShopBecomeSellerSection = () => (
       overflow: 'hidden',
       background: 'linear-gradient(90deg, #fff6fb 0%, #f3e9fd 100%)',
       minHeight: { md: 420 },
-      mb: 4,mt: 5
+      mb: 4,
+      mt: 5,
     }}
   >
     <Grid
@@ -50,7 +51,8 @@ const ShopBecomeSellerSection = () => (
             fontFamily: 'inherit',
           }}
         >
-          Join our marketplace and reach millions of beauty enthusiasts.<br />
+          Join our marketplace and reach millions of beauty enthusiasts.
+          <br />
           Grow your business with our powerful selling tools and support.
         </Typography>
         <List sx={{ mb: 3 }}>
@@ -78,13 +80,22 @@ const ShopBecomeSellerSection = () => (
             '&:hover': { background: '#c80055' },
           }}
           component={Link}
-          href='/auth/jwt/becom-seller'
+          href="/auth/jwt/becom-seller"
         >
           Start Selling
         </Button>
       </Grid>
       {/* Right Column (Image) */}
-      <Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: { xs: 'center', md: 'flex-end' }, mt: { xs: 4, md: 0 } }}>
+      <Grid
+        item
+        xs={12}
+        md={6}
+        sx={{
+          display: 'flex',
+          justifyContent: { xs: 'center', md: 'flex-end' },
+          mt: { xs: 4, md: 0 },
+        }}
+      >
         <Box
           component="img"
           src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=600&q=80"

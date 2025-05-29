@@ -32,9 +32,9 @@ export type IProductReview = {
   attachments?: string[];
   postedAt: Date;
   content: string;
-  user: any,
-  product: any,
-  commentReplies: any[]
+  user: any;
+  product: any;
+  commentReplies: any[];
 };
 
 export type IProductItem = {
@@ -86,66 +86,65 @@ export type IProductTableFilters = {
   publish: string[];
 };
 
-
 // IProductCategory
 export interface IProductCategory {
-id: number;
-name: string;
-description?: string;
-createdAt?: string;
-updatedAt?: string;
+  id: number;
+  name: string;
+  description?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-// CreateProductDto, 
+// CreateProductDto,
 export interface CreateProductDto {
-title: string;
-hours?: number;
-credits?: number;
-vendor: string;
-availability?: any;
-images?: string[];
-publish?: boolean;
-description: string;
-categoryId?: number;
-isFuture?: boolean;
-date?: string;
-class?: boolean;
-ratings?: any[];
+  title: string;
+  hours?: number;
+  credits?: number;
+  vendor: string;
+  availability?: any;
+  images?: string[];
+  publish?: boolean;
+  description: string;
+  categoryId?: number;
+  isFuture?: boolean;
+  date?: string;
+  class?: boolean;
+  ratings?: any[];
 }
 // UpdateProductDto,
 export interface UpdateProductDto {
-title?: string;
-hours?: number;
-credits?: number;
-vendor?: string;
-availability?: any;
-images?: string[];
-publish?: boolean;
-description?: string;
-categoryId?: number;
-isFuture?: boolean;
-date?: string;
-class?: boolean;
-ratings?: AnyARecord[];
+  title?: string;
+  hours?: number;
+  credits?: number;
+  vendor?: string;
+  availability?: any;
+  images?: string[];
+  publish?: boolean;
+  description?: string;
+  categoryId?: number;
+  isFuture?: boolean;
+  date?: string;
+  class?: boolean;
+  ratings?: AnyARecord[];
 }
 // CreateCategoryDto,
 export interface CreateCategoryDto {
-name: string;
-description?: string;
+  name: string;
+  description?: string;
 }
 // UpdateCategoryDto,
 
 export interface UpdateCategoryDto {
-name?: string;
-description?: string;
+  name?: string;
+  description?: string;
 }
 // CreateRatingDto,
 // ListingInterface
 
 export interface CreateRatingDto {
-name: string;
-starCount: number;
-reviewCount: number;
+  name: string;
+  starCount: number;
+  reviewCount: number;
 }
 
 export interface ProductInterface {
@@ -153,10 +152,10 @@ export interface ProductInterface {
   productName: string;
   productImage: string;
   productStatus: string;
-  standardPrice: string; 
-  offerPrice?: string;  
+  standardPrice: string;
+  offerPrice?: string;
   productDescription: string;
-  productDate: string;   
+  productDate: string;
   productQuantity: string;
 
   store: any;

@@ -4,7 +4,6 @@ export const metadata = {
   title: 'shop profile',
 };
 
-
 export default function ShopFeaturedShopsPage() {
   return <ShopProfileView />;
 }

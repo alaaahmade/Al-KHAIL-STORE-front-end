@@ -20,7 +20,7 @@ import {
   Select,
   TextField,
   Typography,
-  Avatar
+  Avatar,
 } from '@mui/material';
 
 // components
@@ -36,15 +36,14 @@ import { paths } from '@/routes/paths';
 
 // ----------------------------------------------------------------------
 
-
 // ----------------------------------------------------------------------
 
 export default function ContactManagementView() {
   const settings = useSettingsContext();
-  const {user} = useAuthContext()
-  const {chats} = useAppSelector(state => state.contactManagement)
+  const { user } = useAuthContext();
+  const { chats } = useAppSelector((state) => state.contactManagement);
   const [currentFilter, setCurrentFilter] = useState('all');
-  const [currentCHats, setCurrentCHats] = useState<any[]>([])
+  const [currentCHats, setCurrentCHats] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [page, setPage] = useState(1);
@@ -56,17 +55,26 @@ export default function ContactManagementView() {
     setCurrentFilter(filterId);
   };
 
-  const urgentChats = chats.filter((chat) => chat.status === 'urgent')
-  const resolvedChats = chats.filter((chat) => chat.status === 'resolved')
-  const unassignedChats = chats.filter((chat) => chat.status === 'unassigned')
+  const urgentChats = chats.filter((chat) => chat.status === 'urgent');
+  const resolvedChats = chats.filter((chat) => chat.status === 'resolved');
+  const unassignedChats = chats.filter((chat) => chat.status === 'unassigned');
 
-
-const TICKET_FILTERS = [
-  { id: 'all', label: 'All Tickets', count: chats.length, icon: 'lucide:tickets' },
-  { id: 'unassigned', label: 'Unassigned', count: unassignedChats.length, icon: 'zondicons:exclamation-solid' },
-  { id: 'urgent', label: 'Urgent', count: urgentChats.length, icon: 'clarity:flame-solid' },
-  { id: 'resolved', label: 'Resolved', count: resolvedChats.length, icon: 'icon-park-solid:check-one' },
-];
+  const TICKET_FILTERS = [
+    { id: 'all', label: 'All Tickets', count: chats.length, icon: 'lucide:tickets' },
+    {
+      id: 'unassigned',
+      label: 'Unassigned',
+      count: unassignedChats.length,
+      icon: 'zondicons:exclamation-solid',
+    },
+    { id: 'urgent', label: 'Urgent', count: urgentChats.length, icon: 'clarity:flame-solid' },
+    {
+      id: 'resolved',
+      label: 'Resolved',
+      count: resolvedChats.length,
+      icon: 'icon-park-solid:check-one',
+    },
+  ];
 
   const getStatusLabelColor = (status: string) => {
     if (status === 'pending') return 'warning';
@@ -77,12 +85,12 @@ const TICKET_FILTERS = [
 
   const applyFilters = () => {
     let filtered = [...chats];
-  
+
     // Filter by ticket status
     if (currentFilter !== 'all') {
       filtered = filtered.filter((ticket) => ticket.status === currentFilter);
     }
-  
+
     // Search by participant name or message content
     if (searchTerm.trim()) {
       const lowerSearch = searchTerm.toLowerCase();
@@ -95,30 +103,27 @@ const TICKET_FILTERS = [
         return name.includes(lowerSearch) || message.includes(lowerSearch);
       });
     }
-  
+
     // Sort by time or priority (you may want to enhance this based on actual data)
     if (sortBy === 'newest') {
       filtered.sort(
         (a, b) =>
-          new Date(b.messages[0].createdAt).getTime() -
-          new Date(a.messages[0].createdAt).getTime()
+          new Date(b.messages[0].createdAt).getTime() - new Date(a.messages[0].createdAt).getTime()
       );
     } else if (sortBy === 'oldest') {
       filtered.sort(
         (a, b) =>
-          new Date(a.messages[0].createdAt).getTime() -
-          new Date(b.messages[0].createdAt).getTime()
+          new Date(a.messages[0].createdAt).getTime() - new Date(b.messages[0].createdAt).getTime()
       );
     } else if (sortBy === 'priority') {
       const priorityOrder = { urgent: 0, pending: 1, resolved: 2 };
       filtered.sort(
-        (a, b) => ((priorityOrder as  any)[a.status] ?? 3) - ((priorityOrder as  any)[b.status] ?? 3)
+        (a, b) => ((priorityOrder as any)[a.status] ?? 3) - ((priorityOrder as any)[b.status] ?? 3)
       );
     }
-  
+
     setCurrentCHats(filtered);
   };
-  
 
   useEffect(() => {
     applyFilters();
@@ -126,20 +131,18 @@ const TICKET_FILTERS = [
   }, [chats, searchTerm, sortBy, currentFilter]);
 
   useEffect(() => {
-    if(user && user.id){
-      dispatch(fetchChats(user.id))
+    if (user && user.id) {
+      dispatch(fetchChats(user.id));
     }
-  }, [])
-
-
+  }, []);
 
   useEffect(() => {
-    if(chats && chats?.length > 0){
-      setCurrentCHats(chats)
-    }else {
-      setCurrentCHats([])
+    if (chats && chats?.length > 0) {
+      setCurrentCHats(chats);
+    } else {
+      setCurrentCHats([]);
     }
-  }, [chats])
+  }, [chats]);
 
   if (user?.role !== 'seller') {
     console.log(user?.role);
@@ -150,7 +153,7 @@ const TICKET_FILTERS = [
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={5}>
         <Box>
           <Typography variant="h4">Contact Management</Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary', mt: .5 }}>
+          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
             Manage customer inquiries and support tickets
           </Typography>
         </Box>
@@ -175,9 +178,17 @@ const TICKET_FILTERS = [
                     }),
                   }}
                 >
-                  <Iconify icon={filter.icon} sx={{ mr: 2, color: currentFilter === filter.id ? 'primary.main' : 'text.secondary' }} />
+                  <Iconify
+                    icon={filter.icon}
+                    sx={{
+                      mr: 2,
+                      color: currentFilter === filter.id ? 'primary.main' : 'text.secondary',
+                    }}
+                  />
                   <ListItemText primary={filter.label} />
-                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>{filter.id === 'all'? chats?.length : filter.count}</Typography>
+                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    {filter.id === 'all' ? chats?.length : filter.count}
+                  </Typography>
                 </ListItem>
               ))}
             </List>
@@ -186,10 +197,12 @@ const TICKET_FILTERS = [
 
         <Grid item xs={12} md={8}>
           <Stack spacing={3}>
-            <Card sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Card
+              sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+            >
               <TextField
                 fullWidth
-                size='small'
+                size="small"
                 variant="outlined"
                 placeholder="Search tickets..."
                 value={searchTerm}
@@ -214,51 +227,78 @@ const TICKET_FILTERS = [
               </Select>
             </Card>
 
-            {currentCHats
-              .slice((page - 1) * rowsPerPage, page * rowsPerPage)
-              .map((ticket) => (
-                <Card key={ticket.participants[0].id} sx={{ p: 2 }}>
-                <Stack direction="column" spacing={2} alignItems="flex-start" justifyContent={'center'} sx={{position: 'relative'}}>
-                  <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent={'flex-start'}
+            {currentCHats.slice((page - 1) * rowsPerPage, page * rowsPerPage).map((ticket) => (
+              <Card key={ticket.participants[0].id} sx={{ p: 2 }}>
+                <Stack
+                  direction="column"
+                  spacing={2}
+                  alignItems="flex-start"
+                  justifyContent={'center'}
+                  sx={{ position: 'relative' }}
+                >
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    alignItems="flex-start"
+                    justifyContent={'flex-start'}
                   >
-                  <Avatar
-                    onClick={() => navigate.push(paths.dashboard.contactManagement.chat(ticket.id))}
-                    sx={{
-                      cursor: 'pointer',
-                      border: '1px solid transparent', 
-                      '&:hover': {
-                        border: '1px solid #FF308D', 
-                      },
-                    }}
-                  src={ticket.participants[0].photo} alt={ticket.participants[0].firstName + ticket.participants[0].lastName} />
-                    <Stack direction="column" spacing={0} alignItems="flex-start" justifyContent={'center'}>
+                    <Avatar
+                      onClick={() =>
+                        navigate.push(paths.dashboard.contactManagement.chat(ticket.id))
+                      }
+                      sx={{
+                        cursor: 'pointer',
+                        border: '1px solid transparent',
+                        '&:hover': {
+                          border: '1px solid #FF308D',
+                        },
+                      }}
+                      src={ticket.participants[0].photo}
+                      alt={ticket.participants[0].firstName + ticket.participants[0].lastName}
+                    />
+                    <Stack
+                      direction="column"
+                      spacing={0}
+                      alignItems="flex-start"
+                      justifyContent={'center'}
+                    >
                       <Typography
-                          onClick={() => navigate.push(paths.dashboard.contactManagement.chat(ticket.id))}
-                          sx={{
-                            cursor: 'pointer',
-                            border: '1px solid transparent', 
-                            '&:hover': {
-                              borderBottom: '2px solid #ccc', 
-                            },
-                          }}
-                      variant="subtitle1">
-                          {ticket.participants[0].firstName + ticket.participants[0].lastName}
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
-                          {ticket.messages[0].content}
-                        </Typography>
-                        <Stack mt={1} direction="row" alignItems="center" spacing={2}>
-                        <Label color={getStatusLabelColor(ticket.status)} sx={{ textTransform: 'capitalize', borderRadius: 50}}>{ticket.status}</Label>
+                        onClick={() =>
+                          navigate.push(paths.dashboard.contactManagement.chat(ticket.id))
+                        }
+                        sx={{
+                          cursor: 'pointer',
+                          border: '1px solid transparent',
+                          '&:hover': {
+                            borderBottom: '2px solid #ccc',
+                          },
+                        }}
+                        variant="subtitle1"
+                      >
+                        {ticket.participants[0].firstName + ticket.participants[0].lastName}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
+                        {ticket.messages[0].content}
+                      </Typography>
+                      <Stack mt={1} direction="row" alignItems="center" spacing={2}>
+                        <Label
+                          color={getStatusLabelColor(ticket.status)}
+                          sx={{ textTransform: 'capitalize', borderRadius: 50 }}
+                        >
+                          {ticket.status}
+                        </Label>
                         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                           {timeAgo(ticket.messages[0].createdAt)}
                         </Typography>
                       </Stack>
-
-                      </Stack>
                     </Stack>
-                    <IconButton sx={{position: 'absolute', top: 0, right: 0, opacity: 0.8}} size="small">
-                      <Iconify icon="eva:more-vertical-fill" />
-                    </IconButton>
+                  </Stack>
+                  <IconButton
+                    sx={{ position: 'absolute', top: 0, right: 0, opacity: 0.8 }}
+                    size="small"
+                  >
+                    <Iconify icon="eva:more-vertical-fill" />
+                  </IconButton>
                 </Stack>
               </Card>
             ))}
@@ -281,10 +321,10 @@ const TICKET_FILTERS = [
                 sx={{
                   '& .MuiPaginationItem-root': {
                     color: '#000', // Default number color
-                    borderRadius: 1
+                    borderRadius: 1,
                   },
                   '& .MuiPaginationItem-root.Mui-selected': {
-                    color: '#fff',           // Selected number color
+                    color: '#fff', // Selected number color
                   },
                 }}
               />

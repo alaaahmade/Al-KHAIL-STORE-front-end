@@ -34,8 +34,6 @@ export default function UserTableFiltersResult({
     onFilters('status', 'all');
   };
 
-
-
   const handleRemoveDate = () => {
     onFilters('startDate', '');
     onFilters('endDate', '');
@@ -60,7 +58,12 @@ export default function UserTableFiltersResult({
         {!!filters.startDate && !!filters.endDate && (
           <Block label="Date:">
             {/* {filters.role.map((item) => ( */}
-              <Chip key={ `${filters.endDate}${filters.startDate}`} label={`${fDate(filters.startDate)} - ${fDate(filters.endDate)}`} size="small" onDelete={() => handleRemoveDate()} />
+            <Chip
+              key={`${filters.endDate}${filters.startDate}`}
+              label={`${fDate(filters.startDate)} - ${fDate(filters.endDate)}`}
+              size="small"
+              onDelete={() => handleRemoveDate()}
+            />
             {/* ))} */}
           </Block>
         )}
