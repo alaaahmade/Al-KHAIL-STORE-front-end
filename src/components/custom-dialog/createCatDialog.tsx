@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Stack, Typography, IconButton, Box, TextField } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Stack, Typography, IconButton, Box, TextField, Slide } from '@mui/material';
 import React from 'react';
 import { TransitionProps } from 'notistack';
 import { useSelector , useDispatch } from 'react-redux';
@@ -27,7 +27,6 @@ export function CreateCatDialog({ onClose, open, handleSave }: CreateCatDialogPr
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const dispatch = useDispatch();
   const error = useSelector((state: any) => state.CategoriesSlice.error);
-  console.log(newCategory);
   
   const handleClose = () => {
     dispatch(changeNewCat({ value: '', field: 'icon' }))

@@ -22,6 +22,7 @@ import {  useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import NotFoundPage from '@/app/not-found';
 import Iconify from '@/components/iconify';
+import { deleteFileFromS3 } from '@/utils/file';
 
     // ----------------------------------------------------------------------
 
@@ -88,10 +89,18 @@ export default function ChatView() {
   }, [socket, currentChat?.id, selectedConversationId]);
 
 
-  const handleDeleteMessage = (messageId: string) => {
-    setMessages((prev: any) => prev.filter((m: any) => m.id !== messageId));
-  
-    socket?.emit('delete', { id: messageId });
+  const handleDeleteMessage = async(messageId: string) => {
+    try {
+      const message = messages.find((m: any) => m.id === messageId);
+      if(message?.files && message?.files.url){
+        await deleteFileFromS3(message?.files.url);
+      }
+      setMessages((prev: any) => prev.filter((m: any) => m.id !== messageId));
+      socket?.emit('delete', { id: messageId });
+    } catch (error) {
+      console.log(error);
+    }
+
   };
 
 

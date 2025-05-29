@@ -24,6 +24,7 @@
   import { fetchChats } from '@/redux/slices/ContactSlice';
   import { useAuthContext } from '@/auth/hooks';
 import Iconify from '@/components/iconify';
+import { deleteFileFromS3 } from '@/utils/file';
 
     // ----------------------------------------------------------------------
 
@@ -93,14 +94,20 @@ import Iconify from '@/components/iconify';
         };
       }, [socket, chat.id]);
     
+  const details = !!conversation;
+  const handleDeleteMessage = async(messageId: string) => {
+    try {
+      const message = messages.find((m: any) => m.id === messageId);
+      if(message?.files && message?.files.url){
+        await deleteFileFromS3(message?.files.url);
+      }
+      setMessages((prev: any) => prev.filter((m: any) => m.id !== messageId));
+      socket?.emit('delete', { id: messageId });
+    } catch (error) {
+      console.log(error);
+    }
 
-      const details = !!conversation;
-
-      const handleDeleteMessage = (messageId: string) => {
-        setMessages((prev: any) => prev.filter((m: any) => m.id !== messageId));
-      
-        socket?.emit('delete', { id: messageId });
-      };
+  };
 
       const renderHead = (
         <Stack

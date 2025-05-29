@@ -24,11 +24,12 @@ export default function useGetMessage({ message, participants, currentUserId }: 
 
   const me = senderDetails.type === 'me';
 
-  const hasImage = message.contentType === 'image';
+  const hasImage = message?.files?.type === 'image';
 
   return {
     hasImage,
     me,
     senderDetails,
+    files: message.files,
   };
 }

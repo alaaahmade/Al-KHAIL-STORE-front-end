@@ -16,6 +16,10 @@ import Iconify from 'src/components/iconify';
 import uuidv4 from '@/utils/uuidv4';
 import { createConversation, sendMessage } from '@/app/api/chat';
 import { useAuthContext } from '@/auth/hooks';
+import { deleteFileFromS3, uploadFile } from '@/utils/file';
+import MediaPreviewDialog from '../media-preview-dialog';
+import { toast } from 'react-toastify';
+import { LoadingScreen } from '@/components/loading-screen';
 // types
 // ----------------------------------------------------------------------
 
@@ -38,20 +42,30 @@ export default function ChatMessageInput({
   const { user, socket } = useAuthContext();
 
   const fileRef = useRef<HTMLInputElement>(null);
-
+  const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('');
+  const [files, setFiles] = useState<{
+    url: string;
+    type: string;
+    text?: string;
+  } | null>({
+    url: '',
+    type: '',
+    text: '',
+  });
+  const [openDialog, setOpenDialog] = useState(false)
 
   const myContact = useMemo(
     () => ({
-      id: user.id,
-      role: user.role,
-      email: user.email,
-      address: user.address,
-      name: user.firstName + ' ' + user.lastName,
+      id: user?.id,
+      role: user?.role,
+      email: user?.email,
+      address: user?.address,
+      name: user?.firstName + ' ' + user?.lastName,
       lastActivity: new Date(),
-      avatarUrl: user.lastActiveAt,
-      phoneNumber: user.phoneNumber,
-      status: user.isActive ? 'online' :'online' 
+      avatarUrl: user?.lastActiveAt,
+      phoneNumber: user?.phoneNumber,
+      status: user?.isActive ? 'online' :'online' 
     }),
     [user]
   );
@@ -92,13 +106,10 @@ export default function ChatMessageInput({
   useEffect(() => {
     if (socket) {
       console.log('Socket in component:', socket);
-  
-      // Wait until socket is connected
-      if (!socket.connected) {
+        if (!socket.connected) {
         socket.on('connect', () => {
           console.log('Socket connected in component:', socket.id);
           
-          // safe to use socket here
           socket.emit('some-event', { data: 'example' });
         });
       } else {
@@ -112,6 +123,20 @@ export default function ChatMessageInput({
       };
     }
   }, [socket]);
+
+  const handleCaptionChange = useCallback(( value: string) => {
+    setFiles((prev: any) => ({...prev, text: value}))
+  }, []);
+
+  const onClose = async() => {
+    try {
+      setOpenDialog(false)
+      await deleteFileFromS3(`${files?.url}`)
+      setFiles(null)
+    } catch (error) {
+      toast.error('somthing wint wrong')
+    }
+  }
   
   const handleSendMessage = useCallback(
     async (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -124,7 +149,6 @@ export default function ChatMessageInput({
             }
   
             if (!socket.connected) {
-              // wait for connect event once
               await new Promise<void>((resolve) => {
                 socket.once('connect', () => resolve());
               });
@@ -134,10 +158,11 @@ export default function ChatMessageInput({
               romeId: selectedConversationId,
               senderId: myContact.id,
               content: message,
+              // files: ,
             });
           } else {
             const res = await createConversation(conversationData);
-            router.push(`${paths.dashboard.chat}?id=${res.conversation.id}`);
+            router.push(`/shop/messages?search=${res.conversation.id}`);
             onAddRecipients([]);
           }
           setMessage('');
@@ -148,8 +173,40 @@ export default function ChatMessageInput({
     },
     [message, myContact.id, selectedConversationId, socket, conversationData, router, onAddRecipients]
   );
-  
 
+  const handleSelectImage = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    if (e.target.files && e.target.files.length > 0) {
+      setLoading(true)
+      const file = e.target.files[0];
+      const {url, type} = await uploadFile(file)
+      setFiles({url, type, text: ''})
+      setLoading(false)
+      setOpenDialog(true)
+    }else {
+      setFiles(null)
+    }
+  }, []);
+
+  const onSubmit = useCallback(async (value: {text: string; url: string; type: string}) => {
+    try {
+      console.log(value);
+      
+      if (value && value.url) {
+        await socket.emit('message', {
+          romeId: selectedConversationId,
+          senderId: myContact.id,
+          content: message,
+          files: value,
+        });
+        setOpenDialog(false)
+      }
+    } catch (error) {
+      toast.error('somthing wint wrong')
+    }
+  }, [])
+  
+  if (loading) return <LoadingScreen />
   return (
     <>
       <InputBase
@@ -171,9 +228,7 @@ export default function ChatMessageInput({
             <IconButton onClick={handleAttach}>
               <Iconify icon="eva:attach-2-fill" />
             </IconButton>
-            <IconButton>
-              <Iconify icon="solar:microphone-bold" />
-            </IconButton>
+
           </Stack>
         }
         sx={{
@@ -184,7 +239,13 @@ export default function ChatMessageInput({
         }}
       />
 
-      <input type="file" ref={fileRef} style={{ display: 'none' }} />
+      <input
+        type="file"
+        ref={fileRef}
+        style={{ display: 'none' }}
+        onChange={(e) => handleSelectImage(e)}
+      />
+      {files && <MediaPreviewDialog handleChangeCaption={handleCaptionChange} open={openDialog} onClose={onClose} file={files} onSubmit={onSubmit} />}
     </>
   );
 }

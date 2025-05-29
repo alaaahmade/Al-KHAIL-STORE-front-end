@@ -7,6 +7,8 @@ import Scrollbar from 'src/components/scrollbar';
 import { useMessagesScroll } from './hooks';
 import ChatMessageItem from './chat-message-item';
 import Lightbox, { useLightBox } from 'src/components/lightbox';
+import { useState } from 'react';
+import { Modal } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -18,14 +20,14 @@ type Props = {
 
 export default function ChatMessageList({ messages = [], participants, handleDeleteMessage }: Props) {
   const { messagesEndRef } = useMessagesScroll(messages);
-
-  const slides = messages
-    .filter((message) => message.contentType === 'image')
-    .map((message) => ({ src: message.body }));
-
-  const lightbox = useLightBox(slides);
-
-
+    const [open, setOpen] = useState(false);
+    const [selectedImg, setSelectedImg] = useState<string | null>(null);
+  
+      const handleOpen = (url: string) => {
+        setSelectedImg(url);
+        setOpen(true);
+      };
+  
   
 
   return (
@@ -37,20 +39,19 @@ export default function ChatMessageList({ messages = [], participants, handleDel
               key={message.id}
               message={message}
               participants={participants}
-              onOpenLightbox={() => lightbox.onOpen(message.body)}
-              onDelete={handleDeleteMessage} // 👈 Pass function here
+              onOpenLightbox={(value) => {
+                handleOpen(value)
+              }}              onDelete={handleDeleteMessage} // 👈 Pass function here
 
             />
           ))}
         </Box>
+          <Modal open={open} onClose={() => setOpen(false)} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Box>
+              <img src={selectedImg || ''} alt="Full size" style={{ maxHeight: '80vh', maxWidth: '90vw', borderRadius: 12 }} />
+            </Box>
+          </Modal>
       </Scrollbar>
-
-      <Lightbox
-        index={lightbox.selected}
-        slides={slides}
-        open={lightbox.open}
-        close={lightbox.onClose}
-      />
     </>
   );
 }

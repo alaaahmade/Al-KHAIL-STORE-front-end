@@ -4,6 +4,7 @@ import axios from 'src/utils/axios';
 interface ReviewsState {
   reviews: any[];
   latestReviews: any[];
+  productReviews: any[];
   reviewsTypes: any[];
   loading: boolean;
   error: string | null;
@@ -11,6 +12,7 @@ interface ReviewsState {
 
 const initialState: ReviewsState = {
   reviews: [],
+  productReviews: [],
   latestReviews: [],
   reviewsTypes: [],
   loading: false,
@@ -104,6 +106,18 @@ export const deleteReviews = createAsyncThunk(
   }
 );
 
+export const fetchCommentsByProduct = createAsyncThunk(
+  'reviews/fetchCommentsByProduct',
+  async (productId: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/v1/comments/product/${productId}`);
+      return response.data.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch reviews');
+    }
+  }
+) 
+
 const reviewsSlice = createSlice({
   name: 'reviews',
   initialState,
@@ -155,6 +169,17 @@ const reviewsSlice = createSlice({
         state.reviews = action.payload;
       })
       .addCase(fetchCommentsByStore.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(fetchCommentsByProduct.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchCommentsByProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.productReviews = action.payload;
+      })
+      .addCase(fetchCommentsByProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })

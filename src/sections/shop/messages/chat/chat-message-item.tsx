@@ -1,4 +1,7 @@
 import { formatDistanceToNowStrict } from 'date-fns';
+import Button from '@mui/material/Button';
+import { useBoolean } from 'src/hooks/use-boolean';
+import { ConfirmDialog } from 'src/components/custom-dialog';
 // @mui
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -11,6 +14,7 @@ import { useMockedUser } from 'src/hooks/use-mocked-user';
 // components
 import Iconify from 'src/components/iconify';
 //
+
 import { useGetMessage } from './hooks';
 import { useAuthContext } from '@/auth/hooks';
 
@@ -26,7 +30,7 @@ type Props = {
 export default function ChatMessageItem({ message, participants, onDelete, onOpenLightbox }: Props) {
   const { user } = useAuthContext();
   
-  const { me, senderDetails, hasImage } = useGetMessage({
+  const { me, senderDetails, hasImage, files } = useGetMessage({
     message,
     participants,
     currentUserId: user?.id,
@@ -38,8 +42,16 @@ export default function ChatMessageItem({ message, participants, onDelete, onOpe
   const { content, createdAt } = message;
 
 
+
+  const confirm = useBoolean();
+
   const handleDeleteMessage = () => {
-    onDelete(message.id); 
+    confirm.onTrue();
+  };
+
+  const handleConfirmDelete = () => {
+    onDelete(message.id);
+    confirm.onFalse();
   };
 
   const renderInfo = (
@@ -81,11 +93,12 @@ export default function ChatMessageItem({ message, participants, onDelete, onOpe
       }}
     >
       {hasImage ? (
+        <Stack sx={{}} direction="column" alignItems={me ? "flex-end" : "flex-start"}>
         <Box
           component="img"
           alt="attachment"
-          src={content}
-          onClick={() => onOpenLightbox(content)}
+          src={files.url}
+          onClick={() => onOpenLightbox(files.url)}
           sx={{
             minHeight: 220,
             borderRadius: 1.5,
@@ -95,6 +108,11 @@ export default function ChatMessageItem({ message, participants, onDelete, onOpe
             },
           }}
         />
+        <Typography textAlign={me ? 'right' : 'left'} sx={{ mt: 1, bgcolor: 'primary.main', color: '#fff', borderRadius: 1, p: 2, width : 'fit-content' }}>
+          {files.text}
+        </Typography>
+        
+        </Stack>
       ) : (
         content
       )}
@@ -129,9 +147,21 @@ export default function ChatMessageItem({ message, participants, onDelete, onOpe
       </IconButton>
       <IconButton
         onClick={handleDeleteMessage}
-      size="small">
+        size="small"
+      >
         <Iconify icon="solar:trash-bin-trash-bold" width={16} />
       </IconButton>
+      <ConfirmDialog
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        title="Delete Message"
+        content="Are you sure you want to delete this message?"
+        action={
+          <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+            Delete
+          </Button>
+        }
+      />
     </Stack>
   );
 
@@ -155,7 +185,7 @@ export default function ChatMessageItem({ message, participants, onDelete, onOpe
           }}
         >
           {renderBody}
-          {renderActions}
+          {me && renderActions}
         </Stack>
       </Stack>
     </Stack>

@@ -9,7 +9,7 @@ import { LoadingScreen } from '@/components/loading-screen';
 import { redirect, useRouter } from 'next/navigation';
 import { ReviewItem } from '@/sections/reviews/review-item';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { createCommentReply, fetchCommentsByProduct, fetchLatestReviews } from '@/redux/slices/reviewsSlice';
+import { createCommentReply, fetchCommentsByProduct } from '@/redux/slices/reviewsSlice';
 import { useAuthContext } from '@/auth/hooks';
 
 // Helper to compute summary from reviews
@@ -278,7 +278,7 @@ export default function ProductReviewView({ productId }: { productId: string }) 
                     </Box>
                     <Typography sx={{ mb: 1 }}>{review.content}</Typography>
                     {/* Show review images if present */}
-                    {review.files && Array.isArray(review.files) && review.files.some(f => f.type === 'image') && (
+                    {review.files && Array.isArray(review.files) && review.files.some((f: any) => f.type === 'image') && (
                       <ReviewImages files={review.files} />
                     )}
                   </Box>
