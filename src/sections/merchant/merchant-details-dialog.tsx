@@ -21,10 +21,8 @@ import Label from '@/components/label';
 import { LoadingButton } from '@mui/lab';
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/redux/hooks';
-import { updateUser } from '@/redux/slices/userSlice';
 import { fetchSellers } from '@/redux/slices/SellersSlice';
 import axiosInstance from '@/utils/axios';
-import { id } from 'date-fns/locale';
 
 const MerchantDetailsDialog = ({
   row,
