@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from 'react';
 import { Box, Grid, Typography, Button } from '@mui/material';
 import Link from 'next/link';
@@ -133,7 +133,7 @@ const ShopHeroSection = () => {
         }}
       />
     </Box>
-  </Box>
+  </Box>;
   return (
     <Box
       sx={{
@@ -241,5 +241,3 @@ const ShopHeroSection = () => {
 };
 
 export default ShopHeroSection;
-
-
