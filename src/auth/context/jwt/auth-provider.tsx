@@ -163,11 +163,10 @@ export function AuthProvider({ children }: Props) {
         lastName,
         phoneNumber,
       });
-      const { accessToken, user } = response.data;
-
-      sessionStorage.setItem(STORAGE_KEY, accessToken);
-      setSession(accessToken);
-
+      const { user } = response.data.data;
+      const { token } = response.data;
+      sessionStorage.setItem(STORAGE_KEY, token);
+      setSession(token);
       dispatch({
         type: Types.REGISTER,
         payload: { user },

@@ -212,7 +212,7 @@ export default function JwtLoginView() {
         borderTopLeftRadius: 'inherit',
         borderBottomLeftRadius: 'inherit',
         width: '50%',
-        height: '100%',
+        minHeight: '100%',
         backgroundImage: `
     linear-gradient(to top right, rgba(236, 72, 153, 0.8),  rgba(139, 92, 246, 0.8)),
     url('/assets/background/authForm.png')
@@ -251,7 +251,6 @@ export default function JwtLoginView() {
           width: '60% !important',
           height: '80% !important',
           maxHeight: '600px',
-
           boxShadow: '0px 10px 15px 0px rgba(0, 0, 0, 0.1), 0px 4px 6px 0px rgba(0, 0, 0, 0.1) ',
         }}
       >

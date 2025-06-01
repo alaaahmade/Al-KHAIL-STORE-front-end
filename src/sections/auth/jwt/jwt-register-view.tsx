@@ -50,6 +50,9 @@ export default function JwtRegisterView() {
     lastName: Yup.string().required('Last name required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required'),
+    confirmPassword: Yup.string()
+      .required('Confirm password is required')
+      .oneOf([Yup.ref('password')], 'Passwords must match'),
     phone: Yup.string().required('Phone number is required'),
   });
 
@@ -59,6 +62,7 @@ export default function JwtRegisterView() {
     email: '',
     password: '',
     phone: '',
+    confirmPassword: '',
   };
 
   const methods = useForm({
@@ -68,19 +72,13 @@ export default function JwtRegisterView() {
 
   const {
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     try {
       setLoading(true);
-      const response = await register?.(
-        data.email,
-        data.password,
-        data.firstName,
-        data.lastName,
-        data.phone
-      );
+      await register?.(data.email, data.password, data.firstName, data.lastName, data.phone);
       router.push(returnTo || PATH_AFTER_LOGIN);
       setLoading(false);
     } catch (error: any) {
@@ -91,15 +89,6 @@ export default function JwtRegisterView() {
       );
     }
   });
-
-  const linkStyle = {
-    cursor: 'pointer',
-    width: '50%',
-    textAlign: 'center',
-    p: 1,
-    display: 'inline-block',
-    m: 0,
-  };
 
   const tabList = [
     {
@@ -199,6 +188,23 @@ export default function JwtRegisterView() {
           }}
         />
 
+        <RHFTextField
+          name="confirmPassword"
+          label="Confirm Password"
+          type={password.value ? 'text' : 'password'}
+          error={!!errors.confirmPassword}
+          helperText={errors.confirmPassword?.message}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={password.onToggle} edge="end">
+                  <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+
         <SubmitButton
           fullWidth
           color="inherit"
@@ -229,6 +235,7 @@ export default function JwtRegisterView() {
         borderBottomLeftRadius: 'inherit',
         width: '50%',
         height: '100%',
+        minHeight: '100%',
         backgroundImage: `
       linear-gradient(to top right, rgba(236, 72, 153, 0.8),  rgba(139, 92, 246, 0.8)),
       url('/assets/background/authForm.png')
@@ -254,7 +261,7 @@ export default function JwtRegisterView() {
   return (
     <Stack
       sx={{
-        height: '100dvh',
+        minHeight: '100dvh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -265,9 +272,8 @@ export default function JwtRegisterView() {
       <StyledAuthWrapper
         sx={{
           width: '60% !important',
-          height: '80% !important',
-          maxHeight: '600px',
-
+          height: '90vh',
+          minHeight: '600px',
           boxShadow: '0px 10px 15px 0px rgba(0, 0, 0, 0.1), 0px 4px 6px 0px rgba(0, 0, 0, 0.1) ',
         }}
       >

@@ -31,18 +31,17 @@ const navigation = [
   },
 ];
 
-export default function AuthClassicLayout({ children, image, title }: Props) {
-  const theme = useTheme();
-
+export default function AuthClassicLayout({ children }: Props) {
   const renderLogo = (
     <Box
       sx={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
-        gap: 2,
-        position: 'absolute',
-        m: { xs: 1.5, md: 1.5 },
+        justifyContent: 'flex-start',
+        gap: 1,
+        mt: 2,
+        ml: 2,
+        // m: { xs: 1.5, md: 1.5 },
         zIndex: 9,
       }}
     >
@@ -63,7 +62,7 @@ export default function AuthClassicLayout({ children, image, title }: Props) {
       </Typography>
     </Box>
   );
-  const helpSupport = (
+  const footer = (
     <Box
       sx={{
         zIndex: 9,
@@ -75,8 +74,6 @@ export default function AuthClassicLayout({ children, image, title }: Props) {
         gap: 1,
         borderTop: '1px solid #d8d8d847',
         width: '100%',
-        position: 'absolute',
-        bottom: 0,
         mb: 1,
       }}
     >
@@ -130,7 +127,7 @@ export default function AuthClassicLayout({ children, image, title }: Props) {
     >
       {renderLogo}
       {renderContent}
-      {helpSupport}
+      {footer}
     </Stack>
   );
 }

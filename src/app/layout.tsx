@@ -5,7 +5,7 @@ import 'simplebar-react/dist/simplebar.min.css';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // ----------------------------------------------------------------------
