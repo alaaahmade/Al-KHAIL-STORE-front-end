@@ -166,7 +166,7 @@ export default function CheckoutConfirmationView() {
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} mt={4} justifyContent="center">
           <Button
             component={Link}
-            href={`/shop/products/review/${order?.cart?.items[order?.cart?.items.length - 1].id}`}
+            href={`/shop/products/review/${order?.cart?.items[order?.cart?.items.length - 1]?.productId}`}
             variant="contained"
             sx={{
               bgcolor: '#E91E63',
