@@ -64,12 +64,10 @@ function CodeInput({ length = 6, setValue, watch }: CodeInputProps) {
     if (e.key === 'Backspace') {
       const newValue = value.split('');
       if (inputs[idx]) {
-        // Clear current box and keep focus
         newValue[idx] = '';
         setValue('code', newValue.join(''));
         e.preventDefault();
       } else if (idx > 0) {
-        // Move focus to previous and clear it
         newValue[idx - 1] = '';
         setValue('code', newValue.join(''));
         focusInput(idx - 1);

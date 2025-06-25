@@ -1,17 +1,9 @@
 'use client';
 // @mui
-import { alpha, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import ListItemText from '@mui/material/ListItemText';
 // utils
-import { fDate } from 'src/utils/format-time';
 // components
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import Lightbox, { useLightBox } from 'src/components/lightbox';
 import { ProductCard } from './productCard';
 import { useState } from 'react';
 import { Pagination } from '@mui/material';

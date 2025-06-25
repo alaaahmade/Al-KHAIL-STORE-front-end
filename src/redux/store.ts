@@ -1,9 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-// import { persistStore, persistReducer } from 'redux-persist';
-// import { rootPersistConfig, rootReducer } from './root-reducer';
 import productsReducer from './slices/productsReducer';
-// import authReducer from './slices/authSlice';
-// import userReducer from './slices/userSlice';
 import businessReducer from './slices/businessSlice';
 import roleReducer from './slices/roleSlice';
 import permissionReducer from './slices/permissionSlice';
@@ -58,7 +54,4 @@ const store = configureStore({
     }),
 });
 
-// const persistor = persistStore(store);
-
-// export { store, persistor };
 export { store };

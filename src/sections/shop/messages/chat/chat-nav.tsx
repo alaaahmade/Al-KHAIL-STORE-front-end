@@ -103,14 +103,16 @@ export default function ChatNav({
           new Map(allParticipants.map((p) => [p.id, p])).values()
         );
 
-        const results = uniqueParticipants.filter((contact) =>
-          (contact.role.toLowerCase() === 'seller'
+        const results = uniqueParticipants.filter((contact) => {
+          const isSeller = Array.isArray(contact.roles) && contact.roles.some((role: any) =>
+            (typeof role === 'string' ? role.toUpperCase() : role.name?.toUpperCase()) === 'SELLER'
+          );
+          const displayName = isSeller
             ? contact.seller.store.name
-            : contact.firstName + ' ' + contact.lastName
-          )
-            .toLowerCase()
-            .includes(inputValue.toLowerCase())
-        );
+            : (contact.firstName + ' ' + contact.lastName);
+        
+          return displayName.toLowerCase().includes(inputValue.toLowerCase());
+        });
 
         setSearchContacts((prevState) => ({
           ...prevState,

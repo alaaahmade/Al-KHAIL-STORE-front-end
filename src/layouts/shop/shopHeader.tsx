@@ -21,10 +21,12 @@ import { AccountPopover, NotificationsPopover } from '../_common';
 import { InputAdornment, TextField, Typography } from '@mui/material';
 import Iconify from '@/components/iconify';
 import Label from '@/components/label';
+import { useAuthContext } from '@/auth/hooks';
 
 // ----------------------------------------------------------------------
 export default function ShopHeader() {
   const theme = useTheme();
+  const {user} = useAuthContext()
   const settings = useSettingsContext();
 
   const isNavHorizontal = settings.themeLayout === 'horizontal';
@@ -53,14 +55,11 @@ export default function ShopHeader() {
 
   const renderContent = (
     <Stack direction="row" alignItems="center" width={1}>
-      {/* Left: Logo + Store Name */}
       <Stack direction="row" alignItems="center" spacing={1} sx={{ minWidth: 270 }}>
         <Logo sx={{ mr: 1 }} />
         <Typography color="primary.main" variant="h6" fontWeight={700} sx={{ letterSpacing: 1 }}>
-          AL KHAIL STORE
-        </Typography>
+          Al KHAIL STORE        </Typography>
       </Stack>
-      {/* Center: Nav Links + Search */}
       <Stack
         direction="row"
         alignItems="center"
@@ -129,6 +128,21 @@ export default function ShopHeader() {
           >
             Messages
           </Typography>
+          {Array.isArray(user?.roles) && user.roles.some((role: any) =>
+        (typeof role === 'string' ? role.toUpperCase() : role.name?.toUpperCase()) === 'SELLER'
+    ) &&           <Typography
+    component="a"
+    href="/dashboard/products"
+    sx={{
+      color: 'text.primary',
+      fontWeight: 500,
+      textDecoration: 'none',
+      '&:hover': { color: 'primary.main' },
+    }}
+  >
+    Dashboard
+  </Typography>
+    }
         </Stack>
         <TextField
           type="text"

@@ -45,8 +45,9 @@ export default function ChatNavItem({ selected, collapse, conversation, onCloseM
 
   const singleParticipant = participants[0];
 
-  const store = singleParticipant.role.toLowerCase() === 'seller';
-
+  const store = Array.isArray(singleParticipant.roles) && singleParticipant.roles.some((role: any) =>
+    (typeof role === 'string' ? role.toUpperCase() : role.name?.toUpperCase()) === 'SELLER'
+  );
   const { firstName, photo, isActive } = singleParticipant;
 
   const handleClickConversation = useCallback(async () => {

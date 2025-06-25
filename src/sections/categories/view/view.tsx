@@ -115,8 +115,6 @@ export function CatView() {
     dispatch(fetchCategories());
   }, [refresh]);
 
-  if (user?.role.toLowerCase() !== 'admin') return redirect('/dashboard/products');
-
   if (lading) return <LoadingScreen />;
 
   return (

@@ -62,11 +62,11 @@ export default function JwtForgotPasswordView() {
 
   const renderHead = (
     <Stack spacing={2} sx={{ mb: 5 }}>
-      <Typography variant="h4">Forgot your password?</Typography>
+      <Typography variant="h4">Forgot Al KHAIL STOREword?</Typography>
 
       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
         Please enter the email address associated with your account and we will email you a link to
-        reset your password.
+        reset Al KHAIL STOREword.
       </Typography>
     </Stack>
   );

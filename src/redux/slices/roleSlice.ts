@@ -43,12 +43,13 @@ export const updateRole = createAsyncThunk(
   'role/updateRole',
   async ({ id, data }: { id: number; data: Partial<IRole> }, { rejectWithValue }) => {
     try {
-      // Transform permission IDs back to numbers if needed
       const formattedData = {
         ...data,
         permissions: data.permissions?.map(Number),
       };
       const response = await axios.put(`/roles/${id}`, formattedData);
+      console.log(response);
+      
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to update role');

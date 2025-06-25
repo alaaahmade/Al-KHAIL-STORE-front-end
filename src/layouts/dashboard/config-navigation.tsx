@@ -86,9 +86,13 @@ export function useNavData() {
     []
   );
 
-  return user?.role.toLowerCase() === 'admin'
+  return Array.isArray(user?.roles) && user.roles.some((role: any) =>
+    (typeof role === 'string' ? role.toUpperCase() : role.name?.toUpperCase()) === 'ADMIN'
+  )
     ? AdminData
-    : user?.role.toLowerCase() === 'seller'
+    : Array.isArray(user?.roles) && user.roles.some((role: any) =>
+        (typeof role === 'string' ? role.toUpperCase() : role.name?.toUpperCase()) === 'SELLER'
+      )
       ? SellerData
       : [];
 }

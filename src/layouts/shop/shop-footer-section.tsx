@@ -10,8 +10,7 @@ const ShopFooterSection = () => (
     <Grid container spacing={4} sx={{ py: 4, borderBottom: '2px solid #333' }}>
       <Grid item xs={12} md={3}>
         <Typography fontWeight={700} mb={2}>
-          AL KHAIL STORE
-        </Typography>
+          Al KHAIL STORE        </Typography>
         <Typography variant="body2" color="rgba(156, 163, 175, 1)">
           Your trusted destination for beauty products.
         </Typography>

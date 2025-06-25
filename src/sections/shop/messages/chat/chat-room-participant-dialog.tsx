@@ -7,7 +7,6 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import DialogContent from '@mui/material/DialogContent';
 // types
-import { IChatParticipant } from 'src/types/chat';
 // components
 import Iconify from 'src/components/iconify';
 
@@ -16,7 +15,7 @@ import Iconify from 'src/components/iconify';
 type Props = {
   open: boolean;
   onClose: VoidFunction;
-  participant: IChatParticipant;
+  participant: any;
 };
 
 export default function ChatRoomParticipantDialog({ participant, open, onClose }: Props) {
@@ -35,7 +34,7 @@ export default function ChatRoomParticipantDialog({ participant, open, onClose }
 
         <Stack spacing={1}>
           <Typography variant="caption" sx={{ color: 'primary.main' }}>
-            {participant.role}
+            {participant?.roles[0]?.name}
           </Typography>
 
           <Typography variant="subtitle1">{participant.name}</Typography>

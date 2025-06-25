@@ -11,19 +11,22 @@ type Props = {
 export default function useGetMessage({ message, participants, currentUserId }: Props) {
   const sender = participants.find((participant) => participant.id === message.sender.id);
 
-  const senderDetails =
-    String(message.sender.id) === String(currentUserId)
-      ? {
-          type: 'me',
-        }
-      : {
-          avatarUrl:
-            sender?.role?.toLowerCase() === 'seller' ? sender.seller.store.logo : sender?.photo,
-          firstName:
-            sender?.role?.toLowerCase() === 'seller'
-              ? sender.seller.store.name.split(' ')[0]
-              : sender?.firstName,
-        };
+  const isSeller = Array.isArray(sender?.roles) && sender.roles.some((role: any) =>
+  (typeof role === 'string' ? role.toUpperCase() : role.name?.toUpperCase()) === 'SELLER'
+);
+
+const senderDetails =
+  String(message.sender.id) === String(currentUserId)
+    ? {
+        type: 'me',
+      }
+    : {
+        avatarUrl: isSeller ? sender.seller.store.logo : sender?.photo,
+        firstName: isSeller
+          ? sender.seller.store.name.split(' ')[0]
+          : sender?.firstName,
+      };
+
 
   const me = senderDetails.type === 'me';
 

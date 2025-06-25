@@ -11,7 +11,6 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 // types
-import { IUserProfileFriend } from 'src/types/user';
 // _mock
 import { _socials } from 'src/_mock';
 // components
@@ -22,7 +21,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 // ----------------------------------------------------------------------
 
 type Props = {
-  friends: IUserProfileFriend[];
+  friends: any[];
   searchFriends: string;
   onSearchFriends: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
@@ -84,7 +83,7 @@ export default function ProfileFriends({ friends, searchFriends, onSearchFriends
 // ----------------------------------------------------------------------
 
 type FriendCardProps = {
-  friend: IUserProfileFriend;
+  friend: any;
 };
 
 function FriendCard({ friend }: FriendCardProps) {
@@ -170,7 +169,7 @@ function FriendCard({ friend }: FriendCardProps) {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, query }: { inputData: IUserProfileFriend[]; query: string }) {
+function applyFilter({ inputData, query }: { inputData: any[]; query: string }) {
   if (query) {
     return inputData.filter(
       (friend) => friend.name.toLowerCase().indexOf(query.toLowerCase()) !== -1

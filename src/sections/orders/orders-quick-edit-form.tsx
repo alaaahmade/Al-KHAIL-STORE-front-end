@@ -58,7 +58,7 @@ export default function UserQuickEditForm({ currentUser, open, onClose }: Props)
       zipCode: currentUser?.zipCode || '',
       status: currentUser?.status,
       company: currentUser?.company || '',
-      role: currentUser?.role || '',
+      role: currentUser?.roles[0].name || '',
     }),
     [currentUser]
   );

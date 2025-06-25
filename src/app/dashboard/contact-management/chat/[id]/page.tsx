@@ -38,8 +38,7 @@ export default function ChatPage() {
 
   if (error) return <NotFoundPage />;
 
-  // return <SplashScreen/>
-  return <RoleBasedGuard roles={['ADMIN']}>
+  return <RoleBasedGuard roles={['ADMIN', 'SELLER']}>
     {loading ? <SplashScreen /> : currentChat && <ChatView chatId={id} chat={currentChat} />}
   </RoleBasedGuard>
 

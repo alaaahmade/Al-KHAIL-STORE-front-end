@@ -12,11 +12,12 @@ import { NavSectionMini } from 'src/components/nav-section';
 import { NAV } from '../config-layout';
 import { useNavData } from './config-navigation';
 import { NavToggleButton } from '../_common';
+import { useAuthContext } from '@/auth/hooks';
 
 // ----------------------------------------------------------------------
 
 export default function NavMini() {
-  const { user } = useMockedUser();
+  const { user } = useAuthContext();
 
   const navData = useNavData();
 
@@ -50,7 +51,7 @@ export default function NavMini() {
         <NavSectionMini
           data={navData}
           config={{
-            currentRole: user?.role || 'admin',
+            currentRole: user?.roles[0].name.toLowerCase() || 'admin',
           }}
         />
       </Stack>

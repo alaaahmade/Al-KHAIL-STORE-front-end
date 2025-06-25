@@ -141,7 +141,11 @@ export default function AnalyticsDashboard() {
   }
 
   useEffect(() => {
-    if (user?.role.toLowerCase() === 'admin') {
+    const isAdmin = Array.isArray(user?.roles) && user.roles.some((role: any) =>
+      (typeof role === 'string' ? role.toUpperCase() : role.name?.toUpperCase()) === 'ADMIN'
+    );
+  
+    if (isAdmin) {
       dispatch(fetchAnalyticsForAdmin());
     } else {
       dispatch(fetchAnalyticsForSeller(user?.seller?.store?.id));

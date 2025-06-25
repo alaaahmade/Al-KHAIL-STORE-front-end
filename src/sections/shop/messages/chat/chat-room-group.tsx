@@ -9,7 +9,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // types
-import { IChatParticipant } from 'src/types/chat';
 // components
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -19,15 +18,15 @@ import ChatRoomParticipantDialog from './chat-room-participant-dialog';
 // ----------------------------------------------------------------------
 
 type Props = {
-  participants: IChatParticipant[];
+  participants: any[];
 };
 
 export default function ChatRoomGroup({ participants }: Props) {
-  const [selected, setSelected] = useState<IChatParticipant | null>(null);
+  const [selected, setSelected] = useState<any>(null);
 
   const collapse = useBoolean(true);
 
-  const handleOpen = useCallback((participant: IChatParticipant) => {
+  const handleOpen = useCallback((participant: any) => {
     setSelected(participant);
   }, []);
 
@@ -75,7 +74,7 @@ export default function ChatRoomGroup({ participants }: Props) {
           <ListItemText
             sx={{ ml: 2 }}
             primary={participant.name}
-            secondary={participant.role}
+            secondary={participant.roles[0].name}
             primaryTypographyProps={{
               noWrap: true,
               typography: 'subtitle2',

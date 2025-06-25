@@ -113,8 +113,7 @@ export default function SellerRegisterView() {
         <Box display="flex" alignItems="center">
           <Logo />
           <Typography variant="h6" color="#e5487e" fontWeight={600} fontFamily="inherit">
-            AL KHAIL STORE
-          </Typography>
+            Al KHAIL STORE          </Typography>
         </Box>
         <Typography fontSize={13} color="#888">
           Already have an account?{' '}
@@ -276,7 +275,7 @@ export default function SellerRegisterView() {
                         valid = false;
                       }
                       if (!confirmPassword) {
-                        errors.confirmPassword = 'Please confirm your password';
+                        errors.confirmPassword = 'Please confirm Al KHAIL STOREword';
                         valid = false;
                       }
                       setStep1Errors(errors);

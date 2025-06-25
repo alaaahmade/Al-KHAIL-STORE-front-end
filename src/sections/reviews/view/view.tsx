@@ -32,13 +32,20 @@ export default function ReviewsView() {
   }
 
   useEffect(() => {
-    if (user?.role === 'ADMIN') {
+    const isAdmin = Array.isArray(user?.roles) && user.roles.some((role: any) =>
+      (typeof role === 'string' ? role.toUpperCase() : role.name?.toUpperCase()) === 'ADMIN'
+    );
+    const isSeller = Array.isArray(user?.roles) && user.roles.some((role: any) =>
+      (typeof role === 'string' ? role.toUpperCase() : role.name?.toUpperCase()) === 'SELLER'
+    );
+  
+    if (isAdmin) {
       appDispatch(fetchReviews());
-    } else if (user?.role === 'SELLER') {
+    } else if (isSeller) {
       appDispatch(fetchCommentsByStore(user?.seller?.store?.id));
     }
-  }, [user]);
-
+  }, [user, appDispatch]);
+  
   if (loading) return <SplashScreen />;
 
   return (

@@ -57,36 +57,41 @@ export default function AccountPopover() {
   };
 
   useEffect(() => {
-    if (user) {
-      if (user.role.toLowerCase() === 'user') {
-        setOPTIONS([
-          ...OPTIONSs,
-          {
-            label: 'Settings',
-            linkTo: '/shop/settings',
-          },
-        ]);
-      }
-      if (user.role.toLowerCase() === 'seller') {
-        setOPTIONS([
-          ...OPTIONSs,
-          {
-            label: 'Settings',
-            linkTo: '/dashboard/settings/seller',
-          },
-        ]);
-      }
-      if (user.role.toLowerCase() === 'admin') {
-        setOPTIONS([
-          ...OPTIONSs,
-          {
-            label: 'Settings',
-            linkTo: '/dashboard/settings/admin',
-          },
-        ]);
-      }
+  if (user && Array.isArray(user.roles)) {
+    const hasRole = (roleName: string) =>
+      user.roles.some(
+        (role: { name: string }) => role.name.toLowerCase() === roleName
+      );
+
+    if (hasRole('user')) {
+      setOPTIONS([
+        ...OPTIONSs,
+        {
+          label: 'Settings',
+          linkTo: '/shop/settings',
+        },
+      ]);
     }
-  }, [user]);
+    if (hasRole('seller')) {
+      setOPTIONS([
+        ...OPTIONSs,
+        {
+          label: 'Settings',
+          linkTo: '/dashboard/settings/seller',
+        },
+      ]);
+    }
+    if (hasRole('admin')) {
+      setOPTIONS([
+        ...OPTIONSs,
+        {
+          label: 'Settings',
+          linkTo: '/dashboard/settings/admin',
+        },
+      ]);
+    }
+  }
+}, [user]);
 
   return (
     <>
@@ -139,15 +144,17 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack sx={{ p: 1 }}>
-          {user?.role.toLowerCase() === 'seller' && (
-            <MenuItem
-              onClick={() => {
-                router.push('/dashboard/profile/store');
-              }}
-            >
-              Store Profile
-            </MenuItem>
-          )}
+          {Array.isArray(user?.roles) && user.roles.some((role: any) => 
+  (typeof role === 'string' ? role.toUpperCase() : role.name?.toUpperCase()) === 'SELLER'
+) && (
+  <MenuItem
+    onClick={() => {
+      router.push('/dashboard/profile/store');
+    }}
+  >
+    Store Profile
+  </MenuItem>
+)}
           {OPTIONS.map((option) => (
             <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
               {option.label}

@@ -58,8 +58,7 @@ export default function AuthClassicLayout({ children }: Props) {
           LetterSpacing: '0%',
         }}
       >
-        Al KHAIL STORE
-      </Typography>
+        Al KHAIL STORE      </Typography>
     </Box>
   );
   const footer = (

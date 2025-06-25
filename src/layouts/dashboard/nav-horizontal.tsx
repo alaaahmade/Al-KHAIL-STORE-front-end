@@ -6,20 +6,20 @@ import Toolbar from '@mui/material/Toolbar';
 // theme
 import { bgBlur } from 'src/theme/css';
 // hooks
-import { useMockedUser } from 'src/hooks/use-mocked-user';
 // components
 import { NavSectionHorizontal } from 'src/components/nav-section';
 //
 import { HEADER } from '../config-layout';
 import { useNavData } from './config-navigation';
 import { HeaderShadow } from '../_common';
+import { useAuthContext } from '@/auth/hooks';
 
 // ----------------------------------------------------------------------
 
 function NavHorizontal() {
   const theme = useTheme();
 
-  const { user } = useMockedUser();
+  const { user } = useAuthContext();
 
   const navData = useNavData();
 
@@ -40,7 +40,7 @@ function NavHorizontal() {
         <NavSectionHorizontal
           data={navData}
           config={{
-            currentRole: user?.role || 'admin',
+            currentRole: user?.roles[0].name.toLowerCase() || 'admin',
           }}
         />
       </Toolbar>

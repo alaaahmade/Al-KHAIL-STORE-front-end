@@ -17,9 +17,15 @@ type Props = {
 
 export default function Layout({ children }: Props) {
   const { user } = useAuthContext();
-  if (user?.role.toLowerCase() !== 'user') {
-    return redirect('/');
-  }
+  const userRoles = Array.isArray(user?.roles)
+  ? user.roles.map((role: { name: string }) => role.name.toUpperCase())
+  : user?.role
+    ? [user.role.toUpperCase()]
+    : [];
+
+    if (!userRoles.includes('USER')) {
+      return redirect('/');
+    }
   return (
     <AuthGuard>
       <ShopLayout>{children}</ShopLayout>

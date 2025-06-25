@@ -19,7 +19,7 @@ import { AccountPopover, NotificationsPopover } from '../_common';
 import Label from 'src/components/label';
 import { useAuthContext } from '@/auth/hooks';
 import { usePathname } from 'next/navigation';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ export default function Header({ onOpenNav }: Props) {
   const offset = useOffSetTop(HEADER.H_DESKTOP);
 
   const offsetTop = offset && !isNavHorizontal;
-
+  
   const pathName = usePathname();
 
   const isProfile = pathName.includes('/dashboard/profile/store/');
@@ -63,8 +63,7 @@ export default function Header({ onOpenNav }: Props) {
         >
           <Logo sx={{ mr: 2.5 }} />
           <Typography color={'primary.main'} variant="h5">
-            AL KHAIL STORE
-          </Typography>
+            Al KHAIL STORE          </Typography>
         </Stack>
       )}
       {lgUp && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
@@ -75,18 +74,43 @@ export default function Header({ onOpenNav }: Props) {
         </IconButton>
       )}
 
-      {user?.role.toLowerCase() === 'seller' && (
-        <Label
-          // color="info"
-          sx={{
-            ml: isProfile ? 30 : 1,
-            backgroundColor: 'rgba(252, 231, 243, 1) !important',
-            color: 'primary.main',
-          }}
-        >
-          Merchant Dashboard
-        </Label>
-      )}
+
+      {Array.isArray(user?.roles) && user.roles.some((role: any) =>
+    (typeof role === 'string' ? role.toUpperCase() : role.name?.toUpperCase()) === 'SELLER'
+) && (
+  <Label
+    // color="info"
+    sx={{
+      ml: isProfile ? 30 : 1,
+      backgroundColor: 'rgba(252, 231, 243, 1) !important',
+      color: 'primary.main',
+      p: 2
+    }}
+  >
+    Merchant Dashboard
+  </Label>
+)}
+
+{
+      Array.isArray(user?.roles) && user.roles.some((role: any) =>
+        (typeof role === 'string' ? role.toUpperCase() : role.name?.toUpperCase()) === 'USER'
+    ) && <Button
+      variant="contained"
+      color="primary"
+      sx={{
+        ml: isProfile ? 30 : 1,
+        color: '#fff',
+        '&:hover': {
+          backgroundColor: 'secondary.main',
+        },
+      }}
+      size='small'
+      href='/shop'
+    >
+      Shop Now
+    </Button>
+    }
+
       <Stack
         flexGrow={1}
         direction="row"

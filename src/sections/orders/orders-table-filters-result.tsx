@@ -57,7 +57,6 @@ export default function UserTableFiltersResult({
 
         {!!filters.startDate && !!filters.endDate && (
           <Block label="Date:">
-            {/* {filters.role.map((item) => ( */}
             <Chip
               key={`${filters.endDate}${filters.startDate}`}
               label={`${fDate(filters.startDate)} - ${fDate(filters.endDate)}`}

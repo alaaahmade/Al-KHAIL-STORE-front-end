@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function ContactManagementPage() {
   return (
-    <RoleBasedGuard roles={['ADMIN']}>
+    <RoleBasedGuard roles={['ADMIN', 'SELLER']}>
       <ContactManagementView />
     </RoleBasedGuard>
   );

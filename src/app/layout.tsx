@@ -26,8 +26,8 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'YOUR PASS',
-  description: 'YOUR PASS - Your secure password and identity management solution',
+  title: 'Al KHAIL STORE',
+  description: 'Al KHAIL STORE - Your secure password and identity management solution',
   keywords: 'password,security,identity,management,authentication',
   themeColor: '#000000',
   manifest: '/manifest.json',

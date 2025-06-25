@@ -19,8 +19,9 @@ type Props = {
 export default function ChatHeaderDetail({ participants }: Props) {
   const { user } = useAuthContext();
   const singleParticipant = participants.filter((p) => p.id !== user?.id)[0];
-  const store = singleParticipant.role.toLowerCase() === 'seller';
-
+  const store = Array.isArray(singleParticipant.roles) && singleParticipant.roles.some((role: any) =>
+    (typeof role === 'string' ? role.toUpperCase() : role.name?.toUpperCase()) === 'SELLER'
+  );
   const renderSingle = (
     <Stack flexGrow={1} direction="row" alignItems="center" spacing={2}>
       <Badge

@@ -8,7 +8,6 @@ import Drawer from '@mui/material/Drawer';
 // hooks
 import { useResponsive } from 'src/hooks/use-responsive';
 // hooks
-import { useMockedUser } from 'src/hooks/use-mocked-user';
 // components
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
@@ -19,6 +18,7 @@ import { NAV } from '../config-layout';
 import { useNavData } from './config-navigation';
 import { NavToggleButton } from '../_common';
 import { Typography } from '@mui/material';
+import { useAuthContext } from '@/auth/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ type Props = {
 };
 
 export default function NavVertical({ openNav, onCloseNav }: Props) {
-  const { user } = useMockedUser();
+  const { user } = useAuthContext();
 
   const pathname = usePathname();
 
@@ -63,14 +63,13 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
       >
         <Logo />
         <Typography color={'primary.main'} variant="h6">
-          AL KHAIL STORE
-        </Typography>
+          Al KHAIL STORE        </Typography>
       </Stack>
 
       <NavSectionVertical
         data={navData}
         config={{
-          currentRole: user?.role || 'admin',
+          currentRole:  user?.roles[0].name.toLowerCase() || 'admin',
         }}
       />
 

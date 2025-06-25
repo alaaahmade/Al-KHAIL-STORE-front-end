@@ -35,7 +35,7 @@ export default function ChatRoomParticipantDialog({ participant, open, onClose }
 
         <Stack spacing={1}>
           <Typography variant="caption" sx={{ color: 'primary.main' }}>
-            {participant.role}
+            {participant.roles[0].name}
           </Typography>
 
           <Typography variant="subtitle1">{participant.name}</Typography>

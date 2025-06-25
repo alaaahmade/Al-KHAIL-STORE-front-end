@@ -43,30 +43,31 @@ export default function ChatNavSearchResults({ query, results, onClickResult }: 
         />
       ) : (
         <>
-          {results.map((result) => (
-            <ListItemButton
-              key={result.id}
-              onClick={() => onClickResult(result)}
-              sx={{
-                px: 2.5,
-                py: 1.5,
-                typography: 'subtitle2',
-              }}
-            >
-              <Avatar
-                alt={
-                  result.role.toLowerCase() === 'seller' ? result.seller.store.name : result.name
-                }
-                src={
-                  result.role.toLowerCase() === 'seller' ? result.seller.store.logo : result.photo
-                }
-                sx={{ mr: 2 }}
-              />
-              {result.role.toLowerCase() === 'seller'
-                ? result.seller.store.name
-                : result.firstName + ' ' + result.lastName}
-            </ListItemButton>
-          ))}
+          {results.map((result) => {
+            const isSeller = Array.isArray(result.roles) && result.roles.some((role: any) =>
+              (typeof role === 'string' ? role.toUpperCase() : role.name?.toUpperCase()) === 'SELLER'
+            );
+            return (
+              <ListItemButton
+                key={result.id}
+                onClick={() => onClickResult(result)}
+                sx={{
+                  px: 2.5,
+                  py: 1.5,
+                  typography: 'subtitle2',
+                }}
+              >
+                <Avatar
+                  alt={isSeller ? result.seller.store.name : result.name}
+                  src={isSeller ? result.seller.store.logo : result.photo}
+                  sx={{ mr: 2 }}
+                />
+                {isSeller
+                  ? result.seller.store.name
+                  : result.firstName + ' ' + result.lastName}
+              </ListItemButton>
+            );
+          })}
         </>
       )}
     </>
